@@ -34,7 +34,8 @@ app.get("/topic/:code", (req, res) => {
 
 app.get("/files/:code", (req, res) => {
   const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
-  const fp = path.join(__dirname, code + ".pptx");
+  const suf = req.query.lang === "en" ? "_en" : "";
+  const fp = path.join(__dirname, code + suf + ".pptx");
   if (!fs.existsSync(fp)) return res.status(404).json({ error: "file not found", code });
   res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
   res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pptx"');
@@ -43,7 +44,8 @@ app.get("/files/:code", (req, res) => {
 
 app.get("/pdf/:code", (req, res) => {
   const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
-  const fp = path.join(__dirname, code + ".pdf");
+  const suf = req.query.lang === "en" ? "_en" : "";
+  const fp = path.join(__dirname, code + suf + ".pdf");
   if (!fs.existsSync(fp)) return res.status(404).json({ error: "pdf not found", code });
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pdf"');
