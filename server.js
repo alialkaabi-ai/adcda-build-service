@@ -41,6 +41,15 @@ app.get("/files/:code", (req, res) => {
   res.sendFile(fp);
 });
 
+app.get("/pdf/:code", (req, res) => {
+  const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
+  const fp = path.join(__dirname, code + ".pdf");
+  if (!fs.existsSync(fp)) return res.status(404).json({ error: "pdf not found", code });
+  res.setHeader("Content-Type", "application/pdf");
+  res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pdf"');
+  res.sendFile(fp);
+});
+
 app.post("/build", (req, res) => {
   const content = req.body || {};
   const id = "job_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
