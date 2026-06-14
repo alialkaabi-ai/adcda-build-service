@@ -32,6 +32,15 @@ app.get("/topic/:code", (req, res) => {
   res.json(t);
 });
 
+app.get("/files/:code", (req, res) => {
+  const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
+  const fp = path.join(__dirname, code + ".pptx");
+  if (!fs.existsSync(fp)) return res.status(404).json({ error: "file not found", code });
+  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+  res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pptx"');
+  res.sendFile(fp);
+});
+
 app.post("/build", (req, res) => {
   const content = req.body || {};
   const id = "job_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
