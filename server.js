@@ -1,8 +1,6 @@
 // ===== ADCDA Build Service =====
 // خدمة بناء العروض: تستقبل JSON المحتوى وترجع ملف PPTX بهوية ADCDA.
-// التشغيل:  node server.js   (المنفذ الافتراضي 3000)
-// الاستدعاء من n8n (عقدة Design PPT): POST http://<host>:3000/build  body = JSON المحتوى
-//   النتيجة: ملف .pptx (binary) — اربطه بعقدة Save Files.
+// + نقطة تأصيل: GET /topic/:code تُرجع نص الموضوع المعتمد ومراجعه من قاعدة المعرفة.
 const express = require("express");
 const { execFileSync } = require("child_process");
 const fs = require("fs");
@@ -16,7 +14,23 @@ const PORT = process.env.PORT || 3000;
 const BUILD = path.join(__dirname, "build.js");
 const FIXRTL = path.join(__dirname, "fix_rtl.py");
 
-app.get("/", (_req, res) => res.send("ADCDA Build Service — POST /build with content JSON"));
+// ===== قاعدة المعرفة (التأصيل) =====
+// corpus.json: خريطة { "A.1": { topic_code, title, package, num_slides, full_text, refs:[...] }, ... }
+// المصدر الوحيد المعتمد للمحتوى — النموذج لا يضيف من عنده، فقط يحوّل هذا النص لشرائح.
+let CORPUS = {};
+try { CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "corpus.json"), "utf8")); }
+catch (e) { console.warn("corpus.json not found — /topic will 404"); }
+
+app.get("/", (_req, res) => res.send("ADCDA Build Service — POST /build | GET /topic/:code | GET /health"));
+
+app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length }));
+
+app.get("/topic/:code", (req, res) => {
+  const code = String(req.params.code || "").trim().toUpperCase();
+  const t = CORPUS[code];
+  if (!t) return res.status(404).json({ error: "topic not found", code });
+  res.json(t);
+});
 
 app.post("/build", (req, res) => {
   const content = req.body || {};
@@ -29,11 +43,8 @@ app.post("/build", (req, res) => {
   content.output = outPath;
   try {
     fs.writeFileSync(jsonPath, JSON.stringify(content), "utf8");
-    // 1) build PPTX with the fixed ADCDA template
     execFileSync("node", [BUILD, jsonPath], { stdio: "pipe" });
-    // 2) RTL fix for Arabic textboxes
-    try { execFileSync("python3", [FIXRTL, outPath], { stdio: "pipe" }); } catch (e) { /* fix_rtl optional */ }
-    // 3) return the file
+    try { execFileSync("python3", [FIXRTL, outPath], { stdio: "pipe" }); } catch (e) {}
     res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
     res.setHeader("Content-Disposition", 'attachment; filename="' + outName + '"');
     res.send(fs.readFileSync(outPath));
@@ -44,4 +55,4 @@ app.post("/build", (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log("✅ ADCDA Build Service on port " + PORT + "  (POST /build)"));
+app.listen(PORT, () => console.log("ADCDA Build Service on port " + PORT));
