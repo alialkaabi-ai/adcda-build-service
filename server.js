@@ -52,6 +52,21 @@ app.get("/pdf/:code", (req, res) => {
   res.sendFile(fp);
 });
 
+app.get("/search", (req, res) => {
+  const q = String(req.query.q || "").trim();
+  if (!q) return res.json({ query: q, matches: [] });
+  // tokenize (Arabic + latin), drop short/stop tokens
+  const stop = new Set(["في","من","على","عند","الى","إلى","عن","مع","the","of","and","a","an"]);
+  const toks = q.replace(/[^\u0621-\u064Aa-zA-Z0-9 ]/g, " ").split(/\s+/).filter(t => t.length >= 3 && !stop.has(t));
+  const scored = Object.values(CORPUS).map(t => {
+    const hay = (t.title + " " + (t.full_text || "")).toLowerCase();
+    let score = 0;
+    for (const tk of toks) { if (hay.includes(tk.toLowerCase())) score++; }
+    return { topic_code: t.topic_code, title: t.title, package: t.package, score, coverage: toks.length ? score / toks.length : 0 };
+  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
+  res.json({ query: q, tokens: toks, matches: scored });
+});
+
 app.post("/build", (req, res) => {
   const content = req.body || {};
   const id = "job_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
