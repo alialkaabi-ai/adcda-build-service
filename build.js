@@ -25,14 +25,14 @@ function iconSvg(name, color = "0B4EA2", size = 256) {
 const COLORS = {
   bg: "F7F8FA", primary: "0B4EA2", primaryDark: "1F2E5A", primaryLight: "DCE7F5",
   textDark: "1F2E5A", textLight: "555555", white: "FFFFFF",
-  red: "DC2626", redLight: "FEE2E2", green: "1B873F", greenLight: "D1FAE5",
+  red: "C0392B", redDark: "7A271A", redLight: "FCEEEC", green: "1E7E34", greenDark: "14532D", greenLight: "EAF4EE",
   cardBorder: "E5EBF2", warningBg: "FEF2F2", warningBorder: "FCA5A5", warningText: "991B1B"
 };
 const FONT = "Tajawal";
 const SLIDE_W = 13.33;
 
 async function build(content) {
-  const ASSETS = __dirname;
+  const ASSETS = path.resolve(__dirname, "assets");
   const CODE = content.code || "F.X";
   const pres = new pptxgen();
   pres.defineLayout({ name: "WIDE", width: 13.33, height: 7.5 });
@@ -72,7 +72,7 @@ async function build(content) {
     ], { x: 9.05, y: 7.15, w: 3.80, h: 0.32, fontSize: 8, fontFace: FONT, color: COLORS.textLight, align: "right", valign: "middle", margin: 0, rtlMode: true });
   }
   function addSlideTitle(slide, title, subtitle) {
-    slide.addText(title, { x: 0.50, y: 1.40, w: 12.30, h: 0.65, fontSize: 28, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    slide.addText(title, { x: 0.50, y: 1.40, w: 12.30, h: 0.65, fontSize: 25, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
     if (subtitle) {
       slide.addText(subtitle, { x: 0.50, y: 2.05, w: 12.30, h: 0.40, fontSize: 14, fontFace: FONT, color: COLORS.textLight, align: "right", valign: "middle", margin: 0, rtlMode: true });
       slide.addShape(pres.shapes.LINE, { x: 10.80, y: 2.55, w: 2.00, h: 0, line: { color: COLORS.primary, width: 1.75 } });
@@ -80,11 +80,11 @@ async function build(content) {
   }
   function addReminderBox(slide, label, text) {
     if (!label && !text) return;
-    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: 6.20, w: 12.30, h: 0.55, fill: { color: COLORS.warningBg }, line: { color: COLORS.warningBorder, width: 0.75 }, rectRadius: 0.05 });
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: 6.20, w: 12.30, h: 0.55, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.06, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.12 } });
     slide.addText([
-      { text: (label || "تذكَّر") + ": ", options: { bold: true, color: COLORS.warningText, lang: "ar-AE" } },
-      { text: text || "", options: { color: COLORS.primaryDark, lang: "ar-AE" } }
-    ], { x: 0.70, y: 6.20, w: 11.90, h: 0.55, fontSize: 12, fontFace: FONT, align: "right", valign: "middle", margin: 0, rtlMode: true, lang: "ar-AE" });
+      { text: (label || "تذكَّر") + ": ", options: { bold: true, color: "FFFFFF", lang: "ar-AE" } },
+      { text: text || "", options: { color: "DCE7F5", lang: "ar-AE" } }
+    ], { x: 0.70, y: 6.20, w: 11.90, h: 0.55, fontSize: 12.5, fontFace: FONT, align: "right", valign: "middle", margin: 0, rtlMode: true, lang: "ar-AE" });
   }
   async function addIconCard(slide, x, y, w, h, icon, title, desc) {
     slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w, h, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
@@ -141,13 +141,25 @@ async function build(content) {
     if (c.subtitle) slide.addText(c.subtitle, { x: 0.50, y: 4.95, w: 12.30, h: 0.45, fontSize: 18, fontFace: FONT, color: COLORS.textLight, align: "center", valign: "middle", margin: 0, rtlMode: true });
     slide.addShape(pres.shapes.LINE, { x: 6.165, y: 5.45, w: 1.0, h: 0, line: { color: COLORS.primary, width: 2 } });
     if (c.quote) slide.addText('"' + c.quote + '"', { x: 1.50, y: 5.75, w: 10.30, h: 0.50, fontSize: 13, fontFace: FONT, color: COLORS.primaryDark, italic: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 5.665, y: 6.30, w: 2.0, h: 0.48, fill: { color: COLORS.primary }, line: { type: "none" }, rectRadius: 0.08, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.15 } });
+    slide.addText([{ text: "للطوارئ  ", options: { lang: "ar-AE" } }, { text: "999", options: {} }], { x: 5.665, y: 6.30, w: 2.0, h: 0.48, fontSize: 15, fontFace: FONT, color: COLORS.white, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
     addFooter(slide);
   }
-  async function renderCards(c) { // 6 big cards in a row + reminder
+  async function renderCards(c) { // ≤4: صف واحد كبير | >4: شبكة 3×2 أوسع وأوضح
     const slide = newSlide(); addSlideTitle(slide, c.title, c.subtitle);
-    const cards = c.cards; const cw = 2.00, ch = 2.30, gx = 0.05;
-    const sx = (SLIDE_W - (cards.length * cw + (cards.length - 1) * gx)) / 2;
-    for (let i = 0; i < cards.length; i++) await addIconCard(slide, sx + i * (cw + gx), 2.95, cw, ch, cards[i].icon, cards[i].title, cards[i].desc);
+    const cards = c.cards;
+    if (cards.length > 4) {
+      const cw = 4.05, ch = 1.58, gx = 0.10, gy = 0.16;
+      const sx = (SLIDE_W - (3 * cw + 2 * gx)) / 2;
+      for (let i = 0; i < cards.length; i++) {
+        const r = Math.floor(i / 3), col = i % 3;
+        await addCompactIconCardWithDesc(slide, sx + col * (cw + gx), 2.78 + r * (ch + gy), cw, ch, cards[i].icon, cards[i].title, cards[i].desc);
+      }
+    } else {
+      const cw = 2.85, ch = 2.45, gx = 0.15;
+      const sx = (SLIDE_W - (cards.length * cw + (cards.length - 1) * gx)) / 2;
+      for (let i = 0; i < cards.length; i++) await addIconCard(slide, sx + i * (cw + gx), 2.85, cw, ch, cards[i].icon, cards[i].title, cards[i].desc);
+    }
     rem(slide, c.reminder); addFooter(slide);
   }
   async function renderCompact(c) { // items icon+title, layout 4-3 / 4-4 / 3x2
@@ -274,7 +286,53 @@ async function build(content) {
     addFooter(slide);
   }
 
-  const renderers = { cover: renderCover, cards: renderCards, compact: renderCompact, cardsDesc: renderCardsDesc, numbered: renderNumbered, stairs: renderStairs, emergency: renderEmergency, dodont: renderDoDont, scenarios: renderScenarios, quiz: renderQuiz, closing: renderClosing };
+
+  async function renderSection(c) {
+    const slide = pres.addSlide(); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
+    const cx = 6.665;
+    slide.addShape(pres.shapes.OVAL, { x: cx - 0.85, y: 1.75, w: 1.70, h: 1.70, fill: { color: COLORS.primaryLight, transparency: 55 }, line: { type: "none" } });
+    slide.addShape(pres.shapes.OVAL, { x: cx - 0.62, y: 1.98, w: 1.24, h: 1.24, fill: { color: COLORS.primary }, line: { type: "none" } });
+    slide.addImage({ data: iconSvg(c.icon || "FaShieldAlt", "FFFFFF", 512), x: cx - 0.38, y: 2.22, w: 0.76, h: 0.76 });
+    if (c.label) slide.addText(c.label, { x: 0.50, y: 3.65, w: 12.30, h: 0.45, fontSize: 16, fontFace: FONT, color: COLORS.red, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    slide.addText(c.title, { x: 0.50, y: 4.15, w: 12.30, h: 0.80, fontSize: 30, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    if (c.subtitle) slide.addText(c.subtitle, { x: 0.50, y: 5.05, w: 12.30, h: 0.45, fontSize: 15, fontFace: FONT, color: COLORS.textLight, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    addFooter(slide);
+  }
+  async function renderList(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title, c.subtitle);
+    let topY = 2.75;
+    if (c.intro) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: 0.85, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.06, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.12 } });
+      slide.addText(c.intro, { x: 0.75, y: topY, w: 11.80, h: 0.85, fontSize: 13.5, fontFace: FONT, color: COLORS.white, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      topY += 1.05;
+    }
+    const pts = c.points || [];
+    const limitY = c.reminder ? 6.10 : 6.90;
+    const step = Math.min(0.52, (limitY - topY - 0.30) / Math.max(1, pts.length));
+    const cardH = 0.25 + pts.length * step;
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: cardH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
+    for (let i = 0; i < pts.length; i++) {
+      const y = topY + 0.15 + i * step;
+      slide.addShape(pres.shapes.OVAL, { x: 12.28, y: y + 0.17, w: 0.14, h: 0.14, fill: { color: COLORS.primary }, line: { type: "none" } });
+      slide.addText(pts[i], { x: 0.80, y, w: 11.35, h: 0.48, fontSize: 14, fontFace: FONT, color: COLORS.primaryDark, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    }
+    rem(slide, c.reminder); addFooter(slide);
+  }
+
+
+  async function renderRefs(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "المصادر بصيغة APA", c.subtitle || "قائمة المراجع الرسمية");
+    const refs = c.refs || [];
+    const topY = 2.80, step = 0.58;
+    const cardH = Math.min(3.85, 0.30 + refs.length * step);
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: cardH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
+    for (let i = 0; i < refs.length; i++) {
+      slide.addText(refs[i], { x: 0.85, y: topY + 0.18 + i * step, w: 11.60, h: step - 0.05, fontSize: 10.5, fontFace: FONT, color: COLORS.primaryDark, align: "left", valign: "middle", margin: 0 });
+    }
+    rem(slide, c.reminder); addFooter(slide);
+  }
+
+  const renderers = { section: renderSection, list: renderList, refs: renderRefs, cover: renderCover, cards: renderCards, compact: renderCompact, cardsDesc: renderCardsDesc, numbered: renderNumbered, stairs: renderStairs, emergency: renderEmergency, dodont: renderDoDont, scenarios: renderScenarios, quiz: renderQuiz, closing: renderClosing };
 
   if (content.cover) await renderCover(content.cover);
   for (const s of (content.slides || [])) {
