@@ -33,7 +33,7 @@ const SLIDE_W = 13.33;
 
 async function build(content) {
   const ASSETS = path.resolve(__dirname, "assets");
-  const CODE = content.code || "F.X";
+  const CODE = content.code || content.topic_code || "F.X";
   const pres = new pptxgen();
   pres.defineLayout({ name: "WIDE", width: 13.33, height: 7.5 });
   pres.layout = "WIDE";
@@ -332,13 +332,232 @@ async function build(content) {
     rem(slide, c.reminder); addFooter(slide);
   }
 
+
+  // ===== ريندررات معيار v1.1 الأصلية (الأنواع الـ15) =====
+  function whiteCard(slide, x, y, w, h) {
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y, w, h, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
+  }
+  function navyBanner(slide, y, text, h, fs) {
+    h = h || 0.85; fs = fs || 15;
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y, w: 12.30, h, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.06, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.12 } });
+    slide.addText(text, { x: 0.75, y, w: 11.80, h, fontSize: fs, fontFace: FONT, color: COLORS.white, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    return y + h;
+  }
+  function checkListCard(slide, x, y, w, items, color, maxH) {
+    items = items || [];
+    const step = Math.min(0.55, (maxH - 0.25) / Math.max(1, items.length));
+    const cardH = 0.20 + items.length * step;
+    whiteCard(slide, x, y, w, cardH);
+    for (let i = 0; i < items.length; i++) {
+      const iy = y + 0.10 + i * step;
+      slide.addShape(pres.shapes.OVAL, { x: x + w - 0.52, y: iy + (step - 0.32) / 2, w: 0.32, h: 0.32, fill: { color: COLORS.white }, line: { color, width: 1.5 } });
+      slide.addText(String(i + 1), { x: x + w - 0.52, y: iy + (step - 0.32) / 2, w: 0.32, h: 0.32, fontSize: 10, fontFace: FONT, color, bold: true, align: "center", valign: "middle", margin: 0 });
+      slide.addText(items[i], { x: x + 0.25, y: iy, w: w - 0.95, h: step, fontSize: 13.5, fontFace: FONT, color: COLORS.primaryDark, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    }
+    return y + cardH;
+  }
+  async function renderV11Objectives(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "أهداف الحقيبة", "ماذا ستكسب من هذا العرض؟");
+    checkListCard(slide, 0.50, 2.90, 12.30, c.items, COLORS.primary, 3.7);
+    addFooter(slide);
+  }
+  async function renderV11MainMessage(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "لماذا يعنيك هذا؟", "رسالة واحدة تحميك");
+    let y = 2.70;
+    if (c.scenario) {
+      whiteCard(slide, 0.50, y, 12.30, 0.80);
+      slide.addImage({ data: iconSvg("FaUserCircle", COLORS.primary, 256), x: 12.05, y: y + 0.20, w: 0.40, h: 0.40 });
+      slide.addText(c.scenario, { x: 0.75, y, w: 11.20, h: 0.80, fontSize: 13, fontFace: FONT, color: COLORS.textDark, italic: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      y += 1.00;
+    }
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y, w: 12.30, h: 1.00, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.18 } });
+    slide.addText("📌 " + (c.main_message || ""), { x: 0.80, y, w: 11.70, h: 1.00, fontSize: 19, fontFace: FONT, color: COLORS.white, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    y += 1.20;
+    if (c.stat) {
+      whiteCard(slide, 0.50, y, 12.30, 1.35);
+      const src = c.source || {};
+      slide.addText(c.stat, { x: 0.80, y: y + 0.08, w: 11.70, h: 0.48, fontSize: 15, fontFace: FONT, color: COLORS.red, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      if (c.stat_meaning) slide.addText(c.stat_meaning, { x: 0.80, y: y + 0.56, w: 11.70, h: 0.42, fontSize: 12.5, fontFace: FONT, color: COLORS.greenDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      if (src.name) {
+        slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.70, y: y + 1.00, w: 4.2, h: 0.28, fill: { color: COLORS.primaryLight }, line: { type: "none" }, rectRadius: 0.05 });
+        slide.addText("المصدر: " + src.name + (src.year ? " (" + src.year + ")" : ""), { x: 0.75, y: y + 1.00, w: 4.1, h: 0.28, fontSize: 9.5, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+      }
+      y += 1.55;
+    }
+    if (c.curiosity_hook) slide.addText("🔎 " + c.curiosity_hook, { x: 0.50, y, w: 12.30, h: 0.45, fontSize: 13, fontFace: FONT, color: COLORS.red, italic: true, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    addFooter(slide);
+  }
+  async function renderV11Definition(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "ما هو الخطر؟", "تعريف بلا غموض");
+    const cx = 6.665;
+    slide.addShape(pres.shapes.OVAL, { x: cx - 0.80, y: 2.85, w: 1.60, h: 1.60, fill: { color: COLORS.primaryLight }, line: { type: "none" } });
+    slide.addShape(pres.shapes.OVAL, { x: cx - 0.58, y: 3.07, w: 1.16, h: 1.16, fill: { color: COLORS.primary }, line: { type: "none" } });
+    slide.addImage({ data: iconSvg(c.icon || "FaInfoCircle", "FFFFFF", 512), x: cx - 0.36, y: 3.29, w: 0.72, h: 0.72 });
+    whiteCard(slide, 1.50, 4.75, 10.30, 1.45);
+    slide.addText(c.text || "", { x: 1.80, y: 4.75, w: 9.70, h: 1.45, fontSize: 16, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    addFooter(slide);
+  }
+  async function renderV11Causes(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "الأسباب الرئيسية", "مرتبة حسب الشيوع — الأول هو الأكثر تكرارًا");
+    checkListCard(slide, 0.50, 2.90, 12.30, c.items, COLORS.red, 3.7);
+    addFooter(slide);
+  }
+  async function renderV11Warning(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "علامات الإنذار المبكر", "كيف تعرف أنه قادم؟");
+    let y = 2.70;
+    if (c.interaction_question) y = navyBanner(slide, y, "🗣️ " + c.interaction_question, 0.60, 14) + 0.15;
+    y = checkListCard(slide, 0.50, y, 12.30, c.items, "B7791F", 2.75) + 0.12;
+    if (c.curiosity_hook) slide.addText("🔎 " + c.curiosity_hook, { x: 0.50, y, w: 12.30, h: 0.42, fontSize: 12.5, fontFace: FONT, color: COLORS.red, italic: true, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    addFooter(slide);
+  }
+  async function renderV11Prevention(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "الوقاية", "بيدك أن تمنعه");
+    let y = 2.70;
+    if (c.empowerment_line) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y, w: 12.30, h: 0.60, fill: { color: COLORS.greenLight }, line: { color: COLORS.green, width: 0.75 }, rectRadius: 0.06 });
+      slide.addText("💪 " + c.empowerment_line, { x: 0.75, y, w: 11.80, h: 0.60, fontSize: 14, fontFace: FONT, color: COLORS.greenDark, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+      y += 0.80;
+    }
+    checkListCard(slide, 0.50, y, 12.30, c.items, COLORS.green, 3.35);
+    addFooter(slide);
+  }
+  async function renderV11Mistakes(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "بدائل الأخطاء الشائعة", c.truth_opener || "");
+    const pairs = c.pairs || [];
+    const doList = pairs.map(p => p.do_this).filter(Boolean);
+    const dontList = pairs.map(p => p.instead_of).filter(Boolean);
+    const colW = 6.10, colY = 2.80, colH = 3.25, itStartY = colY + 0.65, itH = 0.44, itGap = 0.07;
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 6.73, y: colY, w: colW, h: colH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08 });
+    slide.addShape(pres.shapes.RECTANGLE, { x: 6.73, y: colY, w: colW, h: 0.50, fill: { color: COLORS.greenLight }, line: { type: "none" } });
+    slide.addText([{ text: "افعل بدلًا  ", options: { color: COLORS.green, bold: true } }, { text: "✓", options: { color: COLORS.green, bold: true } }], { x: 6.93, y: colY, w: colW - 0.40, h: 0.50, fontSize: 16, fontFace: FONT, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    for (let i = 0; i < doList.length; i++) {
+      slide.addShape(pres.shapes.OVAL, { x: 6.93 + colW - 0.65, y: itStartY + i * (itH + itGap) + 0.06, w: 0.30, h: 0.30, fill: { color: COLORS.white }, line: { color: COLORS.green, width: 1.5 } });
+      slide.addText(String(i + 1), { x: 6.93 + colW - 0.65, y: itStartY + i * (itH + itGap) + 0.06, w: 0.30, h: 0.30, fontSize: 10, fontFace: FONT, color: COLORS.green, bold: true, align: "center", valign: "middle", margin: 0 });
+      slide.addText(doList[i], { x: 6.93, y: itStartY + i * (itH + itGap), w: colW - 0.85, h: itH, fontSize: 12, fontFace: FONT, color: COLORS.primaryDark, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    }
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: colY, w: colW, h: colH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08 });
+    slide.addShape(pres.shapes.RECTANGLE, { x: 0.50, y: colY, w: colW, h: 0.50, fill: { color: COLORS.redLight }, line: { type: "none" } });
+    slide.addText([{ text: "الخطأ الشائع  ", options: { color: COLORS.red, bold: true } }, { text: "✕", options: { color: COLORS.red, bold: true } }], { x: 0.70, y: colY, w: colW - 0.40, h: 0.50, fontSize: 16, fontFace: FONT, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    for (let i = 0; i < dontList.length; i++) {
+      slide.addShape(pres.shapes.OVAL, { x: 0.70 + colW - 0.65, y: itStartY + i * (itH + itGap) + 0.06, w: 0.30, h: 0.30, fill: { color: COLORS.white }, line: { color: COLORS.red, width: 1.5 } });
+      slide.addText(String(i + 1), { x: 0.70 + colW - 0.65, y: itStartY + i * (itH + itGap) + 0.06, w: 0.30, h: 0.30, fontSize: 10, fontFace: FONT, color: COLORS.red, bold: true, align: "center", valign: "middle", margin: 0 });
+      slide.addText(dontList[i], { x: 0.70, y: itStartY + i * (itH + itGap), w: colW - 0.85, h: itH, fontSize: 12, fontFace: FONT, color: COLORS.primaryDark, align: "right", valign: "middle", margin: 0, rtlMode: true });
+    }
+    if (c.critical_dont) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: 6.25, w: 12.30, h: 0.55, fill: { color: COLORS.redDark }, line: { type: "none" }, rectRadius: 0.06 });
+      slide.addText([{ text: "⚠️ تحذير حرج: ", options: { bold: true, color: "FFFFFF", lang: "ar-AE" } }, { text: c.critical_dont, options: { color: "FCEEEC", lang: "ar-AE" } }], { x: 0.70, y: 6.25, w: 11.90, h: 0.55, fontSize: 12.5, fontFace: FONT, align: "right", valign: "middle", margin: 0, rtlMode: true, lang: "ar-AE" });
+    }
+    addFooter(slide);
+  }
+  async function renderV11Steps(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "التصرف عند وقوع الحادث", "خطوات مرقمة — الترتيب مهم");
+    let y = 2.70;
+    if (c.scenario_callback) y = navyBanner(slide, y, "🎬 " + c.scenario_callback, 0.60, 13.5) + 0.18;
+    const steps = c.steps || []; const iw = 6.05, ih = 0.50, gy = 0.12; const half = Math.ceil(steps.length / 2);
+    for (let i = 0; i < half; i++) addNumberedItem(slide, 6.78, y + i * (ih + gy), iw, i + 1, steps[i]);
+    for (let i = half; i < steps.length; i++) addNumberedItem(slide, 0.50, y + (i - half) * (ih + gy), iw, i + 1, steps[i]);
+    rem(slide, c.reminder); addFooter(slide);
+  }
+  async function renderV11Groups(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "فئات تحتاج عناية خاصة", "");
+    let y = 2.70;
+    if (c.interaction_question) y = navyBanner(slide, y, "🗣️ " + c.interaction_question, 0.60, 14) + 0.20;
+    const groups = c.groups || [];
+    const icons = ["FaChild", "FaUserFriends", "FaWheelchair", "FaBaby", "FaBlind", "FaUsers"];
+    const cw = 4.05, ch = 1.50, gx = 0.10, gyy = 0.15; const cols = Math.min(3, Math.max(1, groups.length));
+    const sx = (SLIDE_W - (cols * cw + (cols - 1) * gx)) / 2;
+    for (let i = 0; i < groups.length; i++) {
+      const r = Math.floor(i / 3), col = i % 3;
+      await addCompactIconCardWithDesc(slide, sx + col * (cw + gx), y + r * (ch + gyy), cw, ch, icons[i % icons.length], groups[i].group || "", groups[i].behavior || "");
+    }
+    addFooter(slide);
+  }
+  async function renderV11Emergency(c) {
+    await renderEmergency({
+      title: c.title || "الاتصال بالطوارئ 999",
+      subtitle: "متى تتصل وماذا تقول",
+      exampleLabel: "ماذا تقول للعامل:",
+      exampleText: (c.say || []).slice(0, 3).join("، "),
+      items: (c.when || []).slice(0, 4).map(t => ({ icon: "FaPhoneAlt", title: t })),
+      reminder: c.reminder
+    });
+  }
+  async function renderV11After(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "بعد الحادث", "السلامة لا تنتهي بانتهاء الخطر");
+    let y = 2.70;
+    if (c.surprise_fact) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y, w: 12.30, h: 0.60, fill: { color: "FFF7E6" }, line: { color: "B7791F", width: 0.75 }, rectRadius: 0.06 });
+      slide.addText("💡 " + c.surprise_fact, { x: 0.75, y, w: 11.80, h: 0.60, fontSize: 13, fontFace: FONT, color: "7C5A10", bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+      y += 0.85;
+    }
+    const colsDef = [
+      { key: "report", label: "الإبلاغ والتوثيق", icon: "FaClipboardList", color: COLORS.primary },
+      { key: "safe_return", label: "العودة الآمنة", icon: "FaHome", color: COLORS.green },
+      { key: "disposal", label: "التخلص الآمن", icon: "FaRecycle", color: "B7791F" }
+    ].filter(cd => Array.isArray(c[cd.key]) && c[cd.key].length);
+    const cw = (12.30 - (colsDef.length - 1) * 0.15) / Math.max(1, colsDef.length);
+    for (let ci = 0; ci < colsDef.length; ci++) {
+      const cd = colsDef[ci]; const x = 0.50 + (colsDef.length - 1 - ci) * (cw + 0.15);
+      const items = c[cd.key]; const colH = 0.65 + items.length * 0.55 + 0.15;
+      whiteCard(slide, x, y, cw, colH);
+      slide.addImage({ data: iconSvg(cd.icon, cd.color, 256), x: x + cw - 0.55, y: y + 0.13, w: 0.32, h: 0.32 });
+      slide.addText(cd.label, { x: x + 0.15, y: y + 0.10, w: cw - 0.75, h: 0.40, fontSize: 13.5, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      slide.addShape(pres.shapes.LINE, { x: x + 0.20, y: y + 0.58, w: cw - 0.40, h: 0, line: { color: COLORS.cardBorder, width: 0.75 } });
+      for (let i = 0; i < items.length; i++) {
+        slide.addShape(pres.shapes.OVAL, { x: x + cw - 0.34, y: y + 0.78 + i * 0.55 + 0.12, w: 0.12, h: 0.12, fill: { color: cd.color }, line: { type: "none" } });
+        slide.addText(items[i], { x: x + 0.15, y: y + 0.70 + i * 0.55, w: cw - 0.60, h: 0.52, fontSize: 11.5, fontFace: FONT, color: COLORS.primaryDark, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      }
+    }
+    addFooter(slide);
+  }
+  async function renderV11KeyMessages(c) {
+    const slide = newSlide(); addSlideTitle(slide, c.title || "الخلاصة — رسائل تبقى معك", "ما يجب ألا تنساه");
+    let y = 2.75;
+    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y, w: 12.30, h: 1.00, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.18 } });
+    slide.addText("📌 " + (c.main_message || (c.items && c.items[0]) || ""), { x: 0.80, y, w: 11.70, h: 1.00, fontSize: 19, fontFace: FONT, color: COLORS.white, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    y += 1.20;
+    const rest = (c.items || []).filter(t => t !== c.main_message);
+    y = checkListCard(slide, 0.50, y, 12.30, rest, COLORS.primary, 1.9) + 0.15;
+    if (c.scenario_close) {
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 1.50, y, w: 10.30, h: 0.65, fill: { color: COLORS.greenLight }, line: { color: COLORS.green, width: 0.5 }, rectRadius: 0.06 });
+      slide.addText("🎬 " + c.scenario_close, { x: 1.70, y, w: 9.90, h: 0.65, fontSize: 12.5, fontFace: FONT, color: COLORS.greenDark, italic: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    }
+    addFooter(slide);
+  }
+  async function renderV11Sources(c) {
+    const refs = (c.sources || []).filter(x => x && x.name).map(x => {
+      const t = x.title ? " " + String(x.title).trim().replace(/\.+$/, "") + "." : "";
+      return (x.name + ". (" + (x.year || "n.d.") + ")." + t + " " + (x.url || "")).replace(/\s+/g, " ").trim();
+    });
+    if (Array.isArray(c.iso26000) && c.iso26000.length) refs.push("Prepared in line with ISO 26000 guidance — clauses " + c.iso26000.join(", "));
+    await renderRefs({ title: c.title || "المصادر بصيغة APA", subtitle: "قائمة المراجع الرسمية", refs: refs.slice(0, 7) });
+  }
+  const v11Renderers = {
+    objectives: renderV11Objectives, main_message_why: renderV11MainMessage, definition: renderV11Definition,
+    causes: renderV11Causes, warning_signs: renderV11Warning, prevention_1: renderV11Prevention,
+    prevention_2: renderV11Prevention, mistake_alternatives: renderV11Mistakes, response_steps: renderV11Steps,
+    special_groups: renderV11Groups, emergency_999: renderV11Emergency, after_incident: renderV11After,
+    key_messages: renderV11KeyMessages, sources: renderV11Sources
+  };
+
   const renderers = { section: renderSection, list: renderList, refs: renderRefs, cover: renderCover, cards: renderCards, compact: renderCompact, cardsDesc: renderCardsDesc, numbered: renderNumbered, stairs: renderStairs, emergency: renderEmergency, dodont: renderDoDont, scenarios: renderScenarios, quiz: renderQuiz, closing: renderClosing };
 
-  if (content.cover) await renderCover(content.cover);
-  for (const s of (content.slides || [])) {
-    const fn = renderers[s.type];
-    if (!fn) { console.error("Unknown slide type:", s.type); continue; }
-    await fn(s);
+  const isV11 = !content.cover && content.main_message && Array.isArray(content.slides) && content.slides.some(s => s && s.type === "main_message_why");
+  if (isV11) {
+    await renderCover({ icon: content.icon || "FaShieldAlt", title: content.title_ar || content.title || "", subtitle: "حقيبة توعوية — " + (content.audience || "عام"), quote: content.main_message });
+    for (const s of (content.slides || [])) {
+      if (!s || s.type === "cover") continue;
+      const fn = v11Renderers[s.type] || renderers[s.type];
+      if (!fn) { console.error("Unknown v1.1 slide type:", s.type); continue; }
+      await fn(s);
+    }
+  } else {
+    if (content.cover) await renderCover(content.cover);
+    for (const s of (content.slides || [])) {
+      const fn = renderers[s.type];
+      if (!fn) { console.error("Unknown slide type:", s.type); continue; }
+      await fn(s);
+    }
   }
   const outPath = content.output || ("./" + CODE.replace(/\./g, "") + "_ADCDA.pptx");
   await pres.writeFile({ fileName: outPath });
