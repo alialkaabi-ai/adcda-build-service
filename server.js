@@ -1,8 +1,11 @@
-// ===== ADCDA Build Service =====
-// خدمة بناء العروض: تستقبل JSON المحتوى وترجع ملف PPTX بهوية ADCDA.
-// + نقطة تأصيل: GET /topic/:code تُرجع نص الموضوع المعتمد ومراجعه من قاعدة المعرفة.
+// ===== ADCDA Build Service v2 =====
+// POST /build  body = JSON المحتوى
+//   بدون upload_url: يرجع ملف PPTX (binary) — السلوك القديم كما هو.
+//   مع upload_url (جلسة رفع OneDrive من n8n): يبني ويرفع الملف مباشرة إلى OneDrive
+//   ويرجع JSON خفيفًا { uploaded, name, size, id, webUrl } — الملف لا يمر عبر n8n إطلاقًا.
 const express = require("express");
 const { execFileSync } = require("child_process");
+const https = require("https");
 const fs = require("fs");
 const path = require("path");
 const os = require("os");
@@ -14,61 +17,37 @@ const PORT = process.env.PORT || 3000;
 const BUILD = path.join(__dirname, "build.js");
 const FIXRTL = path.join(__dirname, "fix_rtl.py");
 
-// ===== قاعدة المعرفة (التأصيل) =====
-// corpus.json: خريطة { "A.1": { topic_code, title, package, num_slides, full_text, refs:[...] }, ... }
-// المصدر الوحيد المعتمد للمحتوى — النموذج لا يضيف من عنده، فقط يحوّل هذا النص لشرائح.
-let CORPUS = {};
-try { CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "corpus.json"), "utf8")); }
-catch (e) { console.warn("corpus.json not found — /topic will 404"); }
+app.get("/", (_req, res) => res.send("ADCDA Build Service v2 — POST /build with content JSON (optional upload_url)"));
 
-app.get("/", (_req, res) => res.send("ADCDA Build Service — POST /build | GET /topic/:code | GET /health"));
+function putToUploadUrl(uploadUrl, buf) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(uploadUrl);
+    const req = https.request({
+      hostname: u.hostname,
+      path: u.pathname + u.search,
+      method: "PUT",
+      headers: {
+        "Content-Length": buf.length,
+        "Content-Range": "bytes 0-" + (buf.length - 1) + "/" + buf.length
+      }
+    }, r => {
+      let d = "";
+      r.on("data", c => d += c);
+      r.on("end", () => {
+        if (r.statusCode >= 200 && r.statusCode < 300) {
+          try { resolve(JSON.parse(d)); } catch (e) { resolve({ ok: true }); }
+        } else reject(new Error("upload failed " + r.statusCode + ": " + String(d).slice(0, 300)));
+      });
+    });
+    req.on("error", reject);
+    req.end(buf);
+  });
+}
 
-app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length }));
-
-app.get("/topic/:code", (req, res) => {
-  const code = String(req.params.code || "").trim().toUpperCase();
-  const t = CORPUS[code];
-  if (!t) return res.status(404).json({ error: "topic not found", code });
-  res.json(t);
-});
-
-app.get("/files/:code", (req, res) => {
-  const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
-  const suf = req.query.lang === "en" ? "_en" : "";
-  const fp = path.join(__dirname, code + suf + ".pptx");
-  if (!fs.existsSync(fp)) return res.status(404).json({ error: "file not found", code });
-  res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-  res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pptx"');
-  res.sendFile(fp);
-});
-
-app.get("/pdf/:code", (req, res) => {
-  const code = String(req.params.code || "").replace(/[^A-Za-z0-9.]/g, "");
-  const suf = req.query.lang === "en" ? "_en" : "";
-  const fp = path.join(__dirname, code + suf + ".pdf");
-  if (!fs.existsSync(fp)) return res.status(404).json({ error: "pdf not found", code });
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader("Content-Disposition", 'inline; filename="' + code + '.pdf"');
-  res.sendFile(fp);
-});
-
-app.get("/search", (req, res) => {
-  const q = String(req.query.q || "").trim();
-  if (!q) return res.json({ query: q, matches: [] });
-  // tokenize (Arabic + latin), drop short/stop tokens
-  const stop = new Set(["في","من","على","عند","الى","إلى","عن","مع","the","of","and","a","an"]);
-  const toks = q.replace(/[^\u0621-\u064Aa-zA-Z0-9 ]/g, " ").split(/\s+/).filter(t => t.length >= 3 && !stop.has(t));
-  const scored = Object.values(CORPUS).map(t => {
-    const hay = (t.title + " " + (t.full_text || "")).toLowerCase();
-    let score = 0;
-    for (const tk of toks) { if (hay.includes(tk.toLowerCase())) score++; }
-    return { topic_code: t.topic_code, title: t.title, package: t.package, score, coverage: toks.length ? score / toks.length : 0 };
-  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
-  res.json({ query: q, tokens: toks, matches: scored });
-});
-
-app.post("/build", (req, res) => {
+app.post("/build", async (req, res) => {
   const content = req.body || {};
+  const uploadUrl = content.upload_url;
+  delete content.upload_url;
   const id = "job_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
   const work = path.join(os.tmpdir(), id);
   fs.mkdirSync(work, { recursive: true });
@@ -79,10 +58,23 @@ app.post("/build", (req, res) => {
   try {
     fs.writeFileSync(jsonPath, JSON.stringify(content), "utf8");
     execFileSync("node", [BUILD, jsonPath], { stdio: "pipe" });
-    try { execFileSync("python3", [FIXRTL, outPath], { stdio: "pipe" }); } catch (e) {}
-    res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-    res.setHeader("Content-Disposition", 'attachment; filename="' + outName + '"');
-    res.send(fs.readFileSync(outPath));
+    try { execFileSync("python3", [FIXRTL, outPath], { stdio: "pipe" }); } catch (e) { /* اختياري */ }
+    const buf = fs.readFileSync(outPath);
+    if (uploadUrl) {
+      // رفع مباشر إلى OneDrive عبر جلسة الرفع المفوّضة — n8n لا يستقبل الملف
+      const item = await putToUploadUrl(uploadUrl, buf);
+      res.json({
+        uploaded: true,
+        name: item.name || outName,
+        size: buf.length,
+        id: item.id || null,
+        webUrl: item.webUrl || null
+      });
+    } else {
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+      res.setHeader("Content-Disposition", 'attachment; filename="' + outName + '"');
+      res.send(buf);
+    }
   } catch (err) {
     res.status(500).json({ error: String(err && err.message || err) });
   } finally {
@@ -90,4 +82,4 @@ app.post("/build", (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log("ADCDA Build Service on port " + PORT));
+app.listen(PORT, () => console.log("✅ ADCDA Build Service v2 on port " + PORT + "  (POST /build)"));
