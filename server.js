@@ -1,6 +1,6 @@
-// ===== ADCDA Build Service v2.1 =====
+// ===== ADCDA Build Service v2.3 =====
 // خدمة بناء العروض: POST /build | GET /topic/:code | GET /search | GET /files/:code | GET /pdf/:code | GET /health
-// v2.1: /build يقبل upload_url اختياريًا — يبني ويرفع الملف مباشرة إلى OneDrive عبر جلسة رفع مفوّضة
+// v2.3: /build يقبل upload_url اختياريًا — يبني ويرفع الملف مباشرة إلى OneDrive عبر جلسة رفع مفوّضة
 // ويرجع JSON خفيفًا { uploaded, name, size, id, webUrl } — الملف لا يمر عبر n8n إطلاقًا.
 const express = require("express");
 const { execFileSync } = require("child_process");
@@ -21,7 +21,9 @@ let CORPUS = {};
 try { CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "corpus.json"), "utf8")); }
 catch (e) { console.warn("corpus.json not found — /topic will 404"); }
 
-app.get("/", (_req, res) => res.send("ADCDA Build Service v2.1 — POST /build | GET /topic/:code | GET /health"));
+app.get("/", (_req, res) => res.send("ADCDA Build Service v2.3 — POST /build | GET /topic/:code | GET /health"));
+
+app.get("/dash", (_req, res) => res.sendFile(path.join(__dirname, "dash.html")));
 
 app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.1" }));
 
@@ -66,105 +68,4 @@ app.get("/search", (req, res) => {
   res.json({ query: q, tokens: toks, matches: scored });
 });
 
-// ===== المدقق الرسمي v1.1 — validator.py يعمل كما هو (مصدر الحقيقة الواحد) =====
-const VALIDATOR = path.join(__dirname, "validator.py");
-
-app.post("/validate", (req, res) => {
-  const doc = req.body || {};
-  // حقن حقول التوافق فقط إن غابت — بلا تغيير أي فحص في validator.py
-  if (doc.topic_profile == null) doc.topic_profile = "";
-  if (!doc.standards) {
-    const s15 = (doc.slides || []).find(s => s && s.type === "sources") || {};
-    doc.standards = {
-      conditional: { iso45001: false, iso22320_22322: false },
-      compliance_line_ar: (Array.isArray(s15.iso26000) && s15.iso26000.length)
-        ? "نسترشد بموجهات ISO 26000 — البنود " + s15.iso26000.join("، ")
-        : ""
-    };
-  }
-  const tmp = path.join(os.tmpdir(), "val_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7) + ".json");
-  let out = "", ok = false;
-  try {
-    fs.writeFileSync(tmp, JSON.stringify(doc), "utf8");
-    try {
-      out = execFileSync("python3", [VALIDATOR, tmp], { stdio: "pipe", encoding: "utf8" });
-      ok = true;
-    } catch (e) {
-      out = String((e.stdout || "") + (e.stderr || ""));
-      ok = false;
-    }
-    const checks = out.split("\n").filter(l => /^[✅❌⏳]/.test(l.trim())).map(l => l.trim());
-    const fails = checks.filter(l => l.startsWith("❌"));
-    res.json({ ok, source: "validator.py v1.1 (رسمي)", pass: checks.filter(l => l.startsWith("✅")).length,
-      fail: fails.length, pending: checks.filter(l => l.startsWith("⏳")).length, fails, checks });
-  } catch (err) {
-    res.status(500).json({ error: String(err && err.message || err) });
-  } finally {
-    try { fs.unlinkSync(tmp); } catch (_) {}
-  }
-});
-
-// ===== الرفع المباشر إلى OneDrive عبر جلسة رفع مفوّضة =====
-function putToUploadUrl(uploadUrl, buf) {
-  return new Promise((resolve, reject) => {
-    const u = new URL(uploadUrl);
-    const req = https.request({
-      hostname: u.hostname,
-      path: u.pathname + u.search,
-      method: "PUT",
-      headers: {
-        "Content-Length": buf.length,
-        "Content-Range": "bytes 0-" + (buf.length - 1) + "/" + buf.length
-      }
-    }, r => {
-      let d = "";
-      r.on("data", c => d += c);
-      r.on("end", () => {
-        if (r.statusCode >= 200 && r.statusCode < 300) {
-          try { resolve(JSON.parse(d)); } catch (e) { resolve({ ok: true }); }
-        } else reject(new Error("upload failed " + r.statusCode + ": " + String(d).slice(0, 300)));
-      });
-    });
-    req.on("error", reject);
-    req.end(buf);
-  });
-}
-
-app.post("/build", async (req, res) => {
-  const content = req.body || {};
-  const uploadUrl = content.upload_url;
-  delete content.upload_url;
-  const id = "job_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
-  const work = path.join(os.tmpdir(), id);
-  fs.mkdirSync(work, { recursive: true });
-  const jsonPath = path.join(work, "content.json");
-  const outName = ((content.code || "F.X").replace(/\./g, "")) + "_ADCDA.pptx";
-  const outPath = path.join(work, outName);
-  content.output = outPath;
-  try {
-    fs.writeFileSync(jsonPath, JSON.stringify(content), "utf8");
-    execFileSync("node", [BUILD, jsonPath], { stdio: "pipe" });
-    try { execFileSync("python3", [FIXRTL, outPath], { stdio: "pipe" }); } catch (e) {}
-    const buf = fs.readFileSync(outPath);
-    if (uploadUrl) {
-      const item = await putToUploadUrl(uploadUrl, buf);
-      res.json({
-        uploaded: true,
-        name: item.name || outName,
-        size: buf.length,
-        id: item.id || null,
-        webUrl: item.webUrl || null
-      });
-    } else {
-      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
-      res.setHeader("Content-Disposition", 'attachment; filename="' + outName + '"');
-      res.send(buf);
-    }
-  } catch (err) {
-    res.status(500).json({ error: String(err && err.message || err) });
-  } finally {
-    try { fs.rmSync(work, { recursive: true, force: true }); } catch (_) {}
-  }
-});
-
-app.listen(PORT, () => console.log("ADCDA Build Service v2.1 on port " + PORT));
+// ===== المدقق الرسمي v1.1 — v
