@@ -37,6 +37,43 @@ async function build(content) {
   const pres = new pptxgen();
   pres.defineLayout({ name: "WIDE", width: 13.33, height: 7.5 });
   pres.layout = "WIDE";
+  // ═══ وضع الإنجليزية LTR — لا يعمل إلا عند language === 'en'؛ العربي لا يتأثر إطلاقًا ═══
+  const LTR = String(content.language || "ar").toLowerCase() === "en";
+  const LBL = {
+    "تذكَّر": "Remember", "القاعدة الذهبية": "Golden rule", "تحذير حرج": "Critical warning",
+    "افعل بدلًا": "Do instead", "الخطأ الشائع": "Common mistake", "افعل": "Do", "لا تفعل": "Don't",
+    "التصرف الصحيح:": "Right action:", "سيناريو": "Scenario", "الإجابة:": "Answer:", "المصدر:": "Source:",
+    "للطوارئ": "Emergency", "مثال على بلاغ واضح:": "Example of a clear call:",
+    "ماذا تقول للعامل:": "What to tell the operator:", "متى تتصل وماذا تقول": "When to call and what to say",
+    "حقيبة توعوية": "Awareness Package", "عام": "General", "الاتصال بالطوارئ": "Emergency Call"
+  };
+  function trEn(t) {
+    let s = String(t);
+    for (const k of Object.keys(LBL)) s = s.split(k).join(LBL[k]);
+    return s.replace(/^س(\d+): /, "Q$1: ");
+  }
+  function mirrorOpts(o) {
+    if (!o) return o;
+    const r = Object.assign({}, o);
+    if (typeof r.x === "number" && typeof r.w === "number") r.x = Math.round((SLIDE_W - r.x - r.w) * 1000) / 1000;
+    if (r.align === "right") r.align = "left"; // اليسار يبقى يسارًا (مراجع/أرقام لاتينية)
+    if (r.rtlMode) r.rtlMode = false;
+    return r;
+  }
+  function trText(txt) {
+    if (typeof txt === "string") return trEn(txt);
+    if (Array.isArray(txt)) return txt.map(run => (run && typeof run === "object" && typeof run.text === "string") ? Object.assign({}, run, { text: trEn(run.text) }) : run);
+    return txt;
+  }
+  function wrapSlide(s) {
+    if (!LTR) return s;
+    const t = s.addText.bind(s), sh = s.addShape.bind(s), im = s.addImage.bind(s);
+    s.addText = (txt, o) => t(trText(txt), mirrorOpts(o));
+    s.addShape = (ty, o) => sh(ty, mirrorOpts(o));
+    s.addImage = (o) => im(mirrorOpts(o));
+    return s;
+  }
+
 
   function addHeader(slide) {
     slide.addImage({ path: path.join(ASSETS, "logo_proud.png"), x: 0.40, y: 0.25, w: 0.85, h: 0.85 });
@@ -48,6 +85,22 @@ async function build(content) {
     slide.addShape(pres.shapes.OVAL, { x: 0.0, y: 1.8, w: 0.6, h: 0.6, fill: { color: COLORS.primaryLight, transparency: 80 }, line: { type: "none" } });
   }
   function addFooter(slide) {
+    if (LTR) {
+      slide.addShape(pres.shapes.LINE, { x: 0.54, y: 7.07, w: 12.30, h: 0, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addImage({ path: path.join(ASSETS, "social_icons.png"), x: 0.20, y: 7.14, w: 2.19, h: 0.32 });
+      slide.addShape(pres.shapes.LINE, { x: 2.42, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addText("@civildefencead", { x: 2.50, y: 7.12, w: 1.65, h: 0.38, fontSize: 10, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0 });
+      slide.addShape(pres.shapes.LINE, { x: 4.20, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addText("www.adcda.gov.ae", { x: 4.30, y: 7.12, w: 1.85, h: 0.38, fontSize: 10, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0 });
+      slide.addShape(pres.shapes.LINE, { x: 6.22, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addText("A Safer & More Secure Capital", { x: 6.28, y: 7.17, w: 1.95, h: 0.29, fontSize: 9, fontFace: FONT, color: COLORS.textLight, align: "center", valign: "middle", margin: 0 });
+      slide.addShape(pres.shapes.LINE, { x: 8.30, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addText(CODE, { x: 8.40, y: 7.17, w: 0.55, h: 0.29, fontSize: 10, fontFace: FONT, color: COLORS.textLight, align: "center", valign: "middle", margin: 0 });
+      slide.addShape(pres.shapes.LINE, { x: 9.05, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
+      slide.addText("1st Edition (c) 2026 Abu Dhabi Civil Defence Authority - All rights reserved", { x: 9.15, y: 7.15, w: 3.70, h: 0.32, fontSize: 7.5, fontFace: FONT, color: COLORS.textLight, align: "left", valign: "middle", margin: 0 });
+      return;
+    }
+
     slide.addShape(pres.shapes.LINE, { x: 0.54, y: 7.07, w: 12.30, h: 0, line: { color: COLORS.cardBorder, width: 0.75 } });
     slide.addImage({ path: path.join(ASSETS, "social_icons.png"), x: 0.20, y: 7.14, w: 2.19, h: 0.32 });
     slide.addShape(pres.shapes.LINE, { x: 2.42, y: 7.15, w: 0, h: 0.32, line: { color: COLORS.cardBorder, width: 0.75 } });
@@ -127,12 +180,12 @@ async function build(content) {
     slide.addText(String(num), { x: x + w - ds - 0.10, y: y + (h - ds) / 2, w: ds, h: ds, fontSize: 10, fontFace: FONT, color: COLORS.white, bold: true, align: "center", valign: "middle", margin: 0 });
     slide.addText(text, { x: x + 0.15, y, w: w - ds - 0.40, h, fontSize: 12, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
   }
-  function newSlide() { const s = pres.addSlide(); s.background = { color: COLORS.bg }; addHeader(s); addBgDecorations(s); return s; }
+  function newSlide() { const s = wrapSlide(pres.addSlide()); s.background = { color: COLORS.bg }; addHeader(s); addBgDecorations(s); return s; }
   function rem(s, r) { if (r) addReminderBox(s, r.label, r.text); }
 
   // ===== Slide type renderers =====
   async function renderCover(c) {
-    const slide = pres.addSlide(); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
+    const slide = wrapSlide(pres.addSlide()); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
     const cx = 6.665;
     slide.addShape(pres.shapes.OVAL, { x: cx - 1.10, y: 1.20, w: 2.20, h: 2.20, fill: { color: COLORS.primaryLight, transparency: 50 }, line: { type: "none" } });
     slide.addShape(pres.shapes.OVAL, { x: cx - 0.85, y: 1.45, w: 1.70, h: 1.70, fill: { color: COLORS.primary }, line: { type: "none" } });
@@ -270,7 +323,7 @@ async function build(content) {
     addFooter(slide);
   }
   async function renderClosing(c) {
-    const slide = pres.addSlide(); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
+    const slide = wrapSlide(pres.addSlide()); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
     const cx = 6.665;
     slide.addShape(pres.shapes.OVAL, { x: cx - 1.10, y: 1.20, w: 2.20, h: 2.20, fill: { color: COLORS.primaryLight, transparency: 50 }, line: { type: "none" } });
     slide.addShape(pres.shapes.OVAL, { x: cx - 0.80, y: 1.40, w: 1.60, h: 1.60, fill: { color: COLORS.primary }, line: { type: "none" } });
@@ -288,7 +341,7 @@ async function build(content) {
 
 
   async function renderSection(c) {
-    const slide = pres.addSlide(); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
+    const slide = wrapSlide(pres.addSlide()); slide.background = { color: COLORS.bg }; addHeader(slide); addBgDecorations(slide);
     const cx = 6.665;
     slide.addShape(pres.shapes.OVAL, { x: cx - 0.85, y: 1.75, w: 1.70, h: 1.70, fill: { color: COLORS.primaryLight, transparency: 55 }, line: { type: "none" } });
     slide.addShape(pres.shapes.OVAL, { x: cx - 0.62, y: 1.98, w: 1.24, h: 1.24, fill: { color: COLORS.primary }, line: { type: "none" } });
@@ -544,7 +597,7 @@ async function build(content) {
 
   const isV11 = !content.cover && content.main_message && Array.isArray(content.slides) && content.slides.some(s => s && s.type === "main_message_why");
   if (isV11) {
-    await renderCover({ icon: content.icon || "FaShieldAlt", title: content.title_ar || content.title || "", subtitle: "حقيبة توعوية — " + (content.audience || "عام"), quote: content.main_message });
+    await renderCover({ icon: content.icon || "FaShieldAlt", title: content.title_ar || content.title || "", subtitle: (String(content.language||"ar").toLowerCase()==="en" ? "Awareness Package — " + (content.audience || "General") : "حقيبة توعوية — " + (content.audience || "عام")), quote: content.main_message });
     for (const s of (content.slides || [])) {
       if (!s || s.type === "cover") continue;
       const fn = v11Renderers[s.type] || renderers[s.type];
