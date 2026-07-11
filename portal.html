@@ -1354,14 +1354,22 @@ function AliAgentMissionControl() {
 
 
 
-<!-- ═══ زر «لوحة المسؤول» الوحيد في هيدر البوابة ═══ -->
+
+<!-- ═══ زر «لوحة النظام» — يظهر فقط لمسؤول النظام بعد الدخول ═══ -->
 <script id="ali-admin-nav">
 (function(){
-  function findLogin(){ var b=document.querySelectorAll("button"); for(var i=0;i<b.length;i++){ if((b[i].textContent||"").indexOf("\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644")!==-1) return b[i]; } return null; }
-  function makeBtn(ref){ var b=document.createElement("button"); b.id="ali-admin-nav-btn"; b.type="button"; b.style.cssText=ref.style.cssText; b.style.padding="10px 20px"; b.style.marginInlineEnd="10px"; b.style.cursor="pointer"; b.style.background="linear-gradient(135deg,#0B4EA2,#1D6FD1)"; b.style.color="#fff"; b.textContent="\ud83d\udee1\ufe0f \u0644\u0648\u062d\u0629 \u0627\u0644\u0645\u0633\u0624\u0648\u0644"; b.addEventListener("click",function(){ var l=document.getElementById("ali-mc-launch"); if(l) l.click(); }); return b; }
-  function inject(){ if(document.getElementById("ali-admin-nav-btn")) return true; var lg=findLogin(); if(!lg||!lg.parentNode) return false; lg.parentNode.insertBefore(makeBtn(lg), lg); return true; }
-  var t=setInterval(function(){ if(inject()) clearInterval(t); },500);
-  var mo=new MutationObserver(function(){ inject(); }); mo.observe(document.body,{childList:true,subtree:true});
+  function findLogout(){ var b=document.querySelectorAll("button"); for(var i=0;i<b.length;i++){ if((b[i].textContent||"").indexOf("خروج")!==-1) return b[i]; } return null; }
+  function isAdmin(){ var e=document.querySelectorAll("span,div"); for(var i=0;i<e.length;i++){ if(((e[i].textContent||"").trim())==="مسؤول") return true; } return false; }
+  function makeBtn(){ var b=document.createElement("button"); b.id="ali-admin-nav-btn"; b.type="button"; b.style.cssText="font-family:Tajawal,system-ui,sans-serif;background:linear-gradient(135deg,#0B4EA2,#1D6FD1);color:#fff;border:none;border-radius:12px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-inline-end:10px;box-shadow:0 3px 10px rgba(11,78,162,.28)"; b.textContent="🛡️ لوحة النظام"; b.addEventListener("click",function(){ var l=document.getElementById("ali-mc-launch"); if(l) l.click(); }); return b; }
+  function sync(){
+    var admin = findLogout() && isAdmin();
+    var existing = document.getElementById("ali-admin-nav-btn");
+    if(admin){
+      if(!existing){ var lo=findLogout(); if(lo&&lo.parentNode){ lo.parentNode.insertBefore(makeBtn(), lo); } }
+    } else if(existing){ existing.remove(); }
+  }
+  var mo=new MutationObserver(sync); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sync,700); sync();
 })();
 </script>
 </body>
