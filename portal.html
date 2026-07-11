@@ -1163,6 +1163,60 @@ function AdminTab() {
     return /* @__PURE__ */ React.createElement("div", { key: i, style: { borderInlineStart: `3px solid ${col}`, background: C.soft, borderRadius: 8, padding: "6px 10px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", fontSize: 11.5 } }, /* @__PURE__ */ React.createElement("span", { style: { fontWeight: 700 } }, r.topic || "\u2014", " ", r.pkg ? `\xB7 ${r.pkg}` : ""), /* @__PURE__ */ React.createElement("span", { style: { color: col, fontWeight: 700 } }, lbl, r.cycleMs ? ` \xB7 ${Math.round(r.cycleMs / 1e3)}\u062B` : "")), r.notes ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9.5, color: C.sub, marginTop: 2 } }, "\u0627\u0644\u0633\u0628\u0628: ", r.notes) : null);
   })))), err && /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10, color: "#B00020", textAlign: "center" } }, "\u062A\u0639\u0630\u0651\u0631 \u062C\u0644\u0628 \u0627\u0644\u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u062D\u064A\u0629 (", err, ") \u2014 \u064A\u064F\u0639\u0631\u0636 \u0627\u0644\u0642\u064A\u0627\u0633 \u0627\u0644\u0645\u0631\u062C\u0639\u064A"));
 }
+const NS_API = "https://alialkaabi.app.n8n.cloud/webhook/new-sources";
+function SourcesTab() {
+  const [d, setD] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [er, setEr] = useState(null);
+  const load = useCallback(() => {
+    setLoading(true);
+    fetch(NS_API).then((r) => r.json()).then((j) => {
+      setD(j);
+      setEr(null);
+      setLoading(false);
+    }).catch((e) => {
+      setEr(String(e).slice(0, 60));
+      setLoading(false);
+    });
+  }, []);
+  useEffect(() => {
+    load();
+  }, [load]);
+  const card = { background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: "15px 17px", boxShadow: "0 1px 3px rgba(20,40,80,0.05)" };
+  const src = d && d.sources || [];
+  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 8 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, fontSize: 18 } }, "\u{1F50E} \u0627\u0644\u0645\u0635\u0627\u062F\u0631 \u0648\u0627\u0644\u0645\u0631\u0627\u062C\u0639"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11.5, color: C.sub } }, "\u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0645\u0639\u062A\u0645\u062F\u0629 + \u0627\u0644\u0645\u0635\u0627\u062F\u0631 \u0627\u0644\u062C\u062F\u064A\u062F\u0629 \u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0645\u0631\u0627\u062C\u0639\u062A\u0643")), /* @__PURE__ */ React.createElement("button", { onClick: load, style: { background: C.soft, border: `1px solid ${C.border}`, borderRadius: 10, padding: "7px 16px", cursor: "pointer", fontFamily: FONT, fontWeight: 700, fontSize: 12, color: C.royal } }, "\u21BB \u062A\u062D\u062F\u064A\u062B")), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 } }, [["\u{1F512} \u0646\u0637\u0627\u0642\u0627\u062A \u0645\u0639\u062A\u0645\u062F\u0629", "17", "\u0642\u0627\u0626\u0645\u0629 \u0648\u0643\u064A\u0644 \u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A \u0645\u0642\u0641\u0644\u0629"], ["\u{1F4DA} \u0641\u0647\u0631\u0633 \u0627\u0644\u0645\u0648\u0627\u0636\u064A\u0639", "70", "\u0645\u0648\u0636\u0648\u0639\u064B\u0627 \u0645\u0642\u0641\u0644\u064B\u0627 \u0641\u064A 8 \u0628\u0627\u0642\u0627\u062A"], ["\u{1F195} \u0645\u0635\u0627\u062F\u0631 \u0645\u0631\u0634\u0651\u062D\u0629", String(src.length), "\u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0639\u062A\u0645\u0627\u062F\u0643 \u0644\u0644\u0642\u0627\u0626\u0645\u0629"]].map((k, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: card }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: C.sub, fontWeight: 700 } }, k[0]), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 26, fontWeight: 800, color: C.royal, fontFamily: MONO, direction: "ltr", textAlign: "right" } }, k[1]), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9.5, color: C.sub } }, k[2])))), /* @__PURE__ */ React.createElement("div", { style: card }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, fontSize: 13, marginBottom: 4 } }, "\u{1F195} \u0645\u0635\u0627\u062F\u0631 \u0631\u0633\u0645\u064A\u0629 \u062C\u062F\u064A\u062F\u0629 \u2014 \u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u0629"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 10.5, color: C.sub, marginBottom: 12 } }, "\u0645\u0635\u0627\u062F\u0631 \u0631\u0633\u0645\u064A\u0629 \u0648\u062C\u062F\u0647\u0627 \u0648\u0643\u064A\u0644 \u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A \u062E\u0627\u0631\u062C \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0645\u0639\u062A\u0645\u062F\u0629 \u0648\u0623\u062C\u0627\u0632\u062A\u0647\u0627 \u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0636\u0648\u0627\u0628\u0637 \u2014 \u062A\u062F\u062E\u0644 \u0627\u0644\u0639\u0631\u0648\u0636 \u0645\u0648\u0633\u0648\u0645\u0629\u060C \u0648\u0627\u0639\u062A\u0645\u0627\u062F \u0625\u0636\u0627\u0641\u062A\u0647\u0627 \u0644\u0644\u0642\u0627\u0626\u0645\u0629 \u0642\u0631\u0627\u0631\u0643."), loading ? /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", color: C.sub, padding: 20, fontSize: 12 } }, "\u23F3 \u064A\u062D\u0645\u0651\u0644\u2026") : er ? /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", color: "#B00020", padding: 16, fontSize: 11.5 } }, "\u062A\u0639\u0630\u0651\u0631 \u0627\u0644\u062C\u0644\u0628 (", er, ")") : !src.length ? /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", color: C.sub, padding: 22, fontSize: 12 } }, "\u2705 \u0644\u0627 \u0645\u0635\u0627\u062F\u0631 \u062C\u062F\u064A\u062F\u0629 \u2014 \u0643\u0644 \u0627\u0644\u0625\u062D\u0635\u0627\u0626\u064A\u0627\u062A \u0645\u0646 \u0627\u0644\u0642\u0627\u0626\u0645\u0629 \u0627\u0644\u0645\u0639\u062A\u0645\u062F\u0629") : /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 9 } }, src.map((s, i) => /* @__PURE__ */ React.createElement("div", { key: i, style: { border: `1px solid ${C.border}`, borderRadius: 12, padding: "10px 14px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center" } }, /* @__PURE__ */ React.createElement("b", { style: { color: C.royal } }, s.domain), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, background: "rgba(245,165,36,0.15)", color: "#B57B10", borderRadius: 9, padding: "2px 8px" } }, s.status || "\u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u0631\u0627\u062C\u0639\u0629")), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, marginTop: 4 } }, s.name, " \xB7 ", s.year), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11, color: C.sub, marginTop: 2 } }, "\u0627\u0644\u0645\u0648\u0636\u0648\u0639: ", s.topic), /* @__PURE__ */ React.createElement("a", { href: s.url, target: "_blank", rel: "noopener", style: { fontSize: 11, color: C.glow, wordBreak: "break-all" } }, s.url))))));
+}
+const ACT_API = "https://alialkaabi.app.n8n.cloud/webhook/admin-analytics";
+function ActivityTab() {
+  const [d, setD] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const load = useCallback(() => {
+    setLoading(true);
+    fetch(ACT_API).then((r) => r.json()).then((j) => {
+      setD(j);
+      setLoading(false);
+    }).catch(() => setLoading(false));
+  }, []);
+  useEffect(() => {
+    load();
+    const iv = setInterval(load, 6e4);
+    return () => clearInterval(iv);
+  }, [load]);
+  const card = { background: C.card, border: `1px solid ${C.border}`, borderRadius: 16, padding: "15px 17px", boxShadow: "0 1px 3px rgba(20,40,80,0.05)" };
+  const rec = d && d.recent || [];
+  const fmtT = (t) => {
+    try {
+      return new Date(t).toLocaleString("ar-AE", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+    } catch (e) {
+      return "";
+    }
+  };
+  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: 8 } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, fontSize: 18 } }, "\u{1F4DC} \u0633\u062C\u0644 \u0627\u0644\u0646\u0634\u0627\u0637"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 11.5, color: C.sub } }, "\u0643\u0644 \u062A\u0634\u063A\u064A\u0644 \u0641\u0639\u0644\u064A \u2014 \u0627\u0644\u0645\u0648\u0636\u0648\u0639\u060C \u0627\u0644\u0642\u0631\u0627\u0631\u060C \u0627\u0644\u0632\u0645\u0646\u060C \u0648\u0623\u064A \u0645\u0634\u0643\u0644\u0629")), /* @__PURE__ */ React.createElement("button", { onClick: load, style: { background: C.soft, border: `1px solid ${C.border}`, borderRadius: 10, padding: "7px 16px", cursor: "pointer", fontFamily: FONT, fontWeight: 700, fontSize: 12, color: C.royal } }, "\u21BB \u062A\u062D\u062F\u064A\u062B")), /* @__PURE__ */ React.createElement("div", { style: card }, loading && !rec.length ? /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", color: C.sub, padding: 22, fontSize: 12 } }, "\u23F3 \u064A\u062D\u0645\u0651\u0644\u2026") : !rec.length ? /* @__PURE__ */ React.createElement("div", { style: { textAlign: "center", color: C.sub, padding: 22, fontSize: 12 } }, d && d.note || "\u0644\u0627 \u062A\u0634\u063A\u064A\u0644\u0627\u062A \u0645\u0633\u062C\u0651\u0644\u0629 \u0628\u0639\u062F") : /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 0 } }, /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "1.4fr 1fr 0.8fr 0.8fr 2fr", gap: 8, padding: "6px 8px", fontSize: 10, color: C.sub, fontWeight: 800, borderBottom: `2px solid ${C.border}` } }, /* @__PURE__ */ React.createElement("span", null, "\u0627\u0644\u0645\u0648\u0636\u0648\u0639"), /* @__PURE__ */ React.createElement("span", null, "\u0627\u0644\u0642\u0631\u0627\u0631"), /* @__PURE__ */ React.createElement("span", null, "\u0627\u0644\u062F\u0648\u0631\u0629"), /* @__PURE__ */ React.createElement("span", null, "\u0627\u0644\u062F\u0631\u062C\u0629"), /* @__PURE__ */ React.createElement("span", null, "\u0627\u0644\u0645\u0644\u0627\u062D\u0638\u0629")), rec.map((r, i) => {
+    const col = r.escalated ? "#A855F7" : r.rework > 0 ? "#F59E0B" : "#22C55E";
+    const lbl = r.escalated ? "\u{1F6A8} \u062A\u0635\u0639\u064A\u062F" : r.rework > 0 ? `\u{1F501} ${r.rework} \u0625\u0639\u0627\u062F\u0629` : "\u2705 \u0645\u0639\u062A\u0645\u062F";
+    return /* @__PURE__ */ React.createElement("div", { key: i, style: { display: "grid", gridTemplateColumns: "1.4fr 1fr 0.8fr 0.8fr 2fr", gap: 8, padding: "9px 8px", fontSize: 11.5, borderBottom: `1px solid ${C.border}`, alignItems: "center" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("b", null, r.topic || "\u2014"), r.pkg ? /* @__PURE__ */ React.createElement("span", { style: { color: C.sub } }, " \xB7 ", r.pkg) : "", /* @__PURE__ */ React.createElement("div", { style: { fontSize: 9, color: C.sub } }, fmtT(r.at))), /* @__PURE__ */ React.createElement("span", { style: { color: col, fontWeight: 700 } }, lbl), /* @__PURE__ */ React.createElement("span", { style: { fontFamily: MONO, direction: "ltr", color: C.sub } }, r.cycleMs ? Math.round(r.cycleMs / 1e3) + "\u062B" : "\u2014"), /* @__PURE__ */ React.createElement("span", { style: { fontFamily: MONO, direction: "ltr", color: r.score >= 9 ? "#22C55E" : r.score >= 8 ? "#F59E0B" : C.sub } }, r.score != null ? r.score : "\u2014"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 10, color: C.sub } }, r.notes || (r.uploaded ? "\u0631\u064F\u0641\u0639 \u0625\u0644\u0649 OneDrive" : "\u2014")));
+  }))));
+}
 function AliAgentMissionControl() {
   const [tab, setTab] = useState("admin");
   const [theme, setTheme] = useState(() => {
@@ -1211,7 +1265,7 @@ function AliAgentMissionControl() {
       setFade(1);
     }, 160);
   };
-  const TABS = [{ id: "admin", label: "\u{1F6E1}\uFE0F \u0645\u062F\u064A\u0631 \u0627\u0644\u0646\u0638\u0627\u0645" }, { id: "studio", label: "\u{1F3AC} \u0627\u0644\u0627\u0633\u062A\u0648\u062F\u064A\u0648" }, { id: "agents", label: "\u062E\u0637 \u0627\u0644\u0625\u0646\u062A\u0627\u062C" }, { id: "kpi", label: "\u0627\u0644\u0645\u0624\u0634\u0631\u0627\u062A" }, { id: "content", label: "\u0627\u0644\u0645\u062D\u062A\u0648\u0649" }];
+  const TABS = [{ id: "admin", label: "\u{1F6E1}\uFE0F \u0627\u0644\u0645\u062A\u0627\u0628\u0639\u0629" }, { id: "kpi", label: "\u{1F4CA} \u0627\u0644\u062A\u062D\u0644\u064A\u0644\u0627\u062A" }, { id: "sources", label: "\u{1F50E} \u0627\u0644\u0645\u0635\u0627\u062F\u0631" }, { id: "activity", label: "\u{1F4DC} \u0633\u062C\u0644 \u0627\u0644\u0646\u0634\u0627\u0637" }, { id: "studio", label: "\u{1F3AC} \u0627\u0644\u0627\u0633\u062A\u0648\u062F\u064A\u0648" }, { id: "agents", label: "\u{1F3ED} \u062E\u0637 \u0627\u0644\u0625\u0646\u062A\u0627\u062C" }, { id: "content", label: "\u{1F5C2}\uFE0F \u0627\u0644\u0645\u062D\u062A\u0648\u0649" }];
   const CONSTANTS = [
     // ثوابت الحوكمة الفعلية — مقفلة
     "\u260E\uFE0F \u0631\u0642\u0645 \u0627\u0644\u0637\u0648\u0627\u0631\u0626: 999 \u0641\u0642\u0637",
@@ -1251,7 +1305,7 @@ function AliAgentMissionControl() {
       }
     },
     t.label
-  ))), /* @__PURE__ */ React.createElement("main", { style: { padding: "12px 22px", opacity: fade, transition: "opacity .18s ease" } }, tab === "admin" && /* @__PURE__ */ React.createElement(AdminTab, null), tab === "studio" && /* @__PURE__ */ React.createElement(StudioTab, null), tab === "content" && /* @__PURE__ */ React.createElement(ContentTab, null), tab === "kpi" && /* @__PURE__ */ React.createElement(KpiCockpit, { packages: PACKAGES }), tab === "agents" && /* @__PURE__ */ React.createElement(AgentsCockpit, null)), /* @__PURE__ */ React.createElement("footer", { style: { display: "flex", flexWrap: "wrap", gap: 8, padding: "10px 22px", borderTop: `1px solid ${C.border}`, marginTop: 8 } }, CONSTANTS.map((c, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: 10.5, color: C.sub, background: C.soft, border: `1px solid ${C.border}`, borderRadius: 16, padding: "4px 12px" } }, c))), /* @__PURE__ */ React.createElement("style", null, `@keyframes aliPulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+  ))), /* @__PURE__ */ React.createElement("main", { style: { padding: "12px 22px", opacity: fade, transition: "opacity .18s ease" } }, tab === "admin" && /* @__PURE__ */ React.createElement(AdminTab, null), tab === "sources" && /* @__PURE__ */ React.createElement(SourcesTab, null), tab === "activity" && /* @__PURE__ */ React.createElement(ActivityTab, null), tab === "studio" && /* @__PURE__ */ React.createElement(StudioTab, null), tab === "content" && /* @__PURE__ */ React.createElement(ContentTab, null), tab === "kpi" && /* @__PURE__ */ React.createElement(KpiCockpit, { packages: PACKAGES }), tab === "agents" && /* @__PURE__ */ React.createElement(AgentsCockpit, null)), /* @__PURE__ */ React.createElement("footer", { style: { display: "flex", flexWrap: "wrap", gap: 8, padding: "10px 22px", borderTop: `1px solid ${C.border}`, marginTop: 8 } }, CONSTANTS.map((c, i) => /* @__PURE__ */ React.createElement("span", { key: i, style: { fontSize: 10.5, color: C.sub, background: C.soft, border: `1px solid ${C.border}`, borderRadius: 16, padding: "4px 12px" } }, c))), /* @__PURE__ */ React.createElement("style", null, `@keyframes aliPulse { 0%,100%{opacity:1} 50%{opacity:.25} }
         button:focus-visible, input:focus-visible { outline: 2px solid ${C.glow}; }`));
 }
   window.__aliMC_render = function(el) {
@@ -1295,111 +1349,19 @@ function AliAgentMissionControl() {
 })();
 </script>
 
-<!-- ═══ خانة «الداش بورد» في هيدر البوابة ═══ -->
-<script id="ali-dash-nav">
-(function(){
-  function findLoginBtn(){
-    var btns=document.querySelectorAll("button");
-    for(var i=0;i<btns.length;i++){ if((btns[i].textContent||"").indexOf("\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644")!==-1) return btns[i]; }
-    return null;
-  }
-  function makeBtn(login){
-    var b=document.createElement("button");
-    b.id="ali-dash-nav-btn"; b.type="button";
-    b.style.cssText=login.style.cssText;
-    b.style.padding="10px 22px"; b.style.marginInlineEnd="10px"; b.style.cursor="pointer";
-    b.textContent="\ud83d\udcca \u0627\u0644\u062f\u0627\u0634 \u0628\u0648\u0631\u062f";
-    b.addEventListener("click",function(){ var l=document.getElementById("ali-mc-launch"); if(l) l.click(); });
-    return b;
-  }
-  function inject(){
-    if(document.getElementById("ali-dash-nav-btn")) return true;
-    var login=findLoginBtn();
-    if(!login||!login.parentNode) return false;
-    login.parentNode.insertBefore(makeBtn(login), login);
-    return true;
-  }
-  var tries=0;
-  var t=setInterval(function(){ if(inject()||++tries>40) clearInterval(t); },500);
-  var mo=new MutationObserver(function(){ inject(); });
-  mo.observe(document.body,{childList:true,subtree:true});
-})();
-</script>
 
-<!-- ═══ لوحة المصادر الجديدة (سجل بوابة المصادر الموسعة v6.1) ═══ -->
-<script id="ali-new-sources">
-(function(){
-  var API="https://alialkaabi.app.n8n.cloud/webhook/new-sources";
-  function css(el,s){el.style.cssText=s;return el;}
-  function openPanel(){
-    var ov=document.getElementById("ali-ns-overlay");
-    if(!ov){
-      ov=css(document.createElement("div"),"position:fixed;inset:0;z-index:10050;background:rgba(15,25,50,0.45);display:flex;align-items:center;justify-content:center;font-family:Tajawal,system-ui,sans-serif;");
-      ov.id="ali-ns-overlay"; ov.dir="rtl";
-      ov.addEventListener("click",function(e){if(e.target===ov)ov.remove();});
-      var card=css(document.createElement("div"),"background:#fff;border-radius:18px;max-width:640px;width:92%;max-height:78vh;overflow:auto;padding:22px 24px;box-shadow:0 20px 60px rgba(11,78,162,0.25);");
-      card.innerHTML='<div style="display:flex;align-items:center;gap:9px;margin-bottom:4px"><span style="font-size:20px">🔎</span><b style="font-size:16px;color:#1F2E5A">المصادر الجديدة — بانتظار مراجعتك</b><button id="ali-ns-close" style="margin-inline-start:auto;background:#EAF0F8;border:none;border-radius:9px;padding:5px 12px;cursor:pointer;font-family:inherit">إغلاق ✕</button></div><div style="font-size:11px;color:#5B6B85;margin-bottom:12px">مصادر رسمية وجدها وكيل الإحصائيات خارج القائمة المعتمدة (17 نطاقًا) وأجازتها بوابة الضوابط — تدخل العروض موسومة، واعتماد إضافتها للقائمة قرارك.</div><div id="ali-ns-body" style="font-size:13px;color:#1F2E5A">⏳ يحمّل السجل…</div>';
-      ov.appendChild(card); document.body.appendChild(ov);
-      document.getElementById("ali-ns-close").onclick=function(){ov.remove();};
-    }
-    fetch(API).then(function(r){return r.json();}).then(function(j){
-      var b=document.getElementById("ali-ns-body"); if(!b)return;
-      if(!j.sources||!j.sources.length){ b.innerHTML='<div style="text-align:center;padding:26px 0;color:#5B6B85">✅ لا مصادر جديدة — كل الإحصائيات حتى الآن من القائمة المعتمدة</div>'; return; }
-      b.innerHTML=j.sources.map(function(s){
-        return '<div style="border:1px solid #E5EBF2;border-radius:12px;padding:10px 14px;margin-bottom:9px">'
-          +'<div style="display:flex;gap:8px;align-items:center"><b style="color:#0B4EA2">'+(s.domain||"")+'</b>'
-          +'<span style="font-size:10px;background:rgba(245,165,36,0.15);color:#B57B10;border-radius:9px;padding:2px 8px">'+(s.status||"بانتظار المراجعة")+'</span></div>'
-          +'<div style="font-size:12px;margin-top:4px">'+(s.name||"")+' · '+(s.year||"")+'</div>'
-          +'<div style="font-size:11px;color:#5B6B85;margin-top:2px">الموضوع: '+(s.topic||"")+'</div>'
-          +'<a href="'+(s.url||"#")+'" target="_blank" rel="noopener" style="font-size:11px;color:#1D6FD1;word-break:break-all">'+(s.url||"")+'</a>'
-          +'</div>';
-      }).join("");
-    }).catch(function(){ var b=document.getElementById("ali-ns-body"); if(b) b.innerHTML='<div style="color:#B00020">تعذر الوصول للسجل — تأكد من الاتصال</div>'; });
-  }
-  function makeBtn(ref){
-    var b=document.createElement("button");
-    b.id="ali-ns-btn"; b.type="button";
-    b.style.cssText=ref.style.cssText; b.style.padding="10px 18px"; b.style.marginInlineEnd="10px"; b.style.cursor="pointer";
-    b.textContent="🔎 المصادر الجديدة";
-    b.addEventListener("click",openPanel);
-    return b;
-  }
-  function inject(){
-    if(document.getElementById("ali-ns-btn")) return true;
-    var dash=document.getElementById("ali-dash-nav-btn");
-    if(!dash||!dash.parentNode) return false;
-    dash.parentNode.insertBefore(makeBtn(dash), dash);
-    return true;
-  }
-  var tries=0; var t=setInterval(function(){ if(inject()||++tries>60) clearInterval(t); },500);
-  var mo=new MutationObserver(function(){ inject(); });
-  mo.observe(document.body,{childList:true,subtree:true});
-})();
-</script>
 
-<!-- ═══ زر «مدير النظام» في هيدر البوابة ═══ -->
+
+
+
+<!-- ═══ زر «لوحة المسؤول» الوحيد في هيدر البوابة ═══ -->
 <script id="ali-admin-nav">
 (function(){
-  function makeBtn(ref){
-    var b=document.createElement("button");
-    b.id="ali-admin-nav-btn"; b.type="button";
-    b.style.cssText=ref.style.cssText;
-    b.style.padding="10px 18px"; b.style.marginInlineEnd="10px"; b.style.cursor="pointer";
-    b.style.background="linear-gradient(135deg,#0B4EA2,#1D6FD1)"; b.style.color="#fff";
-    b.textContent="\ud83d\udee1\ufe0f \u0645\u062f\u064a\u0631 \u0627\u0644\u0646\u0638\u0627\u0645";
-    b.addEventListener("click",function(){ var l=document.getElementById("ali-mc-launch"); if(l) l.click(); });
-    return b;
-  }
-  function inject(){
-    if(document.getElementById("ali-admin-nav-btn")) return true;
-    var dash=document.getElementById("ali-dash-nav-btn");
-    if(!dash||!dash.parentNode) return false;
-    dash.parentNode.insertBefore(makeBtn(dash), dash);
-    return true;
-  }
+  function findLogin(){ var b=document.querySelectorAll("button"); for(var i=0;i<b.length;i++){ if((b[i].textContent||"").indexOf("\u062a\u0633\u062c\u064a\u0644 \u0627\u0644\u062f\u062e\u0648\u0644")!==-1) return b[i]; } return null; }
+  function makeBtn(ref){ var b=document.createElement("button"); b.id="ali-admin-nav-btn"; b.type="button"; b.style.cssText=ref.style.cssText; b.style.padding="10px 20px"; b.style.marginInlineEnd="10px"; b.style.cursor="pointer"; b.style.background="linear-gradient(135deg,#0B4EA2,#1D6FD1)"; b.style.color="#fff"; b.textContent="\ud83d\udee1\ufe0f \u0644\u0648\u062d\u0629 \u0627\u0644\u0645\u0633\u0624\u0648\u0644"; b.addEventListener("click",function(){ var l=document.getElementById("ali-mc-launch"); if(l) l.click(); }); return b; }
+  function inject(){ if(document.getElementById("ali-admin-nav-btn")) return true; var lg=findLogin(); if(!lg||!lg.parentNode) return false; lg.parentNode.insertBefore(makeBtn(lg), lg); return true; }
   var t=setInterval(function(){ if(inject()) clearInterval(t); },500);
-  var mo=new MutationObserver(function(){ inject(); });
-  mo.observe(document.body,{childList:true,subtree:true});
+  var mo=new MutationObserver(function(){ inject(); }); mo.observe(document.body,{childList:true,subtree:true});
 })();
 </script>
 </body>
