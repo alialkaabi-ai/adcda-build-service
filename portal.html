@@ -1372,5 +1372,18 @@ function AliAgentMissionControl() {
   setInterval(sync,700); sync();
 })();
 </script>
+<!-- ═══ إخفاء تبويبات البوابة المكررة (صارت في لوحة النظام) ═══ -->
+<script id="ali-hide-dupes">
+(function(){
+  var HIDE=["لوحة المتابعة","التحليلات","المراجع","سجل النشاط"];
+  function inOverlay(el){ var o=document.getElementById("ali-mc-overlay"); return o && o.contains(el); }
+  function sweep(){
+    var b=document.querySelectorAll("button");
+    for(var i=0;i<b.length;i++){ var t=(b[i].textContent||"").trim(); if(HIDE.indexOf(t)!==-1 && !inOverlay(b[i])){ b[i].style.display="none"; } }
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
 </body>
 </html>
