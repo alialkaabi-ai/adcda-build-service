@@ -1,8 +1,6 @@
-// ===== ADCDA Build Service v2.3 =====
-// خدمة بناء العروض: POST /build | GET /topic/:code | GET /search | GET /files/:code | GET /pdf/:code | GET /dash | GET /health
-// v2.1: /build يقبل upload_url اختياريًا — يبني ويرفع الملف مباشرة إلى OneDrive عبر جلسة رفع مفوّضة
-// ويرجع JSON خفيفًا { uploaded, name, size, id, webUrl } — الملف لا يمر عبر n8n إطلاقًا.
-// v2.3: استضافة مركز القيادة (الداش بورد) على GET /dash
+// ===== ADCDA Build Service v2.4 =====
+// POST /build | GET /topic/:code | GET /search | GET /files/:code | GET /pdf/:code | GET /dash | GET /portal | GET /health
+// v2.4: استضافة بوابة المحتوى على GET /portal (بجانب مركز القيادة /dash)
 const express = require("express");
 const { execFileSync } = require("child_process");
 const https = require("https");
@@ -17,16 +15,17 @@ const PORT = process.env.PORT || 3000;
 const BUILD = path.join(__dirname, "build.js");
 const FIXRTL = path.join(__dirname, "fix_rtl.py");
 
-// ===== قاعدة المعرفة (التأصيل) =====
 let CORPUS = {};
 try { CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "corpus.json"), "utf8")); }
 catch (e) { console.warn("corpus.json not found — /topic will 404"); }
 
-app.get("/", (_req, res) => res.send("ADCDA Build Service v2.3 — POST /build | GET /topic/:code | GET /dash | GET /health"));
+app.get("/", (_req, res) => res.send("ADCDA Build Service v2.4 — POST /build | GET /topic/:code | GET /dash | GET /portal | GET /health"));
 
 app.get("/dash", (_req, res) => res.sendFile(path.join(__dirname, "dash.html")));
 
-app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.3" }));
+app.get("/portal", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
+
+app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.4" }));
 
 app.get("/topic/:code", (req, res) => {
   const code = String(req.params.code || "").trim().toUpperCase();
@@ -69,12 +68,10 @@ app.get("/search", (req, res) => {
   res.json({ query: q, tokens: toks, matches: scored });
 });
 
-// ===== المدقق الرسمي v1.1 — validator.py يعمل كما هو (مصدر الحقيقة الواحد) =====
 const VALIDATOR = path.join(__dirname, "validator.py");
 
 app.post("/validate", (req, res) => {
   const doc = req.body || {};
-  // حقن حقول التوافق فقط إن غابت — بلا تغيير أي فحص في validator.py
   if (doc.topic_profile == null) doc.topic_profile = "";
   if (!doc.standards) {
     const s15 = (doc.slides || []).find(s => s && s.type === "sources") || {};
@@ -107,7 +104,6 @@ app.post("/validate", (req, res) => {
   }
 });
 
-// ===== الرفع المباشر إلى OneDrive عبر جلسة رفع مفوّضة =====
 function putToUploadUrl(uploadUrl, buf) {
   return new Promise((resolve, reject) => {
     const u = new URL(uploadUrl);
@@ -151,13 +147,7 @@ app.post("/build", async (req, res) => {
     const buf = fs.readFileSync(outPath);
     if (uploadUrl) {
       const item = await putToUploadUrl(uploadUrl, buf);
-      res.json({
-        uploaded: true,
-        name: item.name || outName,
-        size: buf.length,
-        id: item.id || null,
-        webUrl: item.webUrl || null
-      });
+      res.json({ uploaded: true, name: item.name || outName, size: buf.length, id: item.id || null, webUrl: item.webUrl || null });
     } else {
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
       res.setHeader("Content-Disposition", 'attachment; filename="' + outName + '"');
@@ -170,4 +160,4 @@ app.post("/build", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log("ADCDA Build Service v2.3 on port " + PORT));
+app.listen(PORT, () => console.log("ADCDA Build Service v2.4 on port " + PORT));
