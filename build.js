@@ -595,9 +595,12 @@ async function build(content) {
 
   const renderers = { section: renderSection, list: renderList, refs: renderRefs, cover: renderCover, cards: renderCards, compact: renderCompact, cardsDesc: renderCardsDesc, numbered: renderNumbered, stairs: renderStairs, emergency: renderEmergency, dodont: renderDoDont, scenarios: renderScenarios, quiz: renderQuiz, closing: renderClosing };
 
-  const isV11 = !content.cover && content.main_message && Array.isArray(content.slides) && content.slides.some(s => s && s.type === "main_message_why");
+  // v6.4 fix: كشف v1.1 من أنواع الشرائح نفسها — وجود content.cover لا يلغي النمط
+  const isV11 = Array.isArray(content.slides) && content.slides.some(s => s && s.type === "main_message_why");
   if (isV11) {
-    await renderCover({ icon: content.icon || "FaShieldAlt", title: content.title_ar || content.title || "", subtitle: (String(content.language||"ar").toLowerCase()==="en" ? "Awareness Package — " + (content.audience || "General") : "حقيبة توعوية — " + (content.audience || "عام")), quote: content.main_message });
+    const v11Quote = content.main_message || (content.cover && (content.cover.quote || content.cover.subtitle)) || "";
+    const v11Title = content.title_ar || content.title || (content.cover && content.cover.title) || "";
+    await renderCover({ icon: content.icon || (content.cover && content.cover.icon) || "FaShieldAlt", title: v11Title, subtitle: (String(content.language||"ar").toLowerCase()==="en" ? "Awareness Package — " + (content.audience || "General") : "حقيبة توعوية — " + (content.audience || "عام")), quote: v11Quote });
     for (const s of (content.slides || [])) {
       if (!s || s.type === "cover") continue;
       const fn = v11Renderers[s.type] || renderers[s.type];
