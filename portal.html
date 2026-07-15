@@ -595,339 +595,37 @@ const VAULTS3 = [
   { name: "\u0642\u0627\u0645\u0648\u0633 \u0627\u0644\u0645\u0635\u0637\u0644\u062D\u0627\u062A", to: "translator" },
   { name: "\u0627\u0644\u0647\u0648\u064A\u0629 V6", to: "builder" }
 ];
-function AgentsCockpit() {
-  const rm = useReducedMotion();
-  const [hover, setHover] = useState(null);
-  const [sel, setSel] = useState(null);
-  const nodesRef = useRef([]);
-  const mouseRef = useRef({ x: -1, y: -1 });
-  const hoverKeyRef = useRef(null);
-  const itemsRef = useRef(Array.from({ length: 7 }, (_, i) => ({
-    seg: i * 2 % (MAIN3.length - 1),
-    t: i * 0.31 % 1,
-    speed: 6e-3 + i % 3 * 2e-3,
-    pkg: "AEDCHBF"[i],
-    mode: "flow",
-    fixed: {},
-    holdT: 0
-  })));
-  const byId = useMemo(() => Object.fromEntries(NODES3.map((n) => [n.id, n])), []);
-  const draw = useCallback((ctx, w, h, t) => {
-    ctx.clearRect(0, 0, w, h);
-    const sc = w / VW, sy = h / VH;
-    const P = (n) => ({ x: n.x * sc, y: n.y * sy });
-    ctx.save();
-    ctx.fillStyle = "rgba(74,158,255,0.07)";
-    for (let gx = 14; gx < w; gx += 26) for (let gy = 14; gy < h; gy += 26) {
-      ctx.fillRect(gx, gy, 1.2, 1.2);
-    }
-    ctx.restore();
-    STAGES3.forEach((st) => {
-      const x = st.x * sc, ww = st.w * sc, y = 108 * sy, hh = 250 * sy;
-      ctx.save();
-      ctx.fillStyle = `rgba(${st.c},0.07)`;
-      ctx.strokeStyle = `rgba(${st.c},0.30)`;
-      ctx.lineWidth = 1;
-      roundRect(ctx, x, y, ww, hh, 12);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = `rgba(${st.c},0.95)`;
-      ctx.font = "800 " + Math.max(10, 9.6 * sc * 2.2) + "px " + FONT;
-      ctx.textAlign = "right";
-      ctx.textBaseline = "top";
-      ctx.fillText(st.t, x + ww - 10, y + 8);
-      ctx.restore();
-    });
-    VAULTS3.forEach((v, i) => {
-      const vx = (250 + i * 300) * sc, vy = 44 * sy;
-      const tn = P(byId[v.to]);
-      ctx.save();
-      ctx.strokeStyle = "rgba(74,158,255,0.22)";
-      ctx.setLineDash([3, 6]);
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(vx, vy + 13);
-      ctx.quadraticCurveTo(vx, (vy + tn.y) / 2, tn.x, tn.y - 26 * sy);
-      ctx.stroke();
-      ctx.restore();
-      ctx.save();
-      ctx.fillStyle = "rgba(11,78,162,0.30)";
-      ctx.strokeStyle = C.border;
-      roundRect(ctx, vx - 62, vy - 13, 124, 26, 13);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = C.sub;
-      ctx.font = "700 10.5px " + FONT;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("\u{1F512} " + v.name, vx, vy);
-      ctx.restore();
-    });
-    const wire = (a, b, color, alpha, dash) => {
-      const pa = P(a), pb = P(b);
-      ctx.save();
-      ctx.strokeStyle = color;
-      ctx.globalAlpha = alpha;
-      ctx.lineWidth = 1.8;
-      if (dash) ctx.setLineDash([5, 5]);
-      ctx.beginPath();
-      ctx.moveTo(pa.x + 24 * sc * 1.6, pa.y);
-      const mx = (pa.x + pb.x) / 2;
-      ctx.bezierCurveTo(mx, pa.y, mx, pb.y, pb.x - 24 * sc * 1.6, pb.y);
-      ctx.stroke();
-      ctx.restore();
-    };
-    for (let i = 0; i < MAIN3.length - 1; i++) wire(byId[MAIN3[i]], byId[MAIN3[i + 1]], "rgba(74,158,255,0.45)", 1);
-    const bypass = (fromId, overId, toId) => {
-      const a = P(byId[fromId]), o = P(byId[overId]), b = P(byId[toId]);
-      ctx.save();
-      ctx.strokeStyle = "rgba(129,149,180,0.5)";
-      ctx.setLineDash([4, 5]);
-      ctx.lineWidth = 1.4;
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y - 14 * sy);
-      ctx.quadraticCurveTo(o.x, a.y - 92 * sy, b.x, b.y - 14 * sy);
-      ctx.stroke();
-      ctx.fillStyle = "rgba(129,149,180,0.8)";
-      ctx.font = "600 " + Math.max(9, 9.5 * sc * 2) + "px " + FONT;
-      ctx.textAlign = "center";
-      ctx.fillText("\u062A\u062E\u0637\u064D\u0651 \u0625\u0646 \u0644\u0645 \u064A\u0644\u0632\u0645", o.x, a.y - 98 * sy);
-      ctx.restore();
-    };
-    bypass("gStd", "legal", "committee");
-    bypass("gChair", "translator", "builder");
-    NODES3.filter((n) => n.gate).forEach((g) => {
-      const gp = P(g), rp = P(byId[g.retryTo]);
-      ctx.save();
-      ctx.strokeStyle = "rgba(245,165,36,0.55)";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(gp.x, gp.y + 16 * sy);
-      ctx.bezierCurveTo(gp.x, gp.y + 152 * sy, rp.x, rp.y + 152 * sy, rp.x, rp.y + 16 * sy);
-      ctx.stroke();
-      const mid = { x: (gp.x + rp.x) / 2, y: gp.y + 132 * sy };
-      ctx.fillStyle = "rgba(245,165,36,0.9)";
-      ctx.font = "700 " + Math.max(9, 9.5 * sc * 2) + "px " + FONT;
-      ctx.textAlign = "center";
-      ctx.fillText("\u{1F501} \u0625\u0639\u0627\u062F\u0629 \u0645\u0648\u062C\u0647\u0629", mid.x, mid.y);
-      ctx.restore();
-      const ep = P(byId.esc);
-      ctx.save();
-      ctx.strokeStyle = "rgba(168,85,247,0.45)";
-      ctx.setLineDash([3, 5]);
-      ctx.lineWidth = 1.3;
-      ctx.beginPath();
-      ctx.moveTo(gp.x, gp.y + 16 * sy);
-      ctx.quadraticCurveTo(gp.x, ep.y, ep.x, ep.y - 20 * sy);
-      ctx.stroke();
-      ctx.restore();
-    });
-    if (!rm) for (let i = 0; i < MAIN3.length - 1; i++) {
-      const a = P(byId[MAIN3[i]]), b = P(byId[MAIN3[i + 1]]);
-      const k = (t * 8e-3 + i * 0.19) % 1;
-      const x = a.x + (b.x - a.x) * k, y = a.y + (b.y - a.y) * k;
-      ctx.save();
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = C.glow;
-      ctx.beginPath();
-      ctx.arc(x, y, 1.6, 0, 7);
-      ctx.fill();
-      ctx.restore();
-    }
-    const nodes = [];
-    NODES3.forEach((nd) => {
-      const p = P(nd);
-      const S = (nd.human ? 30 : nd.gate ? 24 : 26) * Math.min(1, sc * 2.2);
-      ctx.save();
-      if (nd.gate) {
-        ctx.translate(p.x, p.y);
-        ctx.rotate(Math.PI / 4);
-        ctx.fillStyle = "rgba(245,165,36,0.14)";
-        ctx.strokeStyle = "#F5A524";
-        ctx.lineWidth = 1.8;
-        if (!rm) {
-          ctx.shadowColor = "#F5A524";
-          ctx.shadowBlur = 8 + 4 * Math.sin(t * 0.05);
-        }
-        roundRect(ctx, -S * 0.72, -S * 0.72, S * 1.44, S * 1.44, 6);
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-        ctx.save();
-        ctx.fillStyle = "#F5A524";
-        ctx.font = "800 " + S * 0.62 + "px " + FONT;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("\u061F", p.x, p.y);
-        ctx.fillStyle = C.text;
-        ctx.font = "800 " + Math.max(10, S * 0.44) + "px " + FONT;
-        const dy = nd.lvl ? 30 : 0;
-        ctx.fillText(nd.name, p.x, p.y + S + 14 + dy);
-        ctx.font = "700 " + Math.max(9, S * 0.36) + "px " + MONO;
-        ctx.fillStyle = "#22C55E";
-        ctx.fillText("\u2713" + nd.passed, p.x - S * 0.7, p.y + S + 28 + dy);
-        ctx.fillStyle = "#EF4444";
-        ctx.fillText("\u2717" + nd.failed, p.x + S * 0.7, p.y + S + 28 + dy);
-        ctx.restore();
-      } else {
-        const working = nd.status === "working";
-        ctx.fillStyle = nd.esc ? "rgba(168,85,247,0.14)" : nd.human ? "rgba(168,85,247,0.18)" : C.card;
-        ctx.strokeStyle = nd.esc || nd.human ? STATUS.awaiting.color : working ? C.glow : "rgba(129,149,180,0.45)";
-        ctx.lineWidth = working || nd.human ? 2 : 1.2;
-        if (working && !rm) {
-          ctx.shadowColor = nd.human ? STATUS.awaiting.color : C.glow;
-          ctx.shadowBlur = 12 + 6 * Math.sin(t * 0.06 + p.x);
-        }
-        roundRect(ctx, p.x - S, p.y - S, S * 2, S * 2, 9);
-        ctx.fill();
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-        if (nd.cond) {
-          ctx.strokeStyle = "rgba(129,149,180,0.6)";
-          ctx.setLineDash([3, 3]);
-          roundRect(ctx, p.x - S - 4, p.y - S - 4, S * 2 + 8, S * 2 + 8, 11);
-          ctx.stroke();
-          ctx.setLineDash([]);
-        }
-        ctx.font = S * 1 + "px " + FONT;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(nd.icon, p.x, p.y - 1);
-        ctx.fillStyle = working ? "#22C55E" : "#7C8AA5";
-        ctx.beginPath();
-        ctx.arc(p.x + S - 5, p.y - S + 5, 3.4, 0, 7);
-        ctx.fill();
-        ctx.fillStyle = C.text;
-        ctx.font = "800 " + Math.max(10, S * 0.42) + "px " + FONT;
-        const dy = nd.lvl ? 30 : 0;
-        ctx.fillText(nd.name, p.x, p.y + S + 13 + dy);
-        ctx.fillStyle = C.sub;
-        ctx.font = "700 " + Math.max(9, S * 0.34) + "px " + MONO;
-        ctx.fillText(String(nd.processed), p.x, p.y + S + 27 + dy);
-      }
-      ctx.restore();
-      nodes.push({ key: nd.id, x: p.x, y: p.y, r: 34 * Math.min(1, sc * 2.2), data: nd });
-    });
-    if (!rm) itemsRef.current.forEach((it) => {
-      const segFrom = byId[MAIN3[it.seg]], segTo = byId[MAIN3[it.seg + 1]];
-      if (it.mode === "hold") {
-        it.holdT--;
-        if (it.holdT <= 0) {
-          const g = segTo;
-          const fail = g.gate && !it.fixed[g.id] && Math.random() < 0.22;
-          if (fail) {
-            if (Math.random() < 0.18) {
-              it.mode = "esc";
-              it.escT = 0;
-            } else {
-              it.mode = "back";
-              it.backSeg = MAIN3.indexOf(g.retryTo);
-              it.fixed[g.id] = true;
-            }
-          } else {
-            it.mode = "flow";
-            it.seg++;
-            it.t = 0;
-          }
-        }
-      } else if (it.mode === "back") {
-        it.t -= it.speed * 2.4;
-        if (it.t <= 0) {
-          it.seg--;
-          it.t = 1;
-          if (it.seg <= it.backSeg) {
-            it.mode = "flow";
-            it.t = 0;
-          }
-        }
-      } else if (it.mode === "esc") {
-        it.escT += 0.02;
-        if (it.escT >= 1) {
-          it.mode = "flow";
-          it.seg = 0;
-          it.t = 0;
-          it.fixed = {};
-          it.pkg = "ABCDEFGH"[Math.random() * 8 | 0];
-        }
-      } else {
-        it.t += it.speed;
-        if (it.t >= 1) {
-          if (segTo.gate) {
-            it.mode = "hold";
-            it.holdT = 34;
-            it.t = 1;
-          } else {
-            it.seg++;
-            it.t = 0;
-            if (it.seg >= MAIN3.length - 1) {
-              it.seg = 0;
-              it.fixed = {};
-              it.pkg = "ABCDEFGH"[Math.random() * 8 | 0];
-            }
-          }
-        }
-      }
-      let x, y;
-      if (it.mode === "esc") {
-        const g = P(segTo.gate ? segTo : byId.gChair), e = P(byId.esc);
-        x = g.x + (e.x - g.x) * it.escT;
-        y = g.y + (e.y - g.y) * it.escT;
-      } else {
-        const a = P(segFrom), b = P(segTo);
-        x = a.x + (b.x - a.x) * Math.min(1, Math.max(0, it.t));
-        y = a.y - 10 * sy;
-      }
-      ctx.save();
-      const col = it.mode === "back" ? "#EF4444" : it.mode === "hold" ? "#F5A524" : it.mode === "esc" ? "#A855F7" : "#22C55E";
-      ctx.fillStyle = col;
-      ctx.shadowColor = col;
-      ctx.shadowBlur = 9;
-      ctx.beginPath();
-      ctx.arc(x, y, 3.4, 0, 7);
-      ctx.fill();
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = C.text;
-      ctx.font = "700 8.5px " + MONO;
-      ctx.textAlign = "center";
-      ctx.fillText(it.pkg, x, y - 9);
-      ctx.restore();
-    });
-    nodesRef.current = nodes;
-    const m = mouseRef.current;
-    let hit = null;
-    for (const nd of nodes) if (dist2(m.x, m.y, nd.x, nd.y) < nd.r * nd.r) {
-      hit = nd;
-      break;
-    }
-    const hk = hit ? hit.key : null;
-    if (hk !== hoverKeyRef.current) {
-      hoverKeyRef.current = hk;
-      setHover(hit ? { ...hit } : null);
-    }
-  }, [rm, byId]);
-  const canvasRef = useCanvas(draw, [draw]);
-  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 12 } }, /* @__PURE__ */ React.createElement("div", { style: { minHeight: 480, position: "relative", background: `radial-gradient(ellipse at 50% 30%, ${C.bg1} 0%, ${C.bg0} 85%)`, borderRadius: 16, border: `1px solid ${C.border}`, overflow: "hidden" } }, /* @__PURE__ */ React.createElement(
-    "canvas",
-    {
-      ref: canvasRef,
-      onMouseMove: (e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        mouseRef.current = { x: e.clientX - r.left, y: e.clientY - r.top };
-      },
-      onMouseLeave: () => {
-        mouseRef.current = { x: -1, y: -1 };
-      },
-      onClick: () => {
-        const hk = hoverKeyRef.current;
-        const nd = nodesRef.current.find((x) => x.key === hk);
-        setSel(nd ? nd.data : null);
-      },
-      style: { display: "block", cursor: hover ? "pointer" : "default" },
-      "aria-label": "\u062E\u0637 \u0627\u0644\u0625\u0646\u062A\u0627\u062C \u0627\u0644\u062D\u064A \u2014 \u0645\u062D\u0627\u0643\u0627\u0629 \u0643\u0627\u0646\u0641\u0633 n8n",
-      role: "img"
-    }
-  ), hover && /* @__PURE__ */ React.createElement("div", { style: { position: "absolute", right: 14, top: 12, background: "rgba(5,9,26,0.96)", border: `1px solid ${hover.data.gate ? "#F5A524" : C.glow}`, borderRadius: 10, padding: "10px 14px", maxWidth: 330, fontSize: 12, pointerEvents: "none" } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, color: C.text, marginBottom: 4 } }, hover.data.icon || "\u26E9\uFE0F", " ", hover.data.name), /* @__PURE__ */ React.createElement("div", { style: { color: C.sub, lineHeight: 1.7 } }, hover.data.role), hover.data.gate ? /* @__PURE__ */ React.createElement("div", { style: { marginTop: 5, fontSize: 11 } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#22C55E" } }, "\u2713 \u0645\u0631\u0651\u0631 ", hover.data.passed), " \xB7 ", /* @__PURE__ */ React.createElement("span", { style: { color: "#EF4444" } }, "\u2717 \u0623\u0639\u0627\u062F ", hover.data.failed)) : /* @__PURE__ */ React.createElement("div", { style: { color: C.glow, marginTop: 5, fontSize: 11 } }, "\u0639\u0627\u0644\u062C: ", hover.data.processed))), sel && /* @__PURE__ */ React.createElement("div", { style: { ...panel, borderColor: sel.gate ? "#F5A524" : C.glow } }, /* @__PURE__ */ React.createElement("div", { style: { ...panelTitle, color: sel.gate ? "#F5A524" : C.glow } }, sel.icon || "\u26E9\uFE0F", " ", sel.name), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12.5, color: C.sub, lineHeight: 1.85 } }, sel.role), sel.gate && /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 18, marginTop: 8, fontSize: 12.5, flexWrap: "wrap" } }, /* @__PURE__ */ React.createElement("span", { style: { color: "#22C55E" } }, "\u2713 \u0645\u0631\u0651\u0631: ", sel.passed), /* @__PURE__ */ React.createElement("span", { style: { color: "#EF4444" } }, "\u2717 \u0623\u0639\u0627\u062F: ", sel.failed), /* @__PURE__ */ React.createElement("span", { style: { color: C.sub } }, "\u0622\u062E\u0631 \u0625\u0639\u0627\u062F\u0629: ", sel.lastReject), /* @__PURE__ */ React.createElement("span", { style: { color: "#F5A524" } }, "\u{1F501} \u0627\u0644\u0625\u0639\u0627\u062F\u0629 \u062A\u0631\u062C\u0639 \u0625\u0644\u0649: ", byId[sel.retryTo].name))), /* @__PURE__ */ React.createElement("div", { style: { ...panel, fontSize: 11.5, color: C.sub, lineHeight: 1.9 } }, "\u{1F4A1} \u0645\u062D\u0627\u0643\u0627\u0629 \u062D\u064A\u0629 \u0644\u0643\u0627\u0646\u0641\u0633 n8n \u0627\u0644\u0645\u0646\u0634\u0648\u0631 (v6.0): ", /* @__PURE__ */ React.createElement("b", { style: { color: "#22C55E" } }, "\u0623\u062E\u0636\u0631"), " \u0645\u062D\u062A\u0648\u0649 \u064A\u062A\u062F\u0641\u0642 \xB7", /* @__PURE__ */ React.createElement("b", { style: { color: "#F5A524" } }, " \u0628\u0631\u062A\u0642\u0627\u0644\u064A"), " \u0645\u062A\u0648\u0642\u0641 \u0639\u0646\u062F \u0628\u0648\u0627\u0628\u0629 \xB7 ", /* @__PURE__ */ React.createElement("b", { style: { color: "#EF4444" } }, "\u0623\u062D\u0645\u0631"), " \u0623\u064F\u0639\u064A\u062F \u0628\u062D\u0644\u0642\u0629 \u0627\u0644\u0625\u0639\u0627\u062F\u0629 \u0627\u0644\u0645\u0648\u062C\u0647\u0629 \xB7", /* @__PURE__ */ React.createElement("b", { style: { color: "#A855F7" } }, " \u0628\u0646\u0641\u0633\u062C\u064A"), " \u0635\u064F\u0639\u0651\u062F \u0644\u0645\u0646\u0637\u0642\u0629 \u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u0645\u062D\u0643\u0651\u0645. \u0627\u0644\u0625\u0637\u0627\u0631 \u0627\u0644\u0645\u0646\u0642\u0651\u0637 = \u0648\u0643\u064A\u0644 \u0634\u0631\u0637\u064A\u060C \u0648\u062E\u0637 \xAB\u062A\u062E\u0637\u064D\u0651 \u0625\u0646 \u0644\u0645 \u064A\u0644\u0632\u0645\xBB \u0641\u0648\u0642\u0647."));
-}
+function AgentsCockpit(){const L=[
+{n:"01",icon:"\u{1F4E5}",name:"\u0627\u0644\u0627\u0633\u062A\u0642\u0628\u0627\u0644",role:"\u0627\u0644\u0628\u0648\u0627\u0628\u0629 \u0648\u0627\u0644\u0637\u0627\u0628\u0648\u0631 \u2014 \u0641\u062D\u0635 \u062A\u0634\u0627\u0628\u0647 \u0627\u0644\u0641\u0647\u0631\u0633 \u0648\u062A\u0648\u062C\u064A\u0647 \u0627\u0644\u0637\u0644\u0628",chips:["\u062A\u0634\u0627\u0628\u0647 \u0627\u0644\u0641\u0647\u0631\u0633","\u0637\u0627\u0628\u0648\u0631 FIFO"],st:["\u0627\u0633\u062A\u0642\u0628\u0627\u0644 \u0627\u0644\u0628\u0648\u0627\u0628\u0629/\u0627\u0644\u0637\u0627\u0628\u0648\u0631","\u062A\u0646\u0638\u064A\u0645 \u0628\u064A\u0627\u0646\u0627\u062A \u0627\u0644\u0637\u0644\u0628","\u0628\u062D\u062B \u0627\u0644\u0641\u0647\u0631\u0633 (\u062A\u0634\u0627\u0628\u0647)","\u062A\u0642\u064A\u064A\u0645 \u0627\u0644\u062A\u0634\u0627\u0628\u0647","\u0645\u0648\u062C\u0648\u062F \u0645\u0633\u0628\u0642\u064B\u0627\u061F","\u0627\u0644\u0637\u0627\u0628\u0648\u0631 \u0623\u0648 \u0627\u0644\u0645\u0631\u0648\u0631 \u0627\u0644\u0645\u0628\u0627\u0634\u0631"]},
+{n:"02",icon:"\u{1F4DA}",name:"\u0627\u0644\u062A\u0623\u0635\u064A\u0644 \u0648\u0627\u0644\u0645\u0648\u062C\u0632",role:"\u0645\u0646 \u0627\u0644\u0641\u0647\u0631\u0633 \u0627\u0644\u0645\u0642\u0641\u0644 \u0623\u0648 \u0628\u062D\u062B \u062D\u064A \u0628\u0627\u0644\u0645\u0635\u0627\u062F\u0631 \u0627\u0644\u0645\u0639\u062A\u0645\u062F\u0629 \u0627\u0644\u064043",chips:["\u0641\u0647\u0631\u0633 \u0645\u0642\u0641\u0644","\u0628\u062D\u062B \u062D\u064A 43 \u0646\u0637\u0627\u0642\u064B\u0627"],st:["\u062C\u0644\u0628 \u0627\u0644\u062A\u0623\u0635\u064A\u0644 \u0645\u0646 \u0627\u0644\u0641\u0647\u0631\u0633","\u0627\u0644\u0628\u062D\u062B \u0639\u0646 \u0645\u0635\u062F\u0631 \u0645\u0648\u062B\u0648\u0642","\u062A\u062D\u0642\u0651\u0642 \u0627\u0644\u0645\u0635\u062F\u0631 \u0627\u0644\u0645\u0648\u062B\u0648\u0642","\u062F\u0645\u062C \u0627\u0644\u062A\u0623\u0635\u064A\u0644","\u062A\u062C\u0647\u064A\u0632 \u0627\u0644\u0645\u0648\u062C\u0632"]},
+{n:"03",icon:"\u270D\uFE0F",name:"\u0627\u0644\u0643\u062A\u0627\u0628\u0629 \u0628\u0627\u0644\u062F\u0641\u0639\u0627\u062A",role:"4 \u062F\u0641\u0639\u0627\u062A \u0643\u062A\u0627\u0628\u0629 \u062B\u0645 \u062A\u062C\u0645\u064A\u0639 v1.1 \u0648\u0645\u0639\u0627\u0644\u062C\u0629 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0644\u062C\u0646\u0629",chips:["15 \u0634\u0631\u064A\u062D\u0629","v1.1"],active:1,st:["\u062F\u0641\u0639\u0629 0 \u2014 \u0627\u0644\u0647\u064A\u0643\u0644","\u062F\u0641\u0639\u0629 1 \u2014 \u0627\u0639\u0631\u0641 (\u06341-6)","\u062F\u0641\u0639\u0629 2 \u2014 \u062A\u062C\u0646\u0651\u0628 (\u06347-9)","\u062F\u0641\u0639\u0629 3 \u2014 \u062A\u0635\u0631\u0651\u0641 (\u063410-15)","\u062A\u062C\u0645\u064A\u0639 \u0648\u062A\u062D\u0648\u064A\u0644 v1.1","\u0645\u0639\u0627\u0644\u062C\u0629 \u0645\u0644\u0627\u062D\u0638\u0627\u062A \u0627\u0644\u0644\u062C\u0646\u0629"]},
+{n:"04",icon:"\u{1F6E1}\uFE0F",name:"\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0645\u0639\u064A\u0627\u0631 G1",gate:1,role:"validator.py \u2014 16 \u0641\u062D\u0635\u064B\u0627 \u062D\u062A\u0645\u064A\u064B\u0627 \u0642\u0628\u0644 \u0639\u0631\u0636 \u0627\u0644\u0644\u062C\u0646\u0629",chips:["\u2713 41 \u0646\u062C\u0627\u062D","\u2717 6 \u0625\u0639\u0627\u062F\u0629"],st:["validator.py \u2014 16 \u0641\u062D\u0635\u064B\u0627","\u0645\u0637\u0627\u0628\u0642\u0629 \u0627\u0644\u0642\u0627\u0644\u0628 \u0627\u0644\u062D\u062A\u0645\u064A\u0629","\u062F\u0648\u0631\u062A\u0627 \u0625\u0635\u0644\u0627\u062D \u062B\u0645 \u062A\u0635\u0639\u064A\u062F"]},
+{n:"05",icon:"\u2696\uFE0F",name:"\u0627\u0644\u0642\u0627\u0646\u0648\u0646\u064A",cond:1,role:"\u0634\u0631\u0637\u064A \u2014 \u064A\u0639\u0645\u0644 \u0639\u0646\u062F \u0627\u0644\u063A\u0631\u0627\u0645\u0627\u062A \u0648\u0645\u0648\u0627\u062F \u0627\u0644\u0642\u0627\u0646\u0648\u0646 \u0641\u0642\u0637",chips:["\u0639\u0646\u062F \u0645\u0648\u0627\u062F \u0627\u0644\u0642\u0627\u0646\u0648\u0646"],st:["\u0641\u062D\u0635 \u0627\u0644\u062D\u0627\u062C\u0629 (\u0643\u0644\u0645\u0627\u062A \u0642\u0627\u0646\u0648\u0646\u064A\u0629)","\u0627\u0644\u0623\u062E\u0635\u0627\u0626\u064A \u0627\u0644\u0642\u0627\u0646\u0648\u0646\u064A"]},
+{n:"06",icon:"\u{1F3DB}\uFE0F",name:"\u0627\u0644\u0644\u062C\u0646\u0629 \u0648\u0627\u0644\u0631\u0626\u064A\u0633 G2",gate:1,role:"6 \u0645\u062F\u0642\u0642\u064A\u0646 + \u0631\u0626\u064A\u0633 \u062D\u062A\u0645\u064A \u0628\u062F\u0631\u062C\u0629 \u0645\u0648\u0632\u0648\u0646\u0629 \u0648\u062D\u0642 \u0627\u0644\u0641\u064A\u062A\u0648",chips:["\u2713 36","\u2717 5","\u0641\u064A\u062A\u0648"],st:["\u0627\u0644\u0641\u062D\u0648\u0635\u0627\u062A \u0627\u0644\u062D\u0627\u0633\u0645\u0629","\u0645\u062F\u0642\u0651\u0642 \u0627\u0644\u062A\u062D\u0631\u064A\u0641","\u0645\u062F\u0642\u0642 \u0627\u0644\u0645\u0635\u0627\u062F\u0631","\u0645\u062F\u0642\u0642 \u0627\u0644\u0633\u0644\u0627\u0645\u0629","\u0627\u0644\u0645\u062F\u0642\u0642 \u0627\u0644\u0644\u063A\u0648\u064A","\u0627\u0644\u0645\u062F\u0642\u0642 \u0627\u0644\u0639\u062F\u0627\u0626\u064A","\u0631\u0626\u064A\u0633 \u0627\u0644\u0644\u062C\u0646\u0629 \u0627\u0644\u062D\u062A\u0645\u064A","\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u0642\u064A\u0627\u0633"]},
+{n:"07",icon:"\u{1F310}",name:"\u0627\u0644\u062A\u0631\u062C\u0645\u0629 G3",cond:1,role:"\u0634\u0631\u0637\u064A \u2014 \u0646\u0633\u062E\u0629 \u0625\u0646\u062C\u0644\u064A\u0632\u064A\u0629 \u0648\u0641\u0642 ISO 18587 \u0645\u0639 \u0628\u0648\u0627\u0628\u0629 \u062A\u0637\u0627\u0628\u0642",chips:["ISO 18587","\u2713 7 \u00B7 \u2717 2"],st:["\u0627\u0644\u0645\u062A\u0631\u062C\u0645 AI","\u0645\u062F\u0642\u0642 \u0627\u0644\u062A\u0631\u062C\u0645\u0629","\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u062A\u0631\u062C\u0645\u0629","\u0639\u062F\u0651\u0627\u062F \u0627\u0644\u062A\u0631\u062C\u0645\u0629"]},
+{n:"08",icon:"\u{1F3D7}\uFE0F",name:"\u0627\u0644\u0628\u0646\u0627\u0621 \u0648\u0627\u0644\u0631\u0641\u0639",role:"\u0628\u0646\u0627\u0621 PPTX \u0628\u0627\u0644\u0647\u0648\u064A\u0629 V6 \u0648\u0631\u0641\u0639\u0647 \u0625\u0644\u0649 OneDrive",chips:["\u0647\u0648\u064A\u0629 V6","OneDrive"],st:["\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0645\u0639\u064A\u0627\u0631 validator.py","\u0645\u0637\u0627\u0628\u0642\u0629 \u0627\u0644\u0642\u0627\u0644\u0628 \u0627\u0644\u062D\u062A\u0645\u064A\u0629","\u062A\u062C\u0647\u064A\u0632 \u0627\u0644\u0628\u0646\u0627\u0621 \u0648\u0627\u0644\u0631\u0641\u0639","\u062C\u0644\u0633\u0629 \u0631\u0641\u0639 OneDrive","\u0628\u0646\u0627\u0621 PPTX \u0628\u0627\u0644\u0647\u0648\u064A\u0629 V6","\u0627\u0644\u062A\u062F\u0642\u064A\u0642 \u0627\u0644\u0646\u0647\u0627\u0626\u064A"]},
+{n:"09",icon:"\u2712\uFE0F",name:"\u0627\u0644\u0645\u062D\u0643\u0651\u0645 \u0627\u0644\u0628\u0634\u0631\u064A",gold:1,role:"\u0627\u0644\u0628\u0648\u0627\u0628\u0629 \u0627\u0644\u0630\u0647\u0628\u064A\u0629 \u2014 \u0644\u0627 \u0646\u0634\u0631 \u0642\u0628\u0644 \u062A\u0648\u0642\u064A\u0639 \u0627\u0644\u0645\u062D\u0643\u0651\u0645 \u0625\u0637\u0644\u0627\u0642\u064B\u0627",chips:["3 \u0628\u0627\u0646\u062A\u0638\u0627\u0631 \u0627\u0644\u062A\u0648\u0642\u064A\u0639","\u0644\u0627 \u0646\u0634\u0631 \u0642\u0628\u0644\u0647"],st:["\u0645\u0646\u0637\u0642\u0629 \u0627\u0646\u062A\u0638\u0627\u0631 OneDrive","\u062A\u0648\u0642\u064A\u0639 \u0627\u0644\u0645\u062D\u0643\u0651\u0645","\u0642\u0631\u0627\u0631 \u0627\u0639\u062A\u0645\u0627\u062F\u061F"]},
+{n:"10",icon:"\u{1F5C2}\uFE0F",name:"\u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F \u0648\u0627\u0644\u062A\u0633\u062C\u064A\u0644",role:"\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u0639\u0631\u0636 \u0628\u0627\u0644\u0641\u0647\u0631\u0633 \u0648\u0625\u0642\u0641\u0627\u0644 \u0623\u0645\u0631 \u0627\u0644\u0625\u0646\u062A\u0627\u062C",chips:["43 \u0645\u0639\u062A\u0645\u062F\u064B\u0627","\u0625\u0634\u0639\u0627\u0631 \u062A\u0644\u0642\u0627\u0626\u064A"],st:["\u0627\u0644\u062A\u0633\u062C\u064A\u0644 \u0628\u0627\u0644\u0641\u0647\u0631\u0633","\u062A\u062D\u062F\u064A\u062B \u0634\u064A\u062A \u0627\u0644\u062D\u0627\u0644\u0629","\u0625\u0642\u0641\u0627\u0644 \u0623\u0645\u0631 \u0627\u0644\u0625\u0646\u062A\u0627\u062C"]}];
+return React.createElement("div",{style:{background:C.card,border:"1px solid "+C.border,borderRadius:15,padding:"16px 18px"}},
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},
+React.createElement("div",{style:{fontWeight:800,fontSize:13}},"\u{1F3ED} \u062E\u0637 \u0627\u0644\u0625\u0646\u062A\u0627\u062C \u2014 10 \u0645\u062D\u0637\u0627\u062A \u0645\u0646 \u0627\u0644\u0637\u0644\u0628 \u0625\u0644\u0649 \u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F"),
+React.createElement("span",{style:{fontSize:9,color:C.sub}},"\u0645\u0637\u0627\u0628\u0642 \u0644\u062E\u0637 n8n \u0627\u0644\u0645\u0646\u0634\u0648\u0631 v6.0")),
+React.createElement("div",{style:{fontSize:10.5,color:C.sub,margin:"3px 0 12px"}},"\u0645\u0631\u0651\u0631 \u0639\u0644\u0649 \u0623\u064A \u0645\u062D\u0637\u0629 \u0644\u0639\u0631\u0636 \u0645\u0631\u0627\u062D\u0644\u0647\u0627 \u0627\u0644\u062F\u0627\u062E\u0644\u064A\u0629 \u0628\u0627\u0644\u062A\u0631\u062A\u064A\u0628 \u2014 \u0627\u0644\u0631\u0642\u0645 \u0627\u0644\u0623\u0632\u0631\u0642 \u064A\u0645\u064A\u0646 \u0643\u0644 \u0628\u0637\u0627\u0642\u0629 \u0647\u0648 \u0639\u062F\u062F \u0627\u0644\u0645\u0631\u0627\u062D\u0644."),
+React.createElement("div",{style:{display:"grid",gridTemplateColumns:"repeat(auto-fit, minmax(196px, 1fr))",gap:10}},
+L.map(function(a,ix){var ac=a.gold?C.gold:a.gate?"#F5A524":a.cond?"#A855F7":C.glow;
+return React.createElement("div",{key:ix,title:a.st?a.st.length+" \u0645\u0631\u0627\u062D\u0644: "+a.st.join(" \u2190 "):"",style:{background:a.gold?"linear-gradient(160deg, "+C.gold+"1F, "+C.card+")":C.card,border:a.gold?"2px solid "+C.gold:a.active?"1.6px solid "+C.glow:(a.cond?"1.6px dashed ":"1px solid ")+(a.gate?"#F5A52499":a.cond?"#A855F799":C.border),borderRadius:14,padding:"10px 12px",cursor:"help",boxShadow:a.active?"0 0 18px "+C.glow+"55":a.gold?"0 0 18px "+C.gold+"33":"none",animation:a.active?"aliPulse 2.4s infinite":"none"}},
+React.createElement("div",{style:{display:"flex",alignItems:"center",gap:7}},
+React.createElement("span",{style:{fontFamily:MONO,fontWeight:800,fontSize:10,color:ac,border:"1.5px solid "+ac,borderRadius:8,padding:"1px 6px",direction:"ltr",flexShrink:0}},a.n),
+React.createElement("span",{style:{fontSize:17}},a.icon),
+React.createElement("div",{style:{fontWeight:800,fontSize:12,flex:1,minWidth:0}},a.name),
+a.st&&React.createElement("span",{style:{background:"rgba(59,130,246,.14)",color:C.glow,borderRadius:999,padding:"1px 7px",fontSize:9.5,fontWeight:800,fontFamily:MONO,flexShrink:0}},a.st.length)),
+React.createElement("div",{style:{fontSize:9.5,color:C.sub,margin:"6px 0 7px",lineHeight:1.55,minHeight:30}},a.role),
+React.createElement("div",{style:{display:"flex",flexWrap:"wrap",gap:5}},a.chips.map(function(c,ci){return React.createElement("span",{key:ci,style:{fontSize:9,fontWeight:700,color:a.gold?C.gold:C.sub,background:C.soft,border:"1px solid "+C.border,borderRadius:9,padding:"2px 8px",whiteSpace:"nowrap"}},c)})))})),
+React.createElement("div",{style:{display:"flex",gap:14,marginTop:12,flexWrap:"wrap",fontSize:9,color:C.sub}},
+React.createElement("span",{style:{color:"#F5A524"}},"\u{1F6E1}\uFE0F \u0625\u0637\u0627\u0631 \u0628\u0631\u062A\u0642\u0627\u0644\u064A = \u0628\u0648\u0627\u0628\u0629 \u062A\u062F\u0642\u064A\u0642 \u0622\u0644\u064A\u0629"),
+React.createElement("span",{style:{color:"#A855F7"}},"\u25CC \u0625\u0637\u0627\u0631 \u0645\u062A\u0642\u0637\u0639 = \u0648\u0643\u064A\u0644 \u0634\u0631\u0637\u064A"),
+React.createElement("span",{style:{color:C.gold}},"\u2712\uFE0F \u0630\u0647\u0628\u064A = \u0627\u0644\u0627\u0639\u062A\u0645\u0627\u062F \u0627\u0644\u0628\u0634\u0631\u064A"),
+React.createElement("span",null,"\u{1F535} \u0646\u0628\u0636 \u0623\u0632\u0631\u0642 = \u064A\u0639\u0645\u0644 \u0627\u0644\u0622\u0646")))}
 const panel = { background: C.card, border: `1px solid ${C.border}`, borderRadius: 14, padding: "13px 16px" };
 const panelTitle = { fontSize: 13, fontWeight: 800, color: C.glow, marginBottom: 10 };
 const ttStyle = { background: "#0A1530", border: `1px solid ${C.border}`, borderRadius: 8, fontFamily: FONT, fontSize: 12, direction: "rtl" };
@@ -1011,7 +709,7 @@ function Timeline15() {
 }
 function StudioTab() {
   const R = AGENTS7.filter((a) => a.side === "r"), L = AGENTS7.filter((a) => a.side === "l");
-  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement(StudioKpis, null), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "290px 1fr", gap: 14, alignItems: "start" } }, /* @__PURE__ */ React.createElement(ApprovalFile, null), /* @__PURE__ */ React.createElement("div", { style: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 15, padding: "16px 18px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, fontSize: 13 } }, "\u{1F3AC} \u0627\u0644\u062A\u0648\u0623\u0645 \u0627\u0644\u0631\u0642\u0645\u064A \u0644\u0644\u0639\u0631\u0636 \u2014 Digital Presentation Twin"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, color: C.sub } }, "E.14 \u2014 \u0643\u0644 \u062A\u0628\u0627\u062F\u0644 \u0628\u064A\u0646 \u0627\u0644\u0648\u0643\u0644\u0627\u0621 = JSON \u0645\u062D\u062F\u062F\u060C \u0644\u0627 \u0646\u0635 \u062D\u0631")), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 12, alignItems: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10 } }, R.map((a) => /* @__PURE__ */ React.createElement(AgentChip, { key: a.name, a }))), /* @__PURE__ */ React.createElement("div", { style: { position: "relative", minHeight: 300, display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 400 300", style: { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }, preserveAspectRatio: "none" }, [55, 125, 195, 262].map((y, i) => /* @__PURE__ */ React.createElement("g", { key: "r" + i }, /* @__PURE__ */ React.createElement("path", { d: `M 400 ${y} Q 330 ${y}, 285 150`, fill: "none", stroke: C.glow, strokeOpacity: "0.35", strokeWidth: "1.4", strokeDasharray: "5 5" }), /* @__PURE__ */ React.createElement("circle", { r: "3.4", fill: C.glow }, /* @__PURE__ */ React.createElement("animateMotion", { dur: `${2.6 + i * 0.5}s`, repeatCount: "indefinite", path: `M 400 ${y} Q 330 ${y}, 285 150` })))), [75, 150, 228].map((y, i) => /* @__PURE__ */ React.createElement("g", { key: "l" + i }, /* @__PURE__ */ React.createElement("path", { d: `M 0 ${y} Q 70 ${y}, 115 150`, fill: "none", stroke: C.glow, strokeOpacity: "0.35", strokeWidth: "1.4", strokeDasharray: "5 5" }), /* @__PURE__ */ React.createElement("circle", { r: "3.4", fill: C.glow }, /* @__PURE__ */ React.createElement("animateMotion", { dur: `${3 + i * 0.6}s`, repeatCount: "indefinite", path: `M 0 ${y} Q 70 ${y}, 115 150` }))))), /* @__PURE__ */ React.createElement(SlideTwin, null)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10 } }, L.map((a) => /* @__PURE__ */ React.createElement(AgentChip, { key: a.name, a })))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 10, marginTop: 16 } }, GATES4.map((g) => /* @__PURE__ */ React.createElement(GateCard, { key: g.id, g }))))), /* @__PURE__ */ React.createElement(Timeline15, null));
+  return /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, /* @__PURE__ */ React.createElement(StudioKpis, null), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "290px 1fr", gap: 14, alignItems: "start" } }, /* @__PURE__ */ React.createElement(ApprovalFile, null), /* @__PURE__ */ React.createElement("div", { style: { background: C.card, border: `1px solid ${C.border}`, borderRadius: 15, padding: "16px 18px" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 6 } }, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 800, fontSize: 13 } }, "\u{1F3AC} \u0627\u0644\u062A\u0648\u0623\u0645 \u0627\u0644\u0631\u0642\u0645\u064A \u0644\u0644\u0639\u0631\u0636 \u2014 Digital Presentation Twin"), /* @__PURE__ */ React.createElement("span", { style: { fontSize: 9, color: C.sub } }, "E.14 \u2014 \u0643\u0644 \u062A\u0628\u0627\u062F\u0644 \u0628\u064A\u0646 \u0627\u0644\u0648\u0643\u0644\u0627\u0621 = JSON \u0645\u062D\u062F\u062F\u060C \u0644\u0627 \u0646\u0635 \u062D\u0631")), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "auto 1fr auto", gap: 12, alignItems: "center" } }, /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10 } }, R.map((a) => /* @__PURE__ */ React.createElement(AgentChip, { key: a.name, a }))), /* @__PURE__ */ React.createElement("div", { style: { position: "relative", minHeight: 300, display: "flex", alignItems: "center", justifyContent: "center" } }, /* @__PURE__ */ React.createElement("svg", { viewBox: "0 0 400 300", style: { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }, preserveAspectRatio: "none" }, [55, 125, 195, 262].map((y, i) => /* @__PURE__ */ React.createElement("g", { key: "r" + i }, /* @__PURE__ */ React.createElement("path", { d: `M 400 ${y} Q 330 ${y}, 285 150`, fill: "none", stroke: C.glow, strokeOpacity: "0.35", strokeWidth: "1.4", strokeDasharray: "5 5" }), /* @__PURE__ */ React.createElement("circle", { r: "3.4", fill: C.glow }, /* @__PURE__ */ React.createElement("animateMotion", { dur: `${2.6 + i * 0.5}s`, repeatCount: "indefinite", path: `M 400 ${y} Q 330 ${y}, 285 150` })))), [75, 150, 228].map((y, i) => /* @__PURE__ */ React.createElement("g", { key: "l" + i }, /* @__PURE__ */ React.createElement("path", { d: `M 0 ${y} Q 70 ${y}, 115 150`, fill: "none", stroke: C.glow, strokeOpacity: "0.35", strokeWidth: "1.4", strokeDasharray: "5 5" }), /* @__PURE__ */ React.createElement("circle", { r: "3.4", fill: C.glow }, /* @__PURE__ */ React.createElement("animateMotion", { dur: `${3 + i * 0.6}s`, repeatCount: "indefinite", path: `M 0 ${y} Q 70 ${y}, 115 150` }))))), /* @__PURE__ */ React.createElement(SlideTwin, null)), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 10 } }, L.map((a) => /* @__PURE__ */ React.createElement(AgentChip, { key: a.name, a })))))));
 }
 const PKG_MAP = [
   { code: "A", name: "\u0627\u0644\u0633\u0644\u0627\u0645\u0629 \u0627\u0644\u0645\u062F\u0631\u0633\u064A\u0629", icon: "\u{1F3EB}", pct: 85, color: "#0B4EA2", subs: ["\u0628\u064A\u0626\u0629 \u0627\u0644\u062A\u0639\u0644\u0645 \u0627\u0644\u0622\u0645\u0646\u0629", "\u0627\u0644\u0623\u0646\u0634\u0637\u0629 \u0627\u0644\u0645\u062F\u0631\u0633\u064A\u0629", "\u0627\u0644\u0623\u0645\u0646 \u0627\u0644\u0633\u064A\u0628\u0631\u0627\u0646\u064A", "\u0627\u0644\u0645\u0631\u0627\u0641\u0642 \u0648\u0627\u0644\u062A\u062C\u0647\u064A\u0632\u0627\u062A", "\u0627\u0644\u0637\u0648\u0627\u0631\u0626 \u0648\u0627\u0644\u0625\u062E\u0644\u0627\u0621"] },
