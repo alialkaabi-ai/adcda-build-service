@@ -355,8 +355,8 @@ async function build(content) {
     const slide = newSlide(); addSlideTitle(slide, c.title, c.subtitle);
     let topY = 2.75;
     if (c.intro) {
-      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: 0.85, fill: { color: COLORS.primaryDark }, line: { type: "none" }, rectRadius: 0.06, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.12 } });
-      slide.addText(c.intro, { x: 0.75, y: topY, w: 11.80, h: 0.85, fontSize: 13.5, fontFace: FONT, color: COLORS.white, align: "right", valign: "middle", margin: 0, rtlMode: true });
+      slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: 0.85, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.06, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
+      slide.addText(c.intro, { x: 0.75, y: topY, w: 11.80, h: 0.85, fontSize: 13.5, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "right", valign: "middle", margin: 0, rtlMode: true });
       topY += 1.05;
     }
     const pts = c.points || [];
