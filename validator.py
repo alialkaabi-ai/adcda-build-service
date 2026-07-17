@@ -24,8 +24,96 @@ def texts_of(s):
         out += [g.get("group",""), g.get("behavior","")]
     return out
 
+ALLOWED_FREE = ["section","list","cards","cardsDesc","compact","numbered","dodont",
+                "scenarios","quiz","emergency","refs","closing"]
+
+def _pt(p):
+    if isinstance(p, list):
+        return " ".join(str(r.get("text","")) for r in p if isinstance(r, dict))
+    if isinstance(p, dict):
+        return (str(p.get("lead","")) + " " + str(p.get("text",""))).strip()
+    return str(p or "")
+
+def texts_free(s):
+    out=[]
+    for k in ("title","subtitle","intro","exampleText","quote","label"):
+        if s.get(k): out.append(str(s[k]))
+    for k in ("points","steps","do","dont","when","say","refs"):
+        out += [_pt(x) for x in (s.get(k) or [])]
+    for k in ("cards","items"):
+        for c in (s.get(k) or []):
+            if isinstance(c, dict): out += [str(c.get("title","")), str(c.get("desc",""))]
+            else: out.append(str(c))
+    for c in (s.get("scenarios") or []) + (s.get("qa") or []):
+        if isinstance(c, dict): out += [str(c.get("q","")), str(c.get("a",""))]
+    r=s.get("reminder")
+    if isinstance(r, dict): out += [str(r.get("label","")), str(r.get("text",""))]
+    return [t for t in out if t.strip()]
+
+def audit_free(d):
+    """معيار البنية الحرة — التصميم الرسمي المعتمد"""
+    R=[]
+    def add(i,st,dt=""): R.append((i,st,dt))
+    slides=d.get("slides") or []
+    n_ok = 14 <= len(slides) <= 30
+    add("1 عدد الشرائح 14-30","PASS" if n_ok else "FAIL",f"{len(slides)}")
+    types=[s.get("type") for s in slides]
+    bad_t=[t for t in types if t not in ALLOWED_FREE]
+    add("2 الأنواع من قائمة التصميم الرسمي","PASS" if not bad_t else "FAIL",str(bad_t))
+    cnt={t:types.count(t) for t in set(types)}
+    need_ok = cnt.get("section",0)>=2 and cnt.get("dodont",0)>=2 and all(cnt.get(t) for t in ("list","numbered","emergency","quiz","refs","closing"))
+    add("3 الأركان الإلزامية (قسمان + افعل/لا تفعل ×2 + طوارئ + كويز + مصادر + خاتمة)","PASS" if need_ok else "FAIL",str(cnt))
+    add("4 الخاتمة أخيرًا","PASS" if types and types[-1]=="closing" else "FAIL")
+    add("5 الغلاف","PASS" if (d.get("cover") or {}).get("title") else "FAIL")
+    bad=[]
+    caps={"cards":6,"items":8,"steps":8,"do":7,"dont":7,"scenarios":4,"qa":5,"refs":7,"points":8,"when":4,"say":4}
+    for ix,s in enumerate(slides):
+        n=s.get("i", ix+1)
+        t=s.get("title","")
+        if t and wc(t)>9: bad.append(f"ش{n} عنوان {wc(t)} كلمة")
+        for k,cap in caps.items():
+            lst=s.get(k) or []
+            if len(lst)>cap: bad.append(f"ش{n} {k}:{len(lst)}>{cap}")
+        for k in ("points","steps","do","dont","when","say"):
+            for b in (s.get(k) or []):
+                tb=_pt(b)
+                if wc(tb)>14: bad.append(f"ش{n} عنصر {wc(tb)} كلمة")
+    add("6 حدود العناوين والعناصر","PASS" if not bad else "FAIL","; ".join(bad[:8]))
+    blob=" ".join(t for s in slides for t in texts_free(s))
+    bad_nums=re.findall(r"(?:^|[^\d])(911|112|997|998|996|995)(?:[^\d]|$)",blob)
+    bad_terms=[t for t in ("المعاقين","ذوي الاحتياجات","المعوقين") if t in blob]
+    add("7 رقم 999 والمصطلحات","PASS" if not bad_nums and not bad_terms else "FAIL",str(bad_nums+bad_terms))
+    mm=d.get("main_message","")
+    mm_ok = bool(mm) and wc(mm)<=15
+    add("8 الرسالة الرئيسية ≤15","PASS" if mm_ok else "FAIL",f"{wc(mm)} كلمة" if mm else "مفقودة")
+    bad_refs=[]
+    for s in slides:
+        if s.get("type")=="refs":
+            for r in (s.get("refs") or []):
+                if not re.search(r"(19|20)\d\d", str(r)): bad_refs.append(str(r)[:40])
+    add("9 المصادر APA بسنوات رقمية","PASS" if not bad_refs else "FAIL","; ".join(bad_refs[:4]))
+    empty=[]
+    for ix,s in enumerate(slides):
+        n=s.get("i", ix+1); t=s.get("type")
+        if t=="dodont" and (not (s.get("do") or []) or not (s.get("dont") or [])): empty.append(f"ش{n} dodont")
+        if t=="quiz" and any(not q.get("q") or not q.get("a") for q in (s.get("qa") or [{}])): empty.append(f"ش{n} quiz")
+        if t=="scenarios" and any(not q.get("q") or not q.get("a") for q in (s.get("scenarios") or [{}])): empty.append(f"ش{n} scenarios")
+        if t=="emergency" and not (s.get("items") or s.get("when")): empty.append(f"ش{n} emergency")
+    add("10 اكتمال المحتوى الأساسي","PASS" if not empty else "FAIL","; ".join(empty))
+    if "MISSING_FACT" in blob: add("11 لا حقائق ناقصة","FAIL","MISSING_FACT موجودة")
+    else: add("11 لا حقائق ناقصة","PASS")
+    print(f"\n=== {d.get('code','?')} — {d.get('title_ar') or d.get('title','?')} (بنية حرة) ===")
+    p=sum(1 for _,st,_ in R if st=="PASS"); f=sum(1 for _,st,_ in R if st=="FAIL")
+    for i,st,dt in R:
+        mark={"PASS":"✅","FAIL":"❌","PENDING":"⏳"}[st]
+        print(f"{mark} {i}" + (f" — {dt}" if dt else ""))
+    print(f"النتيجة: {p} ناجح / {f} فاشل (من {len(R)})")
+    return f==0
+
 def audit(path):
     d=json.load(open(path,encoding="utf-8"))
+    if not any((s0 or {}).get("type")=="main_message_why" for s0 in d.get("slides") or []):
+        return audit_free(d)
     sl={s["n"]:s for s in d["slides"]}
     R=[]  # (item, status, detail)  status: PASS/FAIL/PENDING
     def add(i,st,dt=""): R.append((i,st,dt))
