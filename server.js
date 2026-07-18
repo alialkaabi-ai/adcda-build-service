@@ -140,6 +140,7 @@ app.post("/build", async (req, res) => {
   const outName = ((content.code || "F.X").replace(/\./g, "")) + "_ADCDA.pptx";
   const outPath = path.join(work, outName);
   content.output = outPath;
+  try { const qz = extractQuiz(content); if (qz && qz.code) fs.writeFileSync(path.join(QUIZ_DIR, qz.code.replace(/[^\w.\-]/g, "") + ".json"), JSON.stringify(qz), "utf8"); } catch (e) {}
   try {
     fs.writeFileSync(jsonPath, JSON.stringify(content), "utf8");
     execFileSync("node", [BUILD, jsonPath], { stdio: "pipe" });
@@ -159,5 +160,34 @@ app.post("/build", async (req, res) => {
     try { fs.rmSync(work, { recursive: true, force: true }); } catch (_) {}
   }
 });
+
+// ─── نظام قياس الأثر: اختبار تفاعلي لكل عرض (QR) ───
+const QUIZ_DIR = path.join(__dirname, "quizzes");
+try { fs.mkdirSync(QUIZ_DIR, { recursive: true }); } catch (e) {}
+
+function extractQuiz(content) {
+  const slides = content.slides || [];
+  const qz = slides.find(s => s && s.type === "quiz" && Array.isArray(s.qa) && s.qa.length);
+  if (!qz) return null;
+  const key = slides.find(s => s && s.type === "list" && /رسائل ذهبية/.test(s.title || ""));
+  const pt = p => Array.isArray(p) ? p.map(r => (r && r.text) || "").join("") : (p && typeof p === "object" ? ((p.lead || "") + " " + (p.text || "")) : String(p || ""));
+  return {
+    code: content.code || "",
+    title: content.title_ar || content.title || "",
+    main_message: content.main_message || "",
+    qa: qz.qa.slice(0, 6).map(x => ({ q: String(x.q || ""), a: String(x.a || "") })),
+    messages: key ? (key.points || []).map(pt).slice(0, 5) : []
+  };
+}
+
+app.get("/quiz-data/:code", (req, res) => {
+  const f = path.join(QUIZ_DIR, String(req.params.code).replace(/[^\w.\-]/g, "") + ".json");
+  if (!fs.existsSync(f)) return res.status(404).json({ error: "لا يوجد اختبار لهذا العرض بعد" });
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.send(fs.readFileSync(f, "utf8"));
+});
+
+app.get("/quiz/:code", (_req, res) => res.sendFile(path.join(__dirname, "quiz.html")));
+
 
 app.listen(PORT, () => console.log("ADCDA Build Service v2.4 on port " + PORT));

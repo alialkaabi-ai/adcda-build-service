@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبر معلوماتك — هيئة أبوظبي للدفاع المدني</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Tajawal','Segoe UI',sans-serif}
+body{background:#F7F8FA;color:#1F2E5A;min-height:100vh;padding:18px 14px 40px}
+.wrap{max-width:520px;margin:0 auto}
+.head{text-align:center;margin-bottom:18px}
+.head .badge{display:inline-block;background:#0B4EA2;color:#fff;border-radius:999px;padding:4px 16px;font-size:12px;font-weight:700;margin-bottom:10px}
+h1{font-size:20px;font-weight:800}
+.sub{color:#555;font-size:12.5px;margin-top:4px}
+.card{background:#fff;border:1px solid #E5EBF2;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(31,46,90,.06)}
+.qnum{font-size:11px;color:#0B4EA2;font-weight:800;margin-bottom:6px}
+.qtext{font-size:15px;font-weight:700;line-height:1.6;margin-bottom:12px}
+.btns{display:flex;gap:10px}
+.btn{flex:1;border:1.5px solid #E5EBF2;background:#fff;border-radius:10px;padding:11px;font-size:15px;font-weight:800;cursor:pointer;color:#1F2E5A}
+.btn.t{border-color:#1E7E34;color:#1E7E34}.btn.f{border-color:#C0392B;color:#C0392B}
+.btn.sel-right{background:#EAF4EE;border-color:#1E7E34}
+.btn.sel-wrong{background:#FCEEEC;border-color:#C0392B}
+.exp{display:none;margin-top:10px;background:#F2F6FB;border-radius:9px;padding:10px 12px;font-size:12.5px;line-height:1.7;color:#1F2E5A}
+.verdict{font-weight:800;margin-bottom:2px}
+.stars{display:flex;gap:8px;justify-content:center;font-size:30px;cursor:pointer;user-select:none}
+.stars span{filter:grayscale(1);transition:.15s}.stars span.on{filter:none;transform:scale(1.12)}
+.submit{width:100%;background:#0B4EA2;color:#fff;border:none;border-radius:12px;padding:14px;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px}
+.submit:disabled{opacity:.45}
+.result{display:none;text-align:center}
+.score{font-size:42px;font-weight:800;color:#0B4EA2;margin:8px 0}
+.mm{background:#1F2E5A;color:#fff;border-radius:12px;padding:14px;font-size:14px;font-weight:700;line-height:1.7;margin-top:12px}
+.foot{text-align:center;color:#888;font-size:10.5px;margin-top:22px;line-height:1.8}
+.center{text-align:center}
+</style></head><body><div class="wrap">
+<div class="head"><span class="badge">هيئة أبوظبي للدفاع المدني</span><h1 id="tt">اختبر معلوماتك</h1><div class="sub">صح أم خطأ؟ جاوب ثم اكتشف الإجابة — إجاباتك تساعدنا نطور التوعية</div></div>
+<div id="qs"></div>
+<div class="card" id="impact" style="display:none">
+ <div class="qtext center">ما مدى استفادتك من هذا العرض؟</div>
+ <div class="stars" id="useful"><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span><span>⭐</span></div>
+ <div class="qtext center" style="margin-top:16px">هل ستغيّر سلوكك بعد ما تعلمته اليوم؟</div>
+ <div class="btns"><button class="btn t" id="chgY">نعم، أكيد</button><button class="btn" id="chgM">ربما</button><button class="btn f" id="chgN">لا</button></div>
+ <button class="submit" id="send" disabled>أرسل إجاباتي</button>
+</div>
+<div class="card result" id="res">
+ <div class="qtext">نتيجتك</div><div class="score" id="sc"></div>
+ <div id="fb" style="font-size:14px;font-weight:700"></div>
+ <div class="mm" id="mm" style="display:none"></div>
+ <div class="sub" style="margin-top:10px">شكرًا لمشاركتك — سلامتك أولًا 🇦🇪</div>
+</div>
+<div class="foot">عاصمة أكثر أمنًا وسلامة · للطوارئ 999<br>@civildefencead · www.adcda.gov.ae</div>
+</div>
+<script>
+const code=location.pathname.split("/").pop();
+let quiz=null,answers={},useful=0,willChange=null,done=0;
+fetch("/quiz-data/"+code).then(r=>{if(!r.ok)throw 0;return r.json()}).then(q=>{quiz=q;render(q)}).catch(()=>{document.getElementById("qs").innerHTML='<div class="card center">هذا العرض لا يحتوي اختبارًا تفاعليًا بعد.</div>';});
+function isTrue(a){return /^\s*صح/.test(a)}
+function render(q){
+ document.getElementById("tt").textContent="اختبر معلوماتك: "+(q.title||"");
+ const qs=document.getElementById("qs");
+ q.qa.forEach((x,i)=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML='<div class="qnum">السؤال '+(i+1)+' من '+q.qa.length+'</div><div class="qtext">'+x.q+'</div><div class="btns"><button class="btn t">صح ✓</button><button class="btn f">خطأ ✕</button></div><div class="exp"></div>';
+  const bs=d.querySelectorAll(".btn"),ex=d.querySelector(".exp"),right=isTrue(x.a);
+  bs.forEach((b,bi)=>b.onclick=()=>{if(answers[i]!==undefined)return;
+   const saidTrue=bi===0,ok=saidTrue===right;answers[i]=ok?1:0;done++;
+   b.classList.add(ok?"sel-right":"sel-wrong");
+   ex.style.display="block";ex.innerHTML='<div class="verdict" style="color:'+(ok?"#1E7E34":"#C0392B")+'">'+(ok?"إجابة صحيحة 👏":"إجابة غير صحيحة")+'</div>'+x.a;
+   if(done===quiz.qa.length)document.getElementById("impact").style.display="block";
+  });
+  qs.appendChild(d);
+ });
+}
+document.querySelectorAll("#useful span").forEach((s,i)=>s.onclick=()=>{useful=i+1;document.querySelectorAll("#useful span").forEach((x,j)=>x.classList.toggle("on",j<=i));check()});
+for(const [id,v] of [["chgY","نعم"],["chgM","ربما"],["chgN","لا"]])document.getElementById(id).onclick=e=>{willChange=v;document.querySelectorAll("#impact .btns .btn").forEach(b=>b.style.background="");e.target.style.background="#F2F6FB";check()};
+function check(){document.getElementById("send").disabled=!(useful&&willChange)}
+document.getElementById("send").onclick=()=>{
+ const score=Object.values(answers).reduce((a,b)=>a+b,0),total=quiz.qa.length;
+ document.getElementById("impact").style.display="none";
+ document.getElementById("res").style.display="block";
+ document.getElementById("sc").textContent=score+" / "+total;
+ document.getElementById("fb").textContent=score===total?"ممتاز! وعيك درع أمان لعائلتك":score>=Math.ceil(total/2)?"جيد جدًا — راجع الإجابات اللي فاتتك فوق":"لا بأس — أعد قراءة العرض، سلامتك تستاهل";
+ if(quiz.main_message){const m=document.getElementById("mm");m.style.display="block";m.textContent="📌 "+quiz.main_message;}
+ fetch("https://alialkaabi.app.n8n.cloud/webhook/adcda-impact",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({code:code,title:quiz.title,score:score,total:total,useful:useful,will_change:willChange,at:new Date().toISOString()})}).catch(()=>{});
+};
+</script></body></html>

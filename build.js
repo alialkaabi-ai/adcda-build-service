@@ -4,6 +4,7 @@
 const pptxgen = require("pptxgenjs");
 const path = require("path");
 const fs = require("fs");
+let QRCode=null; try{QRCode=require("qrcode");}catch(e){}
 const FA = require("@fortawesome/free-solid-svg-icons");
 
 function faDef(name) {
@@ -335,6 +336,15 @@ async function build(content) {
     if (c.quote) {
       slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 2.50, y: 5.95, w: 8.30, h: 0.75, fill: { color: "EEF3FA" }, line: { color: COLORS.primary, width: 0.75 }, rectRadius: 0.05 });
       slide.addText('"' + c.quote + '"', { x: 2.50, y: 5.95, w: 8.30, h: 0.75, fontSize: 13, fontFace: FONT, color: COLORS.primary, bold: true, italic: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+    }
+    if (QRCode && CODE && CODE !== "F.X") {
+      try {
+        const qrUrl = "https://adcda-build-service.onrender.com/quiz/" + encodeURIComponent(CODE);
+        const qrData = await QRCode.toDataURL(qrUrl, { width: 512, margin: 1, color: { dark: "1F2E5A", light: "FFFFFFFF" } });
+        slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.55, y: 5.35, w: 1.55, h: 1.85, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.06, shadow: { type: "outer", blur: 6, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.10 } });
+        slide.addImage({ data: qrData, x: 0.70, y: 5.45, w: 1.25, h: 1.25 });
+        slide.addText("امسح واختبر معلوماتك", { x: 0.55, y: 6.72, w: 1.55, h: 0.40, fontSize: 8.5, fontFace: FONT, color: COLORS.primaryDark, bold: true, align: "center", valign: "middle", margin: 0, rtlMode: true });
+      } catch (e) {}
     }
     addFooter(slide);
   }
