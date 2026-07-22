@@ -1159,5 +1159,79 @@ function AliAgentMissionControl() {
   setInterval(sweep,700); sweep();
 })();
 </script>
+<!-- ═══ قسم المبادرة — الصفحة التعريفية قبل الدخول (القيمة المضافة + الدليل التشغيلي + ISO الست + الأثر) ═══ -->
+<style>
+#init-sec{padding:90px 24px;background:#FCFBFD;direction:rtl;font-family:Tajawal,system-ui,sans-serif}
+#init-sec .init-wrap{max-width:1080px;margin:0 auto}
+#init-sec .init-head{text-align:center;margin-bottom:44px}
+#init-sec .init-eyebrow{color:#2E7BE0;font-weight:800;font-size:13px;letter-spacing:.5px;margin-bottom:10px}
+#init-sec h2{margin:0;color:#082A5E;font-size:clamp(24px,3.4vw,34px);font-weight:800}
+#init-sec .init-sub{margin:12px auto 0;max-width:680px;color:#50709B;font-size:15px;line-height:1.9}
+#init-sec .init-bar{width:46px;height:3px;border-radius:3px;background:linear-gradient(90deg,#2E7BE0,#5BA3FE);margin:14px auto 0}
+#init-sec .init-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+#init-sec .init-card{background:#fff;border:1px solid #E2E9F4;border-radius:16px;box-shadow:0 6px 22px rgba(8,42,94,.05);padding:26px 24px;text-align:right}
+#init-sec .init-card.full{grid-column:1/-1}
+#init-sec .init-ct{display:flex;align-items:center;gap:10px;color:#082A5E;font-size:18px;font-weight:800;margin-bottom:12px}
+#init-sec .init-card p{margin:0;color:#50709B;font-size:14.5px;line-height:2}
+#init-sec .init-ul{list-style:none;margin:12px 0 0;padding:0}
+#init-sec .init-ul li{position:relative;padding-right:20px;margin-bottom:8px;color:#50709B;font-size:14.5px;line-height:1.9}
+#init-sec .init-ul li::before{content:"";position:absolute;right:2px;top:11px;width:7px;height:7px;border-radius:50%;background:#2E7BE0}
+#init-sec .init-iso{margin-top:16px;border-top:1px dashed #E2E9F4;padding-top:6px}
+#init-sec .init-iso .row{display:flex;flex-direction:row-reverse;justify-content:flex-start;gap:14px;align-items:baseline;padding:8px 0;border-bottom:1px solid #F3F5F9}
+#init-sec .init-iso .row:last-child{border-bottom:none}
+#init-sec .init-iso .code{color:#2E7BE0;font-weight:800;direction:ltr;min-width:128px;text-align:left;font-size:13.5px;flex:none}
+#init-sec .init-iso .desc{color:#082A5E;font-size:14.5px;font-weight:600}
+#init-sec .init-note{color:#8FA6C6;font-size:12px;text-align:center;margin-top:14px;line-height:1.7}
+@media(max-width:640px){#init-sec{padding:60px 16px}#init-sec .init-card{padding:22px 18px}}
+</style>
+<script>
+(function(){
+  var HTML =
+  '<div class="init-wrap">'+
+    '<div class="init-head">'+
+      '<div class="init-eyebrow">المبادرة</div>'+
+      '<h2>مبادرة الحقيبة التوعوية الموحّدة</h2>'+
+      '<p class="init-sub">منظومة توعوية موحّدة تجمع محتوى السلامة والوقاية ضمن مرجعية واحدة متسقة، بنسختيها العربية والإنجليزية، تخدم المدارس والمجتمع وشركاء العمل المؤسسي.</p>'+
+      '<div class="init-bar"></div>'+
+    '</div>'+
+    '<div class="init-grid">'+
+      '<div class="init-card"><div class="init-ct">🎯 القيمة المضافة</div>'+
+        '<p>توحّد المبادرة المحتوى التوعوي في مرجع واحد يرفع الاتساق ويمنع التعارض بين المصادر، ويعزّز الشفافية وقابلية التتبع وضبط المخاطر. وتتيح مرونة عالية في سرعة إنتاج المحتوى وحوكمته، وسهولة في الإتاحة والوصول إليه بنسختيه العربية والإنجليزية، بما يضمن استدامة العمل المؤسسي وقابليته للتطوير المستمر بأقل كلفة وجهد.</p></div>'+
+      '<div class="init-card"><div class="init-ct">📘 الدليل التشغيلي</div>'+
+        '<p>تستند المبادرة إلى تحديثٍ للعمليات الإدارية ذات العلاقة بإدارة المحتوى التوعوي، وإلى إعداد الأدلة والوثائق الضابطة التي تنظّم دورة الإنتاج والاعتماد، وتشمل:</p>'+
+        '<ul class="init-ul">'+
+          '<li>الدليل القياسي لإدارة المحتوى التوعوي.</li>'+
+          '<li>جدول الأهداف التوعوية السنوي.</li>'+
+          '<li>معايير اختيار وتقييم محاضر / مقدّم برامج التوعية المجتمعية.</li>'+
+        '</ul></div>'+
+      '<div class="init-card full"><div class="init-ct">💠 منظومة محوكمة وفق المعايير الدولية</div>'+
+        '<p>أُنتجت الحقيبة التوعوية عبر توظيف متقدّم لتقنيات الذكاء الاصطناعي التوليدي ضمن إطار حوكمة محكم يقوم على مبدأ أن يبقى أداةً خاضعة للرقابة لا منتجاً مستقلاً؛ إذ يمر كل مخرج عبر طبقات متتابعة من المعالجة الآلية والمراجعة البشرية المستقلة، مع بوابات لضبط الجودة وتوحيد الهوية البصرية المؤسسية وحوكمة المفاهيم والمصطلحات. وقد صُممت هذه المنظومة استرشاداً بمجموعة من المواصفات الدولية (ISO) ذات الصلة، تشمل:</p>'+
+        '<div class="init-iso">'+
+          '<div class="row"><span class="desc">نظام إدارة الذكاء الاصطناعي</span><span class="code">ISO/IEC 42001</span></div>'+
+          '<div class="row"><span class="desc">نظام إدارة المخاطر</span><span class="code">ISO/IEC 23894</span></div>'+
+          '<div class="row"><span class="desc">نظام إدارة الجودة</span><span class="code">ISO 9001</span></div>'+
+          '<div class="row"><span class="desc">مبادئ ضبط المصطلحات والمفاهيم</span><span class="code">ISO 704</span></div>'+
+          '<div class="row"><span class="desc">جودة خدمات الترجمة</span><span class="code">ISO 17100</span></div>'+
+          '<div class="row"><span class="desc">مبادئ المسؤولية المجتمعية</span><span class="code">ISO 26000</span></div>'+
+        '</div>'+
+        '<div class="init-note">نسترشد بمنهجيات هذه المعايير في التصميم والتشغيل، ولا يُعد ذلك ادعاءً بحيازة شهادة رسمية.</div></div>'+
+      '<div class="init-card full"><div class="init-ct">🏛️ الأثر والقيمة المضافة</div>'+
+        '<p>تخدم هذه المنظومة الطابع المؤسسي للحقيبة التوعوية الموحّدة عبر مرجعية واحدة قابلة للتتبع والتطوير، تعزّز الشفافية وقابلية التتبع وضبط المخاطر، وتختصر الوقت والكلفة، وتضمن جودة واتساق المحتوى وحداثته، وتُبقي المبادرة قابلة للتوسّع مستقبلاً بما يواكب الأولويات الوطنية في مجالي السلامة والوقاية.</p></div>'+
+    '</div>'+
+  '</div>';
+  function sweep(){
+    var tech=document.getElementById('tech');
+    if(!tech){ var old=document.getElementById('init-sec'); if(old) old.remove(); return; }
+    if(document.getElementById('init-sec')) return;
+    var sec=document.createElement('section');
+    sec.id='init-sec';
+    sec.innerHTML=HTML;
+    tech.parentNode.insertBefore(sec, tech.nextSibling);
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
+
 </body>
 </html>
