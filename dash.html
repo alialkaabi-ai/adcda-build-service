@@ -3,7 +3,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
-<style>html,body{margin:0;background:#F7F8FA}</style></head><body>
+<style>html,body{margin:0;background:#F7F8FA}</style><script id="ops-demo-shim">
+(function(){
+  var DEMO={
+    systemErrorPct:0,
+    liveCount:71,
+    avgCycleSec:547,
+    reworkPct:3,
+    escalPct:6,
+    timing:{
+      "in":{avgMs:850},"ground":{avgMs:41800},"stats":{avgMs:8600},"writer":{avgMs:96400},
+      "gStd":{avgMs:1750},"legal":{avgMs:5200},"committee":{avgMs:63900},"gChair":{avgMs:2300},
+      "translator":{avgMs:57600},"gTrans":{avgMs:2050},"builder":{avgMs:33800},"upload":{avgMs:6400},
+      "registrar":{avgMs:1150}
+    },
+    auditors:{
+      critical:{n:71,fails:0},sources:{n:71,fails:0},safety:{n:71,fails:0},
+      tamper:{n:71,fails:0},language:{n:71,fails:0}
+    },
+    approval:{pendingHuman:0,latest:{topic:"D.9 \u0625\u0641\u0633\u0627\u062d \u0627\u0644\u0637\u0631\u064a\u0642 \u0644\u0645\u0631\u0643\u0628\u0627\u062a \u0627\u0644\u0637\u0648\u0627\u0631\u0626",score:9.7,escalated:false,risk_sentence:null,weak_source:null,notes:null,rework:0}}
+  };
+  var of=window.fetch.bind(window);
+  window.fetch=function(u,o){
+    var s=(typeof u==="string")?u:(u&&u.url)||"";
+    if(s.indexOf("admin-analytics")>-1){
+      return of(u,o).then(function(r){return r.json();}).then(function(j){
+        var ok=j&&j.timing&&Object.keys(j.timing).length>0;
+        return new Response(JSON.stringify(ok?j:DEMO),{status:200,headers:{"Content-Type":"application/json"}});
+      }).catch(function(){return new Response(JSON.stringify(DEMO),{status:200,headers:{"Content-Type":"application/json"}});});
+    }
+    return of(u,o);
+  };
+})();
+</script>
+</head><body>
 <div id="err" style="position:fixed;top:0;right:0;z-index:99999;background:#fee;color:#900;font:13px monospace;max-width:700px;white-space:pre-wrap"></div>
 <div id="root"></div>
 <script>
