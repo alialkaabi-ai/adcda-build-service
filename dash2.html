@@ -101,6 +101,17 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
 .cc-traces .pu{fill:#E3C87F;filter:drop-shadow(0 0 4px rgba(227,200,127,.9))}
 .cc-traces .pu.bad{fill:#E5484D;filter:drop-shadow(0 0 4px rgba(229,72,77,.9))}
 .cc-col{display:grid;gap:9px;position:relative;z-index:2}
+.cc-item .cc-sub{display:none;background:rgba(8,26,51,.9);border:1px solid var(--hair);border-top:none;border-radius:0 0 10px 10px;padding:7px 12px 8px;margin-top:-4px}
+.cc-item.open .cc-sub{display:block}
+.cc-item.open .cc-card{border-radius:10px 10px 0 0;border-color:rgba(199,162,75,.4)}
+.cc-sub .nd{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--dim);padding:4px 2px}
+.cc-sub .nd b{font-weight:600;color:#B9C6DA}
+.cc-sub .nd .d{width:6px;height:6px;border-radius:50%;background:#6FCF8E;flex:none}
+.cc-sub .nd.bad .d{background:#E5484D;box-shadow:0 0 6px rgba(229,72,77,.7)}
+.cc-sub .nd.bad b{color:#E5484D}
+.cc-sub .nd .ms{margin-inline-start:auto;font-size:9px;color:var(--dim)}
+.cc-sub .nd.bad .ms{color:#E5484D}
+.cc-card{cursor:pointer}
 .cc-card{display:flex;align-items:center;gap:10px;background:rgba(10,31,61,.82);border:1px solid var(--hair);
   border-radius:10px;padding:9px 12px;transition:border-color .3s,box-shadow .3s,transform .3s}
 .cc-card:hover{border-color:var(--line);transform:translateY(-2px)}
@@ -592,13 +603,41 @@ document.getElementById("tabs").addEventListener("click", function (e) {
 setInterval(function () { var c = document.getElementById("clock"); if (c) c.textContent = new Date().toLocaleTimeString("en-GB"); }, 1000);
 
 /* ── غرفة العمليات: البطاقات + المسارات + الخلل ── */
+var NODES = [
+  ["استلام الطلب","التحقق من الاكتمال","التوجيه للوكيل التالي"],
+  ["تحديد الفئة","تحديد العمر واللغة","ضبط مستوى المحتوى"],
+  ["بناء الهيكل","توزيع الشرائح","اعتماد المخطط"],
+  ["التأليف وفق الدليل","إسناد المصادر","تسليم المسودة"],
+  ["مطابقة المصدر","فحص الأرقام","تقرير الدقة"],
+  ["القواعد والإملاء","وضوح الصياغة","التوحيد الأسلوبي"],
+  ["الألوان والخطوط","الشعار والعناصر","مطابقة القالب"],
+  ["القاموس المؤسسي","توحيد المصطلح","فحص الممنوعات"],
+  ["الملاءمة المجتمعية","الملاءمة القيمية","فحص الحساسيات"],
+  ["الترجمة الأمينة","حفظ الأرقام","قائمة DNT"],
+  ["تطابق 1:1","لا عربي متبقٍ","اتساق المصطلح"],
+  ["بناء الملف","القالب المعتمد","فحص الإخراج"],
+  ["البوابات الخمس","الدرجة الموزونة","قرار العبور"],
+  ["الحزمة النهائية","التسليم للمحكّم","انتظار التوقيع"]
+];
 function agentCard(a, i, side) {
-  return '<div class="cc-card" data-side="' + side + '" data-i="' + i + '"><span class="num mono">' + String(i + 1).padStart(2, "0") + '</span>' +
+  var subs = NODES[i].map(function (n, k) {
+    return '<div class="nd" data-k="' + k + '"><span class="d"></span><b>' + n + '</b><span class="ms mono">OK</span></div>';
+  }).join("");
+  return '<div class="cc-item" data-i="' + i + '"><div class="cc-card" data-side="' + side + '" data-i="' + i + '"><span class="num mono">' + String(i + 1).padStart(2, "0") + '</span>' +
     '<span class="ic"><svg viewBox="0 0 20 20" width="16" height="16"><path d="' + GLYPHS[i % GLYPHS.length] + '" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-    '<span class="tx"><b>' + a[0] + '</b><i>' + a[1] + '</i></span><span class="st">نشط</span></div>';
+    '<span class="tx"><b>' + a[0] + '</b><i>' + a[1] + '</i></span><span class="st">نشط</span></div><div class="cc-sub">' + subs + '</div></div>';
 }
 document.getElementById("colR").innerHTML = AGENTS.slice(0, 7).map(function (a, i) { return agentCard(a, i, "r"); }).join("");
 document.getElementById("colL").innerHTML = AGENTS.slice(7).map(function (a, i) { return agentCard(a, i + 7, "l"); }).join("");
+document.querySelectorAll("#board .cc-card").forEach(function (c) {
+  c.addEventListener("click", function () {
+    var it = c.parentNode;
+    var was = it.classList.contains("open");
+    document.querySelectorAll("#board .cc-item.open").forEach(function (o) { o.classList.remove("open"); });
+    if (!was) it.classList.add("open");
+    setTimeout(function () { if (typeof drawTraces === "function") drawTraces(); }, 60);
+  });
+});
 
 function drawTraces() {
   var board = document.getElementById("board"), svg = document.getElementById("traces");
@@ -634,6 +673,11 @@ function faultCycle() {
   c.classList.add("bad");
   c.querySelector(".st").textContent = "خلل";
   c.querySelector(".tx i").textContent = "معزول للفحص الذاتي";
+  var nds = c.parentNode.querySelectorAll(".cc-sub .nd");
+  var bk = Math.floor(Math.random() * nds.length);
+  if (nds[bk]) { nds[bk].classList.add("bad"); nds[bk].querySelector(".ms").textContent = "FAULT"; }
+  c.parentNode.classList.add("open");
+  setTimeout(function () { if (typeof drawTraces === "function") drawTraces(); }, 60);
   var sh = document.getElementById("shield");
   sh.classList.add("bad");
   document.getElementById("shieldT").textContent = "خلل قيد العزل";
@@ -645,6 +689,9 @@ function faultCycle() {
     c.classList.remove("bad");
     c.querySelector(".st").textContent = "نشط";
     c.querySelector(".tx i").textContent = AGENTS[i][1];
+    if (nds[bk]) { nds[bk].classList.remove("bad"); nds[bk].querySelector(".ms").textContent = "OK"; }
+    c.parentNode.classList.remove("open");
+    setTimeout(function () { if (typeof drawTraces === "function") drawTraces(); }, 60);
     sh.classList.remove("bad");
     document.getElementById("shieldT").textContent = "لا توجد أخطاء";
     document.getElementById("shieldS").textContent = "كل الوكلاء يعملون بكفاءة";
