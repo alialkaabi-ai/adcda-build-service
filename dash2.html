@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>لوحة النظام | علي إيجنت — هيئة أبوظبي للدفاع المدني</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+:root{--navy:#081A33;--navy2:#0A1F3D;--blue:#0B4EA2;--bs:#2E7BE0;--gold:#C7A24B;--gs:#E3C87F;--paper:#F4F1E9;--dim:#8DA2C0;--line:rgba(199,162,75,.22);--hair:rgba(141,162,192,.16);--ok:#6FCF8E}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Tajawal',system-ui,sans-serif;background:var(--navy);color:var(--paper);min-height:100vh}
+.mono{font-family:'IBM Plex Mono',monospace;direction:ltr}
+.wrap{max-width:1320px;margin:0 auto;padding:26px 20px 60px}
+header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+header.top .logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:18px}
+header.top .sub{color:var(--dim);font-size:12.5px}
+header.top a.back{margin-inline-start:auto;color:var(--gs);font-size:13px;font-weight:800;text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:8px 18px}
+header.top a.back:hover{background:rgba(199,162,75,.08)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tab{font-family:inherit;font-size:13.5px;font-weight:800;color:var(--dim);background:rgba(10,31,61,.7);border:1px solid var(--hair);border-radius:999px;padding:10px 22px;cursor:pointer;transition:all .25s}
+.tab:hover{color:var(--paper);border-color:var(--line)}
+.tab.on{color:#241A05;background:var(--gold);border-color:var(--gold);box-shadow:0 6px 20px rgba(199,162,75,.4)}
+.cc{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:radial-gradient(70% 60% at 50% 40%,rgba(11,78,162,.16),transparent 70%),repeating-linear-gradient(0deg,rgba(141,162,192,.035) 0 1px,transparent 1px 42px),repeating-linear-gradient(90deg,rgba(141,162,192,.035) 0 1px,transparent 1px 42px),#071527;box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.cctop{display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--hair);background:rgba(8,26,51,.6);flex-wrap:wrap}
+.brand{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--gold);letter-spacing:2px}
+.badge{font-size:11px;font-weight:800;border-radius:999px;padding:4px 12px}
+.badge.ok{color:var(--ok);border:1px solid rgba(111,207,142,.4);background:rgba(111,207,142,.08)}
+.badge.gold{color:var(--gs);border:1px solid var(--line);background:rgba(199,162,75,.08)}
+.badge.amber{color:#E5C04B;border:1px solid rgba(229,192,75,.4);background:rgba(229,192,75,.08)}
+.clock{margin-inline-start:auto;color:var(--dim);font-size:13px}
+.pane{display:none;padding:16px}
+.pane.on{display:block;animation:din .35s ease-out}
+@keyframes din{from{transform:translateY(12px);opacity:.5}}
+.grid3{display:grid;grid-template-columns:250px 1fr 250px;gap:14px}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel{background:rgba(10,31,61,.72);border:1px solid var(--hair);border-radius:12px;padding:15px}
+.pt{font-size:12.5px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.pt::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(199,162,75,.8)}
+.kv{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--dim);padding:7px 2px;border-top:1px solid rgba(141,162,192,.09)}
+.kv b{color:var(--paper);font-size:13.5px}
+.kv b.ok{color:var(--ok)}.kv b.am{color:#E5C04B}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.sk{background:rgba(10,31,61,.72);border:1px solid var(--hair);border-radius:11px;padding:14px;text-align:center}
+.sk b{display:block;font-size:24px}.sk b.g{color:var(--gs)}.sk b.k{color:var(--ok)}
+.sk span{font-size:11px;color:var(--dim)}
+/* agents board */
+.board{display:grid;grid-template-columns:1fr 190px 1fr;gap:12px;align-items:center}
+.acol{display:grid;gap:9px}
+.card{display:flex;align-items:center;gap:10px;background:rgba(10,31,61,.82);border:1px solid var(--hair);border-radius:10px;padding:9px 12px;transition:all .3s;position:relative}
+.card:hover{border-color:var(--line);transform:translateY(-2px)}
+.card::after{content:"";position:absolute;top:50%;width:14px;height:1.5px;background:rgba(46,123,224,.35)}
+.acol.r .card::after{left:-14px}.acol.l .card::after{right:-14px}
+.card .num{font-size:10.5px;color:var(--bs);font-weight:600;min-width:20px}
+.card .ic{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--gs);background:rgba(199,162,75,.1);border:1px solid rgba(199,162,75,.25);font-size:13px}
+.card .tx{min-width:0;flex:1}
+.card .tx b{display:block;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .tx i{display:block;font-style:normal;font-size:10.5px;color:#7E93B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .st{font-size:10px;font-weight:800;color:var(--ok);border:1px solid rgba(111,207,142,.35);border-radius:999px;padding:2px 8px;background:rgba(111,207,142,.07)}
+.core{position:relative;aspect-ratio:1;display:grid;place-items:center}
+.core .ring{position:absolute;border-radius:50%;border:1px solid rgba(199,162,75,.35)}
+.core .r1{inset:9%;border-style:dashed;animation:spin 26s linear infinite}
+.core .r2{inset:1%;border-color:rgba(46,123,224,.3);animation:spin 40s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.corein{width:64%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:radial-gradient(circle at 50% 38%,#123564,#0A1F3D 70%);border:1.5px solid var(--gold);box-shadow:0 0 34px rgba(199,162,75,.35);animation:breathe 3.6s ease-in-out infinite;text-align:center}
+@keyframes breathe{50%{box-shadow:0 0 52px rgba(199,162,75,.55)}}
+.corein b{font-size:12.5px}.corein span{font-size:8.5px;color:var(--dim);letter-spacing:1px}
+.gauge{position:relative;width:110px;margin:2px auto 10px}
+.gauge svg{display:block;width:110px;height:110px}
+.gauge .gv{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:2px}
+.gauge .gv b{font-size:26px;color:var(--ok)}
+.gauge .gv span{color:var(--dim);font-size:11px;margin-top:8px}
+.feed .fl{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;color:#AFC0D8;line-height:1.7;padding:5px 0;border-top:1px solid rgba(141,162,192,.07)}
+.feed .fl:first-child{border-top:none}
+.feed .d{width:6px;height:6px;border-radius:50%;flex:none;margin-top:6px;background:var(--ok);box-shadow:0 0 6px rgba(111,207,142,.8)}
+.feed .d.am{background:#E5C04B;box-shadow:0 0 6px rgba(229,192,75,.8)}
+/* bars */
+.bars{display:flex;align-items:flex-end;gap:12px;height:190px;direction:ltr;padding:6px 4px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.bcol .bar{width:100%;max-width:40px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--gs),var(--gold) 60%,#8F7434);box-shadow:0 0 14px rgba(199,162,75,.25);animation:up .9s ease-out backwards}
+@keyframes up{from{transform:scaleY(0)}}
+.bcol .bn{font-size:11px;color:var(--dim)}
+.bcol .bc{font-size:12px;color:var(--gold);font-weight:600}
+.bcol small{font-size:9.5px;color:#5E7396;text-align:center;line-height:1.4;direction:rtl}
+/* pending */
+.pend{display:flex;gap:16px;align-items:center;border:1px solid rgba(229,192,75,.45);border-radius:13px;padding:16px 18px;background:rgba(229,192,75,.05);flex-wrap:wrap}
+.pend .ic{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;font-size:20px;background:rgba(229,192,75,.12);border:1px solid rgba(229,192,75,.35)}
+.pend b{display:block;font-size:15px}
+.pend span{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+.pend .acts{margin-inline-start:auto;display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-block;font-size:12.5px;font-weight:800;text-decoration:none;border-radius:9px;padding:10px 18px;transition:all .25s}
+.btn.g{background:var(--gold);color:#241A05}.btn.g:hover{box-shadow:0 6px 18px rgba(199,162,75,.4)}
+.btn.o{color:var(--gs);border:1px solid var(--line)}.btn.o:hover{background:rgba(199,162,75,.08)}
+/* journey */
+.stages{display:flex;align-items:flex-start;overflow-x:auto;padding:10px 2px}
+.stg{position:relative;flex:1;min-width:96px;text-align:center;padding:0 4px}
+.stg .bub{width:40px;height:40px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;border:1.5px solid rgba(141,162,192,.35);color:#7E93B4;background:rgba(10,31,61,.8);position:relative;z-index:2;font-size:14px}
+.stg b{display:block;font-size:11px;color:var(--dim);line-height:1.5}
+.stg em{display:block;font-style:normal;font-size:10px;color:#5E7396;margin-top:2px}
+.stg .ln{position:absolute;top:20px;left:-50%;width:100%;height:1.5px;background:rgba(141,162,192,.2);z-index:1}
+.stg.done .bub{border-color:var(--ok);color:var(--ok);box-shadow:0 0 12px rgba(111,207,142,.3)}
+.stg.done b{color:var(--paper)}.stg.done .ln{background:rgba(111,207,142,.5)}
+.stg.now .bub{border-color:#E5C04B;color:#E5C04B;box-shadow:0 0 16px rgba(229,192,75,.45)}
+.stg.now .bub::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px dashed rgba(229,192,75,.5);animation:spin 7s linear infinite}
+.stg.now b{color:#E5C04B}
+/* lists */
+.rows .r{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:12px 4px;border-bottom:1px solid rgba(141,162,192,.09)}
+.rows .r:last-child{border-bottom:none}
+.rows .r b{font-size:13.5px;font-weight:700;color:#D8E0EC}
+.rows .r .code{color:var(--gold);font-weight:600;font-size:13px;flex:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.note{color:#5E7396;font-size:11.5px;text-align:center;margin-top:14px;line-height:1.8}
+.foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 20px;font-size:12px;color:var(--dim);border-top:1px solid var(--hair);background:rgba(8,26,51,.5)}
+.foot .dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.foot .sep{width:1px;height:13px;background:var(--hair)}
+@media(max-width:1100px){.grid3{grid-template-columns:1fr 1fr}.board{grid-column:1/-1}}
+@media(max-width:760px){.grid3,.grid2,.kpis{grid-template-columns:1fr}.board{grid-template-columns:1fr}.core{max-width:180px;margin:0 auto}.card::after{display:none}.stages{flex-wrap:wrap;gap:12px}.stg .ln{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">
+      <svg width="30" height="30" viewBox="0 0 26 26"><rect x="1" y="1" width="24" height="24" rx="5" fill="none" stroke="#C7A24B" stroke-width="1.5"/><path d="M7 17 L13 7 L19 17" fill="none" stroke="#F4F1E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="17" r="1.8" fill="#C7A24B"/></svg>
+      <div>علي إيجنت · لوحة النظام<div class="sub">هيئة أبوظبي للدفاع المدني · مبادرة الحقيبة التوعوية الموحدة</div></div>
+    </div>
+    <a class="back" href="/portal">→ فتح البوابة</a>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-t="ops">غرفة العمليات</button>
+    <button class="tab" data-t="decks">العروض والباقات</button>
+    <button class="tab" data-t="follow">المتابعة والاعتماد</button>
+    <button class="tab" data-t="gov">الحوكمة والأدلة</button>
+  </div>
+
+  <div class="cc">
+    <div class="cctop">
+      <span class="brand">ALI&nbsp;AGENT</span>
+      <span class="badge ok">النظام يعمل</span>
+      <span class="badge amber" id="pendBadge">1 بانتظار الاعتماد</span>
+      <span class="clock mono" id="clock"></span>
+    </div>
+
+    <!-- ═══ غرفة العمليات ═══ -->
+    <div class="pane on" id="p-ops">
+      <div class="grid3">
+        <div class="col">
+          <div class="panel">
+            <div class="pt">حالة المنظومة</div>
+            <div class="gauge">
+              <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(141,162,192,.15)" stroke-width="8"/><circle id="arc" cx="60" cy="60" r="50" fill="none" stroke="#6FCF8E" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 1.4s ease-out"/></svg>
+              <div class="gv"><b class="mono" id="health">—</b><span>/100</span></div>
+            </div>
+            <div class="kv"><span>إجمالي الوكلاء</span><b class="mono">14</b></div>
+            <div class="kv"><span>عروض معتمدة</span><b class="mono" id="approved">70</b></div>
+            <div class="kv"><span>بانتظار الاعتماد</span><b class="mono am" id="pending">1</b></div>
+            <div class="kv"><span>شرائح منتجة</span><b class="mono" id="slides">3,666</b></div>
+            <div class="kv"><span>أخطاء في المخرجات المعتمدة</span><b class="mono ok">0</b></div>
+          </div>
+        </div>
+
+        <div class="board">
+          <div class="acol r" id="colR"></div>
+          <div class="core">
+            <div class="ring r1"></div><div class="ring r2"></div>
+            <div class="corein">
+              <svg width="30" height="30" viewBox="0 0 26 26"><path d="M7 17 L13 7 L19 17" fill="none" stroke="#F4F1E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="17" r="1.8" fill="#C7A24B"/></svg>
+              <b>قلب المنظومة</b><span class="mono">CORE · 14 AGENTS</span>
+            </div>
+          </div>
+          <div class="acol l" id="colL"></div>
+        </div>
+
+        <div class="col">
+          <div class="panel">
+            <div class="pt">آخر الأحداث الفعلية</div>
+            <div class="feed">
+              <div class="fl"><span class="d am"></span><span>عرض D.9 «إفساح الطريق للآليات الإسعافية» بانتظار الاعتماد البشري</span></div>
+              <div class="fl"><span class="d"></span><span>D.9 اجتاز التدقيق بدرجة 9.7 من 10 · التقييم: سليم</span></div>
+              <div class="fl"><span class="d"></span><span>أُضيفت شريحة الجانب القانوني لمخالفة عدم الإفساح</span></div>
+              <div class="fl"><span class="d"></span><span>70 عرضًا معتمدًا متاحة في البوابة بنسختيها AR/EN</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="pt">مصدر البيانات</div>
+            <div class="kv"><span>الاتصال بالمنظومة</span><b id="srcState">جارٍ الفحص…</b></div>
+            <div class="kv"><span>آخر تحديث</span><b id="srcTime" class="mono">—</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ العروض والباقات ═══ -->
+    <div class="pane" id="p-decks">
+      <div class="kpis">
+        <div class="sk"><b class="g mono">71</b><span>عرضًا توعويًا</span></div>
+        <div class="sk"><b class="g mono">3,666</b><span>شريحة منتجة</span></div>
+        <div class="sk"><b class="k mono">70</b><span>معتمدًا</span></div>
+        <div class="sk"><b class="mono" style="color:#E5C04B">1</b><span>بانتظار الاعتماد</span></div>
+      </div>
+      <div class="panel">
+        <div class="pt">العروض حسب الباقات الثماني</div>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="pend">
+        <div class="ic">⏳</div>
+        <div><b>D.9 · إفساح الطريق للآليات الإسعافية</b>
+          <span>باقة السلامة المرورية والتنقل · درجة التدقيق 9.7/10 · التقييم العام: سليم · بانتظار توقيع المراجع البشري</span></div>
+        <div class="acts">
+          <a class="btn g" href="/pdf/D.9" target="_blank">معاينة الملف</a>
+          <a class="btn o" href="/portal">فتح البوابة للمراجعة</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ المتابعة والاعتماد ═══ -->
+    <div class="pane" id="p-follow">
+      <div class="panel">
+        <div class="pt">رحلة العرض D.9 · «إفساح الطريق للآليات الإسعافية»</div>
+        <div class="stages">
+          <div class="stg done"><div class="bub">✓</div><b>الطلب</b><em>مكتمل</em><i class="ln" style="display:none"></i></div>
+          <div class="stg done"><div class="bub">✓</div><b>التخطيط</b><em>مكتمل</em><i class="ln"></i></div>
+          <div class="stg done"><div class="bub">✓</div><b>التأليف</b><em>19 شريحة</em><i class="ln"></i></div>
+          <div class="stg done"><div class="bub">✓</div><b>التدقيق</b><em>9.7 / 10</em><i class="ln"></i></div>
+          <div class="stg done"><div class="bub">✓</div><b>الإخراج</b><em>PPTX + PDF</em><i class="ln"></i></div>
+          <div class="stg now"><div class="bub">✎</div><b>الاعتماد البشري</b><em>قيد الانتظار الآن</em><i class="ln"></i></div>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="grid2">
+        <div class="panel">
+          <div class="pt">تقرير التدقيق</div>
+          <div class="kv"><span>التقييم العام</span><b class="ok">سليم</b></div>
+          <div class="kv"><span>درجة الجودة</span><b class="mono">9.7 / 10</b></div>
+          <div class="kv"><span>عدد الشرائح</span><b class="mono">19</b></div>
+          <div class="kv"><span>الجمهور</span><b>السائقون · بالغون</b></div>
+          <div class="kv"><span>اللغة</span><b class="mono">AR</b></div>
+          <div class="kv"><span>الملف</span><b><a href="/pdf/D.9" target="_blank" style="color:var(--gs)">معاينة PDF ↗</a></b></div>
+        </div>
+        <div class="panel">
+          <div class="pt">قرار الاعتماد</div>
+          <p style="color:var(--dim);font-size:13px;line-height:2;margin:4px 0 12px">
+            المخرج جاهز ومدقق آليًا عبر المحاور الخمسة، ولا يُنشر ولا يُعمم إلا بعد
+            توقيع مراجع بشري مستقل من تبويب «مراجعة واعتماد» في البوابة.</p>
+          <a class="btn g" href="/portal">الانتقال لمراجعة واعتماد ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ الحوكمة والأدلة ═══ -->
+    <div class="pane" id="p-gov">
+      <div class="grid2">
+        <div class="panel">
+          <div class="pt">الأدلة والوثائق الضابطة</div>
+          <div class="rows">
+            <div class="r"><b>الدليل القياسي لإدارة المحتوى التوعوي</b><span class="badge ok">معتمد</span></div>
+            <div class="r"><b>جدول الأهداف التوعوية السنوي</b><span class="badge ok">معتمد</span></div>
+            <div class="r"><b>معايير اختيار وتقييم محاضر / مقدم برامج التوعية</b><span class="badge ok">معتمد</span></div>
+          </div>
+          <div class="pt" style="margin-top:18px">محاور التدقيق الخمسة</div>
+          <div class="rows">
+            <div class="r"><b>الدقة العلمية والمرجعية</b></div>
+            <div class="r"><b>السلامة اللغوية</b></div>
+            <div class="r"><b>الهوية البصرية الموحدة</b></div>
+            <div class="r"><b>ضبط المصطلحات والمفاهيم</b></div>
+            <div class="r"><b>الملاءمة المجتمعية والقيمية</b></div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="pt">مواصفات دولية نسترشد بها</div>
+          <div class="rows">
+            <div class="r"><b>نظام إدارة الذكاء الاصطناعي</b><span class="code mono">ISO/IEC 42001</span></div>
+            <div class="r"><b>نظام إدارة المخاطر</b><span class="code mono">ISO/IEC 23894</span></div>
+            <div class="r"><b>نظام إدارة الجودة</b><span class="code mono">ISO 9001</span></div>
+            <div class="r"><b>مبادئ ضبط المصطلحات والمفاهيم</b><span class="code mono">ISO 704</span></div>
+            <div class="r"><b>جودة خدمات الترجمة</b><span class="code mono">ISO 17100</span></div>
+            <div class="r"><b>مبادئ المسؤولية المجتمعية</b><span class="code mono">ISO 26000</span></div>
+          </div>
+          <div class="note">نسترشد بمنهجيات هذه المعايير في التصميم والتشغيل، ولا يُعد ذلك ادعاءً بحيازة شهادة رسمية.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      <span class="dot"></span> فريق العمل: علي سلطان الكعبي · حسن ظافر الأحبابي
+      <span class="sep"></span> لا يصدر أي مخرج دون اعتماد بشري
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══ البيانات الحقيقية للبوابة (تُستبدل بالبث الحي من n8n عند توفره) ═══ */
+var REAL = {
+  approved: 70, pending: 1, slides: 3666, health: 96,
+  packs: [
+    ["A", "السلامة المنزلية", 10], ["B", "سلامة المنشآت", 9], ["C", "الحريق والإخلاء", 9],
+    ["D", "السلامة المرورية", 9], ["E", "المواد الخطرة", 8], ["F", "الكوارث والطوارئ", 9],
+    ["G", "الإسعافات الأولية", 8], ["H", "التوعية الموسمية", 9]
+  ],
+  agents: [
+    ["منسق الطلبات","استقبال الطلب وتوجيهه"],["محلل الجمهور","الفئة والعمر واللغة"],
+    ["مخطط المحتوى","مخطط العرض شريحة بشريحة"],["المؤلف الرئيسي","تأليف المحتوى وفق الدليل"],
+    ["المدقق العلمي","مطابقة المعلومة بمصدرها"],["المدقق اللغوي","سلامة العربية ووضوحها"],
+    ["مدقق الهوية","فرض الهوية البصرية"],["مدقق المصطلحات","توحيد القاموس المؤسسي"],
+    ["مدقق الملاءمة","الملاءمة المجتمعية والقيمية"],["المترجم","النسخة الإنجليزية الكاملة"],
+    ["مدقق الترجمة","دقة الترجمة واتساقها"],["مهندس الإخراج","بناء الملف بالقالب المعتمد"],
+    ["مراقب الجودة","بوابات الجودة الخمس"],["بواب الاعتماد","التسليم للمراجع البشري"]
+  ]
+};
+var GL = ["📋","🔎","🗂","✍️","🔬","🖋","🎨","📖","🤝","🌐","🔁","📐","✅","🖊"];
+
+/* التبويبات */
+document.getElementById("tabs").addEventListener("click", function (e) {
+  var b = e.target.closest(".tab"); if (!b) return;
+  document.querySelectorAll(".tab").forEach(function (t) { t.classList.remove("on"); });
+  document.querySelectorAll(".pane").forEach(function (p) { p.classList.remove("on"); });
+  b.classList.add("on");
+  document.getElementById("p-" + b.dataset.t).classList.add("on");
+});
+
+/* الساعة */
+setInterval(function () {
+  document.getElementById("clock").textContent = new Date().toLocaleTimeString("en-GB");
+}, 1000);
+
+/* بطاقات الوكلاء */
+function agentCard(a, i) {
+  return '<div class="card"><span class="num mono">' + String(i + 1).padStart(2, "0") + '</span>' +
+    '<span class="ic">' + GL[i] + '</span>' +
+    '<span class="tx"><b>' + a[0] + '</b><i>' + a[1] + '</i></span>' +
+    '<span class="st">نشط</span></div>';
+}
+document.getElementById("colR").innerHTML = REAL.agents.slice(0, 7).map(agentCard).join("");
+document.getElementById("colL").innerHTML = REAL.agents.slice(7).map(function (a, i) { return agentCard(a, i + 7); }).join("");
+
+/* أعمدة الباقات */
+var mx = 10;
+document.getElementById("bars").innerHTML = REAL.packs.map(function (p, i) {
+  return '<div class="bcol"><span class="bn mono">' + p[2] + '</span>' +
+    '<div class="bar" style="height:' + (p[2] / mx * 100) + '%;animation-delay:' + (i * 0.08) + 's"></div>' +
+    '<span class="bc mono">' + p[0] + '</span><small>' + p[1] + '</small></div>';
+}).join("");
+
+/* تعبئة الأرقام + محاولة البث الحي من n8n (نفس مصدر البوابة) */
+function apply(d) {
+  document.getElementById("health").textContent = d.health;
+  document.getElementById("arc").style.strokeDashoffset = String(Math.round(314 - d.health / 100 * 314));
+  document.getElementById("approved").textContent = d.approved;
+  document.getElementById("pending").textContent = d.pending;
+  document.getElementById("slides").textContent = d.slides.toLocaleString("en-US");
+  document.getElementById("pendBadge").textContent = d.pending + " بانتظار الاعتماد";
+}
+apply(REAL);
+document.getElementById("srcTime").textContent = new Date().toLocaleTimeString("en-GB");
+(function () {
+  var ctl = new AbortController();
+  var t = setTimeout(function () { ctl.abort(); }, 4500);
+  fetch("https://alialkaabi.app.n8n.cloud/webhook/admin-analytics", { signal: ctl.signal })
+    .then(function (r) { clearTimeout(t); if (!r.ok) throw 0; return r.json(); })
+    .then(function (j) {
+      var d = Array.isArray(j) ? j[0] : j;
+      if (!d || typeof d !== "object") throw 0;
+      apply({
+        health: (d.advisor && d.advisor.health) || d.health || REAL.health,
+        approved: d.approvedCount || REAL.approved,
+        pending: d.pendingHuman != null ? d.pendingHuman : (d.approval && d.approval.pendingHuman) || REAL.pending,
+        slides: d.slideCount || REAL.slides
+      });
+      document.getElementById("srcState").textContent = "متصل مباشرة";
+      document.getElementById("srcState").style.color = "#6FCF8E";
+      document.getElementById("srcTime").textContent = new Date().toLocaleTimeString("en-GB");
+    })
+    .catch(function () {
+      document.getElementById("srcState").textContent = "بيانات البوابة المعتمدة";
+      document.getElementById("srcState").style.color = "#E3C87F";
+    });
+})();
+</script>
+</body>
+</html>

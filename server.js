@@ -22,6 +22,7 @@ catch (e) { console.warn("corpus.json not found — /topic will 404"); }
 app.get("/", (_req, res) => res.send("ADCDA Build Service v2.4 — POST /build | GET /topic/:code | GET /dash | GET /portal | GET /health"));
 
 app.get("/dash", (_req, res) => res.sendFile(path.join(__dirname, "dash.html")));
+app.get("/dash2", (_req, res) => res.sendFile(path.join(__dirname, "dash2.html")));
 
 app.get("/portal", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
 
