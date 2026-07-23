@@ -555,6 +555,20 @@ var AGENTS = [
 ];
 var GLYPHS = ["M4 4h12v3H4zM4 9h12v3H4zM4 14h8v3H4z","M10 3a5 5 0 100 10 5 5 0 000-10zM14 13l4 4","M4 16l9-9 2 2-9 9H4zM14 6l2-2 2 2-2 2z","M10 3a7 7 0 100 14 7 7 0 000-14zM3 10h14M10 3c3 3 3 11 0 14","M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5z","M4 10l4 4 8-8","M3 5h14v10H3zM3 9h14"];
 
+/* ── live n8n (نفس ربط الداشبورد القديم مع بديل تلقائي) ── */
+(function () {
+  try {
+    var ctl = new AbortController(); var tm = setTimeout(function () { ctl.abort(); }, 4500);
+    fetch("https://alialkaabi.app.n8n.cloud/webhook/admin-analytics", { signal: ctl.signal }).then(function (r) { return r.json(); }).then(function (d) {
+      clearTimeout(tm);
+      if (d && typeof d.health === "number") {
+        var b = document.querySelector("#p-ops .gauge .gv b"), a = document.querySelector("#p-ops .gauge .arc");
+        if (b) b.textContent = Math.round(d.health);
+        if (a) a.setAttribute("stroke-dashoffset", (314 * (1 - d.health / 100)).toFixed(1));
+      }
+    }).catch(function () { clearTimeout(tm); });
+  } catch (e) {}
+})();
 setTimeout(function(){document.querySelectorAll(".cc").forEach(function(c){c.classList.add("live");});},300);
 
 /* التبويبات */
