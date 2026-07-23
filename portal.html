@@ -1264,5 +1264,36 @@ function AliAgentMissionControl() {
 })();
 </script>
 
+<!-- ═══ زر لوحة النظام → الداشبورد الجديد داخل البوابة ═══ -->
+<script id="ali-mc-newdash">
+(function () {
+  var old = document.getElementById("ali-mc-launch");
+  if (!old || !old.parentNode) return;
+  var b = old.cloneNode(true);
+  old.parentNode.replaceChild(b, old);
+  b.addEventListener("click", function () {
+    var ov = document.getElementById("ali-mc-overlay");
+    if (!ov) return;
+    var ld = document.getElementById("ali-mc-loading"); if (ld) ld.style.display = "none";
+    var root = document.getElementById("ali-mc-root"); if (root) root.style.display = "none";
+    ov.style.background = "#081A33";
+    ov.style.display = "block";
+    if (!document.getElementById("ali-mc-frame")) {
+      var f = document.createElement("iframe");
+      f.id = "ali-mc-frame";
+      f.src = "/dash";
+      f.setAttribute("style", "position:absolute;inset:0;width:100%;height:100%;border:0;background:#081A33");
+      ov.appendChild(f);
+    }
+    if (!document.getElementById("ali-mc-close-btn")) {
+      var c = document.createElement("button"); c.id = "ali-mc-close-btn"; c.textContent = "\u2715";
+      c.setAttribute("style", "position:fixed;top:14px;left:14px;z-index:10001;background:#1F2E5A;color:#fff;border:none;border-radius:50%;width:38px;height:38px;font-size:17px;cursor:pointer;box-shadow:0 4px 12px rgba(31,46,90,.3)");
+      c.addEventListener("click", function () { ov.style.display = "none"; });
+      ov.appendChild(c);
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
