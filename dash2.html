@@ -22,6 +22,42 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
 .ds-tab:hover{color:var(--paper);border-color:var(--line)}
 .ds-tab.on{color:#241A05;background:var(--gold);border-color:var(--gold);box-shadow:0 6px 20px rgba(199,162,75,.4)}
 .pane{display:none}
+.reach-h{padding:16px 16px 0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.reach-h .rb{font-size:9.5px;color:#E5C04B;border:1px solid rgba(229,192,75,.3);border-radius:7px;padding:2px 9px}
+.mk.pending{border-style:dashed}
+.mk.pending .v b{color:#E5C04B}
+.mk .pend-chip{display:inline-block;margin-top:4px;font-size:9px;color:#E5C04B;border:1px solid rgba(229,192,75,.35);border-radius:6px;padding:1px 7px}
+.qb-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:14px 16px 0}
+.qb-grid{display:grid;grid-template-columns:340px 1fr;gap:12px;padding:14px 16px}
+.qb-list{max-height:452px;overflow-y:auto;display:grid;gap:7px;padding-inline-end:4px}
+.qb-list::-webkit-scrollbar{width:5px}.qb-list::-webkit-scrollbar-thumb{background:rgba(141,162,192,.25);border-radius:3px}
+.qb-pk{font-size:10px;color:var(--gold-soft);font-weight:800;margin:8px 2px 1px;letter-spacing:.5px}
+.qb-row{display:flex;align-items:center;gap:9px;padding:9px 11px;border:1px solid var(--hair);border-radius:9px;cursor:pointer;background:rgba(10,31,61,.5);transition:.2s}
+.qb-row:hover{border-color:rgba(199,162,75,.4);background:rgba(199,162,75,.05)}
+.qb-row.on{border-color:var(--gold);background:rgba(199,162,75,.1)}
+.qb-row .c{font-family:IBM Plex Mono,monospace;font-size:11px;color:var(--gold-soft);font-weight:700;min-width:34px}
+.qb-row .t{flex:1;font-size:11px;color:#D8E0EC;font-weight:600;line-height:1.4;min-width:0}
+.qb-row .bg{font-size:9px;padding:2px 7px;border-radius:6px;white-space:nowrap;flex:none}
+.qb-row .bg.ready{color:#6FCF8E;background:rgba(111,207,142,.12)}
+.qb-row .bg.pend{color:#E5C04B;background:rgba(229,192,75,.1)}
+.qb-detail{border:1px solid var(--hair);border-radius:11px;background:rgba(8,26,51,.55);padding:16px 18px;min-height:320px;max-height:452px;overflow-y:auto}
+.qb-detail .dh{display:flex;align-items:center;gap:10px;margin-bottom:3px}
+.qb-detail .dh .dc{font-family:IBM Plex Mono,monospace;color:var(--gold-soft);font-weight:700;font-size:13px}
+.qb-detail .dh h4{font-size:15px;color:var(--paper);font-weight:800}
+.qb-detail .dsub{font-size:11px;color:var(--dim);margin-bottom:14px}
+.qb-q{border:1px solid var(--hair);border-radius:9px;padding:11px 13px;margin-bottom:9px;background:rgba(10,31,61,.4)}
+.qb-q .qq{font-size:12.5px;color:#D8E0EC;font-weight:700;margin-bottom:6px;display:flex;gap:7px;line-height:1.5}
+.qb-q .qq .n{color:var(--gold-soft);flex:none}
+.qb-q .qa{font-size:11px;color:var(--dim);line-height:1.6;display:flex;gap:7px}
+.qb-q .qa .tag{flex:none;font-weight:800;padding:1px 8px;border-radius:5px;font-size:10px;height:fit-content}
+.qb-q .qa .tag.t{color:#6FCF8E;background:rgba(111,207,142,.14)}
+.qb-q .qa .tag.f{color:#E5484D;background:rgba(229,72,77,.14)}
+.qb-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:290px;text-align:center;color:var(--dim);gap:12px}
+.qb-empty .ic{font-size:30px;opacity:.4}
+.qb-empty b{color:#E5C04B;font-size:13px}
+.qb-foot{padding:12px 20px;font-size:11.5px;color:var(--dim);border-top:1px solid var(--hair);background:rgba(8,26,51,.5)}
+.qb-foot b{color:#E5C04B}
+@media(max-width:980px){.qb-grid{grid-template-columns:1fr}.qb-kpis{grid-template-columns:1fr 1fr}}
 .pane.on{display:block;animation:din .35s ease-out}
 @keyframes din{from{transform:translateY(12px)}}
 .pfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:18px 6px 0;font-size:12.5px;color:var(--dim)}
@@ -357,6 +393,7 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
     <button class="ds-tab" data-t="log">سجل النشاط</button>
     <button class="ds-tab" data-t="studio">الاستوديو</button>
     <button class="ds-tab" data-t="kpi">المؤشرات</button>
+    <button class="ds-tab" data-t="qbank">بنك الأسئلة</button>
   </div>
 
   <!-- ═══ غرفة العمليات ═══ -->
@@ -373,6 +410,8 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
             <div class="kv"><span>بانتظار الاعتماد</span><b class="mono" style="color:#E5C04B">1</b></div>
             <div class="kv"><span>شرائح منتجة</span><b class="mono">3,666</b></div>
             <div class="kv"><span>أخطاء حرجة</span><b class="mono ok">0</b></div>
+            <div class="kv"><span>عدد المستفيدين</span><b class="mono" style="color:#E5C04B">قيد الربط</b></div>
+            <div class="kv"><span>مؤشر قياس الأثر</span><b class="mono" style="color:#E5C04B">قيد الربط</b></div>
           </div>
           <div class="cc-panel">
             <div class="pt">النشاط المباشر</div>
@@ -547,11 +586,31 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
     <div class="cc live">
       <div class="cc-top"><span class="cc-brand">KPI&nbsp;BOARD</span><span class="cc-badge ok">أرقام حية</span><span class="cc-clock mono">Q3&nbsp;2026</span></div>
       <div class="mkpis" id="mkpis"></div>
+      <div class="reach-h"><div class="pt" style="padding:0">قياس الأثر والوصول</div><span class="rb">قيد الربط — يُفعّل مع الباركود والمسار</span></div>
+      <div class="mkpis reach" id="reach"></div>
       <div class="mgrid">
         <div class="cc-panel"><div class="pt">العروض المنتجة حسب الباقة <span class="mono" style="color:var(--gold)">71</span></div><div class="mbars" id="mbars"></div></div>
         <div class="cc-panel"><div class="pt">درجات محاور التدقيق الخمسة</div><svg class="mradar" id="mradar" viewBox="0 0 180 176"></svg></div>
         <div class="cc-panel"><div class="pt">آخر العمليات</div><div class="feed" id="kfeed"></div></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ بنك الأسئلة ═══ -->
+  <div class="pane" id="p-qbank">
+    <div class="cc live">
+      <div class="cc-top"><span class="cc-brand">QUESTION&nbsp;BANK</span><span class="cc-badge gold" id="qbBadge">اختبار لكل عرض</span><span class="cc-clock mono">صح / خطأ</span></div>
+      <div class="qb-kpis">
+        <div class="sk"><b class="mono ok" id="qbReady">0</b><span>عروض فيها اختبار جاهز</span></div>
+        <div class="sk"><b class="mono" id="qbTotalQ">0</b><span>إجمالي الأسئلة</span></div>
+        <div class="sk"><b class="mono" style="color:#E5C04B" id="qbPend">0</b><span>بانتظار التوليد</span></div>
+        <div class="sk"><b class="mono" style="color:#E5C04B">قيد الإعداد</b><span>الباركود والمسار</span></div>
+      </div>
+      <div class="qb-grid">
+        <div class="qb-list" id="qbList"></div>
+        <div class="qb-detail" id="qbDetail"></div>
+      </div>
+      <div class="qb-foot"><span class="dot warn" style="width:7px;height:7px;border-radius:50%;background:#E5C04B;display:inline-block"></span> الأسئلة تُولّد آليًا من محتوى كل عرض ومصادره المعتمدة — النماذج المعروضة عيّنة توضيحية<span class="sep" style="display:inline-block;width:1px;height:11px;background:var(--hair);margin:0 8px;vertical-align:middle"></span> <b>الباركود قيد الإعداد</b> — سيربط كل عرض بصفحة اختباره لقياس الزوار والمستفيدين</div>
     </div>
   </div>
 
@@ -703,6 +762,55 @@ function faultCycle() {
   setTimeout(faultCycle, 7500 + Math.random() * 3000);
 }
 setTimeout(faultCycle, 3000);
+
+/* ── قياس الأثر والوصول (مؤشرات قيد الربط) ── */
+var REACH = [
+  ["عدد التنزيلات","تنزيلات العروض من البوابة"],
+  ["عدد الزوار","مسح الباركود لصفحة الاختبار"],
+  ["عدد المستفيدين","أكملوا الاختبار التفاعلي"],
+  ["متوسط قياس الأثر","معدل الإجابات الصحيحة"]
+];
+document.getElementById("reach").innerHTML = REACH.map(function (r) {
+  return '<div class="mk pending"><div class="v mono"><b>—</b></div><div class="k">' + r[0] + '</div><div style="font-size:9.5px;color:var(--dim);margin-top:2px">' + r[1] + '</div><span class="pend-chip">قيد الربط</span></div>';
+}).join("");
+
+/* ── بنك الأسئلة ── */
+var QBANK = [["A.1", "الإخلاء الآمن في المدارس", "A", []], ["A.2", "الوقاية من الإصابات داخل البيئة المدرسية", "A", []], ["A.3", "الوقاية من الحرائق في المدارس", "A", []], ["A.4", "السلامة في الحافلات المدرسية", "A", []], ["A.5", "السلامة في المختبرات المدرسية", "A", []], ["A.6", "ثقافة الإبلاغ عن المخاطر داخل المدرسة", "A", []], ["B.1", "السلامة في المطبخ", "B", []], ["B.2", "الوقاية من حرائق المنازل", "B", [["أغلب حرائق المنازل تبدأ في المطبخ.", "صح — لا تترك الطهي دون مراقبة."], ["يمكن إطفاء حريق زيت الطهي بالماء بأمان.", "خطأ — الماء يفاقمه، يُغطّى بغطاء أو قماش مبلل."], ["فصل الأجهزة الكهربائية غير المستخدمة يقلل الخطر.", "صح — خاصة قبل النوم والسفر."], ["تخزين المواد القابلة للاشتعال قرب مصادر الحرارة آمن.", "خطأ — يُبعد عنها ويُحفظ في مكان جيد التهوية."], ["وجود طفاية حريق صالحة في المنزل ضرورة.", "صح — مع معرفة طريقة استخدامها مسبقًا."]]], ["B.3", "أجهزة إنذار الدخان وخطة الهروب", "B", [["يكفي جهاز إنذار دخان واحد لحماية المنزل كله.", "خطأ — يُركّب في كل طابق وقرب غرف النوم."], ["يُختبر جهاز الإنذار شهريًا وتُبدّل بطاريته دوريًا.", "صح — جهاز صامت لا يحمي أحدًا."], ["خطة الهروب يجب أن تحدد مخرجين ونقطة تجمّع خارج المنزل.", "صح — ويُتدرّب عليها مع الأطفال."], ["عند سماع الإنذار نجمع الأغراض الثمينة أولًا.", "خطأ — اخرج فورًا، الأرواح قبل الممتلكات."], ["يُركّب كاشف الدخان داخل المطبخ مباشرة لأفضل حماية.", "خطأ — يُبعد قليلًا لتفادي الإنذارات الكاذبة."]]], ["B.4", "السلامة الكهربائية في المنازل", "B", []], ["B.5", "السلامة عند استخدام المدافئ والتدفئة شتاءً", "B", []], ["B.6", "السلامة عند استخدام الشموع والزينة الضوئية", "B", []], ["B.7", "السلامة في المسابح المنزلية", "B", []], ["B.8", "السلامة عند استخدام الميكروويف", "B", []], ["B.9", "الوقاية من الإصابات المنزلية", "B", []], ["B.10", "السلامة من أول أكسيد الكربون داخل المنزل", "B", []], ["C.1", "السلامة في الحدائق العامة", "C", []], ["C.2", "السلامة في المراكز التجارية", "C", []], ["C.3", "السلامة على الشواطئ", "C", []], ["C.4", "السلامة في الفعاليات والمناطق العامة", "C", []], ["C.5", "السلامة في المخيمات والرحلات البرية", "C", [["دفن الفحم الحار بالرمل يطفئه تمامًا.", "خطأ — يبقى الجمر حيًا حتى 24 ساعة، والإطفاء الصحيح بالماء والتقليب."], ["الحرق يُبرَّد بماء جارٍ فاتر لمدة 20 دقيقة.", "صح — هذا أفضل إسعاف أولي، ولا تستخدم الثلج أبدًا."], ["المنقلة داخل الخيمة آمنة إذا كانت التهوية جيدة.", "خطأ — أول أكسيد الكربون قاتل صامت، لا تدخل الفحم للخيمة إطلاقًا."], ["نار بلا مراقب لدقائق قليلة أمر مقبول.", "خطأ — أغلب الحرائق تبدأ في لحظات الغفلة، عيّن مسؤولًا دائمًا."], ["إبعاد النار 3 أمتار عن الخيام إجراء ضروري.", "صح — مع تجهيز طفاية وماء قريبين قبل الإشعال."]]], ["C.6", "السلامة عند استخدام الشوايات", "C", []], ["C.7", "السلامة في موسم الصيد", "C", []], ["C.8", "السلامة في المزارع وحماية الثروة الزراعية", "C", []], ["C.9", "السلامة من اللدغات واللسعات", "C", []], ["C.10", "السلامة في الأبراج السكنية والشقق", "C", []], ["D.1", "الوقاية من حرائق المركبات", "D", []], ["D.2", "الفحص الوقائي وسلامة المركبة", "D", []], ["D.3", "التصرف الصحيح عند حريق المركبة", "D", []], ["D.4", "الوقاية من الإصابات المرورية", "D", []], ["D.5", "السلوكيات الخاطئة المسببة للحوادث", "D", []], ["D.6", "السلامة عند استخدام الدراجات الهوائية", "D", []], ["D.7", "السلامة عند شحن المركبات الكهربائية في المنزل", "D", []], ["D.8", "التصرف الصحيح عند الحوادث المرورية", "D", [["أول خطوة بعد الحادث هي الهدوء وتأمين المكان.", "صح — ثم حماية الأشخاص وطلب المساعدة."], ["يُفضّل تحريك المصاب من المركبة فورًا دائمًا.", "خطأ — لا يُحرّك إلا عند خطر داهم كالحريق."], ["تُوضع المثلثات العاكسة لتحذير المركبات القادمة.", "صح — على مسافة كافية خلف موقع الحادث."], ["رقم الطوارئ للإبلاغ عن الحادث هو 999.", "صح — مع تحديد الموقع بدقة."], ["يُترك النزيف الشديد دون ضغط حتى وصول الإسعاف.", "خطأ — الضغط المباشر على الجرح قد ينقذ حياة."]]], ["D.9", "إفساح الطريق للآليات الإسعافية", "D", []], ["E.1", "أساسيات الإسعافات الأولية", "E", [["تأمين مكان الحادث يسبق إسعاف المصاب.", "صح — سلامتك أولًا حتى تستطيع المساعدة."], ["يُحرّك مصاب العمود الفقري لمكان مريح فورًا.", "خطأ — لا يُحرّك إلا لخطر داهم تفاديًا للشلل."], ["رقم الطوارئ الموحد في الإمارات هو 999.", "صح — احفظه وعلّمه أطفالك."], ["حقيبة إسعاف أولية جاهزة ضرورة في كل منزل ومركبة.", "صح — تُفحص صلاحيتها دوريًا."]]], ["E.2", "حقيبة الإسعافات الأولية في المنزل", "E", []], ["E.3", "الإنعاش القلبي الرئوي CPR", "E", [["يبدأ الإنعاش فورًا عند توقف التنفس وعدم استجابة الشخص.", "صح — كل ثانية تأخير تقلل فرص النجاة."], ["الضغطات الصدرية للبالغ بمعدل 100–120 ضغطة في الدقيقة.", "صح — بعمق 5–6 سم في منتصف الصدر."], ["يجب التوقف المتكرر لفحص النبض أثناء الإنعاش.", "خطأ — التوقف يقطع الدورة الدموية ويقلل الفعالية."], ["يُطلب 999 فور اكتشاف الحالة قبل بدء الإنعاش أو أثناءه.", "صح — بالتوازي مع طلب مزيل الرجفان إن توفّر."], ["الإنعاش يستمر حتى وصول المختصين أو عودة التنفس.", "صح — لا تتوقف إلا للضرورة القصوى."]]], ["E.4", "استخدام جهاز مزيل الرجفان AED", "E", []], ["E.5", "التعامل مع النزيف والبتر", "E", []], ["E.6", "إسعاف حالات الاختناق", "E", []], ["E.7", "التعامل مع الكسور والسقوط", "E", []], ["E.8", "التعامل مع الحروق الحرارية والكيميائية", "E", []], ["E.9", "التعامل مع الإغماء ووضعية الإفاقة", "E", []], ["E.10", "التعامل مع التشنجات والصرع", "E", []], ["E.11", "التعامل مع الجلطات والسكتات الدماغية", "E", []], ["E.12", "التعامل مع هبوط السكر", "E", []], ["E.13", "التعامل مع التسمم والتسمم الغذائي", "E", []], ["E.14", "التعامل مع ضربات الشمس والإجهاد الحراري", "E", []], ["E.15", "التعامل مع حالات الغرق", "E", []], ["F.1", "التوعية بالسلامة أثناء الأزمات والطوارئ", "F", []], ["F.2", "خطط الطوارئ في المباني الشاهقة", "F", []], ["F.3", "خطط الإخلاء في المباني متعددة الطوابق", "F", []], ["F.4", "الإخلاء الآمن في مكان العمل", "F", []], ["F.5", "الوقاية من مخاطر الدخان وأول أكسيد الكربون", "F", [["أول أكسيد الكربون غاز عديم اللون والرائحة.", "صح — لذلك يُسمى القاتل الصامت."], ["يمكن تشغيل مولّد كهرباء داخل منزل مغلق بأمان.", "خطأ — يجب تشغيله خارجًا بعيدًا عن النوافذ."], ["الدخان أخطر من اللهب في معظم حرائق المباني.", "صح — معظم الوفيات بسبب استنشاق الدخان."], ["كاشف أول أكسيد الكربون غير ضروري مع تهوية جيدة.", "خطأ — الكاشف ضروري للإنذار المبكر."], ["عند استنشاق الدخان نخرج للهواء الطلق ونتصل بـ999.", "صح — فورًا ودون تأخير."]]], ["F.6", "السلامة من المولدات الكهربائية", "F", []], ["F.7", "الوقاية من حرائق البطاريات", "F", []], ["F.8", "السلامة الكهربائية الخارجية", "F", []], ["F.9", "السلامة الكهربائية حول المسابح", "F", []], ["F.10", "التصرف الصحيح عند انطلاق الإنذار", "F", []], ["G.1", "إدارة مخاطر حرائق المنازل والمطابخ", "G", []], ["G.2", "إدارة مخاطر حرائق المركبات", "G", []], ["G.3", "إدارة مخاطر الكهرباء والغاز", "G", []], ["G.4", "إدارة مخاطر المنشآت والمساكن ذات الكثافة العالية", "G", []], ["G.5", "إدارة مخاطر الحشود والمرافق العامة", "G", []], ["G.6", "إدارة مخاطر الأحوال الجوية والسيول", "G", []], ["G.7", "_سلامة_الفئات_الأكثر_تعرضًا_للمخاطر", "G", []], ["H.1", "السلامة من الإجهاد الحراري وضربات الشمس", "H", []], ["H.2", "السلامة أثناء التنقل والحشود", "H", []], ["H.3", "السلامة في السكن والمخيمات", "H", []], ["H.4", "الإسعافات الأولية والتصرف وقت الطوارئ", "H", []]];
+var PKN = {A:"باقة A · السلامة المدرسية",B:"باقة B · السلامة المنزلية",C:"باقة C · السلامة الخارجية والمواسم",D:"باقة D · السلامة المرورية والمركبات",E:"باقة E · الإسعافات الأولية",F:"باقة F · الحرائق والإخلاء",G:"باقة G · السلامة العامة",H:"باقة H · مواسم وحملات"};
+(function () {
+  var readyN = QBANK.filter(function (b) { return b[3].length; }).length;
+  var totalQ = QBANK.reduce(function (a, b) { return a + b[3].length; }, 0);
+  document.getElementById("qbReady").textContent = readyN;
+  document.getElementById("qbTotalQ").textContent = totalQ;
+  document.getElementById("qbPend").textContent = QBANK.length - readyN;
+  var html = "", lastP = "";
+  QBANK.forEach(function (b, i) {
+    if (b[2] !== lastP) { html += '<div class="qb-pk">' + PKN[b[2]] + '</div>'; lastP = b[2]; }
+    var ready = b[3].length > 0;
+    html += '<div class="qb-row" data-i="' + i + '"><span class="c">' + b[0] + '</span><span class="t">' + b[1] + '</span><span class="bg ' + (ready ? "ready" : "pend") + '">' + (ready ? b[3].length + " أسئلة" : "بانتظار التوليد") + '</span></div>';
+  });
+  document.getElementById("qbList").innerHTML = html;
+  function showTopic(i) {
+    var b = QBANK[i];
+    document.querySelectorAll("#qbList .qb-row").forEach(function (r) { r.classList.toggle("on", r.dataset.i == i); });
+    var d = document.getElementById("qbDetail");
+    if (!b[3].length) {
+      d.innerHTML = '<div class="qb-empty"><div class="ic">🧪</div><div class="dh" style="justify-content:center"><span class="dc">' + b[0] + '</span></div><div style="color:#D8E0EC;font-weight:700">' + b[1] + '</div><b>الاختبار بانتظار التوليد</b><div style="max-width:320px;font-size:11px">سيُولّد الاختبار آليًا من محتوى هذا العرض ومصادره المعتمدة عند إنشائه، بصيغة صح / خطأ.</div></div>';
+      return;
+    }
+    var qs = b[3].map(function (q, k) {
+      var isTrue = q[1].indexOf("صح") === 0;
+      return '<div class="qb-q"><div class="qq"><span class="n mono">س' + (k + 1) + '</span><span>' + q[0] + '</span></div><div class="qa"><span class="tag ' + (isTrue ? "t" : "f") + '">' + (isTrue ? "صح" : "خطأ") + '</span><span>' + q[1] + '</span></div></div>';
+    }).join("");
+    d.innerHTML = '<div class="dh"><span class="dc">' + b[0] + '</span><h4>' + b[1] + '</h4></div><div class="dsub">اختبر معلوماتك · صح أم خطأ؟ · ' + b[3].length + ' أسئلة مشتقة من محتوى العرض ومصادره</div>' + qs;
+  }
+  document.querySelectorAll("#qbList .qb-row").forEach(function (r) {
+    r.addEventListener("click", function () { showTopic(parseInt(r.dataset.i)); });
+  });
+  // open first ready topic
+  var firstReady = QBANK.findIndex(function (b) { return b[3].length; });
+  if (firstReady >= 0) showTopic(firstReady);
+})();
 
 /* ── غرفة المتابعة ── */
 var STAGES = [["استلام الطلب","00:02:15",2],["التحليل والتخطيط","00:05:40",2],["جمع المعلومات","00:18:25",2],["كتابة المحتوى","00:25:30",2],["التصميم والإخراج","58%",1],["المراجعة والتدقيق","في الانتظار",0],["الاعتماد البشري","في الانتظار",0]];
