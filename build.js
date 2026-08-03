@@ -114,8 +114,14 @@ function refToApa(r) {
   if (typeof r === "string") return r.trim();
   if (typeof r !== "object") return String(r);
   if (r.apa && String(r.apa).trim()) return String(r.apa).trim();
-  const author = String(r.author || r.publisher || r.org || "").trim().replace(/\.+$/, "");
+  let author = String(r.author || r.publisher || r.org || "").trim().replace(/\.+$/, "");
   const title = String(r.title || r.name || "").trim().replace(/\.+$/, "");
+  // مخطط v1.1 يضع الجهة في «name» وعنوان الوثيقة في «title».
+  // لا نأخذ name كجهة إلا إذا وُجد عنوان مستقل فعلًا ومختلف عنه؛
+  // وإلا يبقى name عنوانًا كما كان تمامًا (بلا أي تأليف أو تغيير سلوك).
+  if (!author && r.name && r.title && String(r.name).trim() !== String(r.title).trim()) {
+    author = String(r.name).trim().replace(/\.+$/, "");
+  }
   const year = String(r.year || r.date || "").trim();
   const url = String(r.url || r.link || "").trim();
   const dt = "(" + (year || "n.d.") + ").";
