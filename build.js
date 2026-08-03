@@ -96,6 +96,37 @@ function toCelsiusDeep(v, _seen) {
   return v;
 }
 
+// ===== المراجع بصيغة APA =====
+// النص المعتمد للمرجع هو حقل «apa» الجاهز في corpus.json — يُستخدم حرفيا بلا
+// تعديل. وإن غاب، يُركّب السطر من الحقول الموجودة فقط بترتيب APA 7،
+// ولا يُخترع مؤلف ولا سنة إطلاقا.
+let __CORPUS = null;
+function corpusRefs(code) {
+  if (__CORPUS === null) {
+    try { __CORPUS = JSON.parse(fs.readFileSync(path.join(__dirname, "corpus.json"), "utf8")); }
+    catch (e) { __CORPUS = {}; }
+  }
+  const t = __CORPUS && __CORPUS[code];
+  return t && Array.isArray(t.refs) ? t.refs : [];
+}
+function refToApa(r) {
+  if (r == null) return "";
+  if (typeof r === "string") return r.trim();
+  if (typeof r !== "object") return String(r);
+  if (r.apa && String(r.apa).trim()) return String(r.apa).trim();
+  const author = String(r.author || r.publisher || r.org || "").trim().replace(/\.+$/, "");
+  const title = String(r.title || r.name || "").trim().replace(/\.+$/, "");
+  const year = String(r.year || r.date || "").trim();
+  const url = String(r.url || r.link || "").trim();
+  const dt = "(" + (year || "n.d.") + ").";
+  let s;
+  if (author) s = author + ". " + dt + (title ? " " + title + "." : "");
+  else if (title) s = title + ". " + dt;
+  else s = dt;
+  if (url) s += " " + url;
+  return s.replace(/\s+/g, " ").trim();
+}
+
 async function build(content) {
   // توحيد وحدة الحرارة قبل أي رسم — يشمل العربي والإنجليزي على حدّ سواء
   try { content = toCelsiusDeep(content); } catch (e) { /* لا يوقف الإنتاج إطلاقًا */ }
@@ -451,14 +482,17 @@ async function build(content) {
 
   async function renderRefs(c) {
     const slide = newSlide(); addSlideTitle(slide, c.title || "المصادر بصيغة APA", c.subtitle || "قائمة المراجع الرسمية");
-    const refs = c.refs || [];
-    const topY = 2.80, step = 0.58;
-    const cardH = Math.min(3.85, 0.30 + refs.length * step);
+    const refs = (c.refs || []).map(refToApa).filter(x => x).slice(0, 8);
+    // تخطيط مرن: سطور APA طويلة، فيُوزّع الارتفاع المتاح عليها ويصغر الخط عند الكثرة
+    const topY = 2.80, botY = 6.98;
+    const step = refs.length ? Math.min(0.58, (botY - topY - 0.24) / refs.length) : 0.58;
+    const refFS = refs.length >= 7 ? 8.5 : refs.length >= 6 ? 9 : refs.length >= 5 ? 9.5 : 10.5;
+    const cardH = Math.min(botY - topY, 0.24 + refs.length * step);
     slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: cardH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
     for (let i = 0; i < refs.length; i++) {
       // المراجع العربية تُحاذى يمينًا بوضع RTL؛ المراجع اللاتينية تبقى يسارًا كما هي
       const isAr = /[؀-ۿ]/.test(String(refs[i]));
-      const refOpts = { x: 0.85, y: topY + 0.18 + i * step, w: 11.60, h: step - 0.05, fontSize: 10.5, fontFace: FONT, color: COLORS.primaryDark, align: isAr ? "right" : "left", valign: "middle", margin: 0 };
+      const refOpts = { x: 0.85, y: topY + 0.12 + i * step, w: 11.60, h: step - 0.02, fontSize: refFS, fontFace: FONT, color: COLORS.primaryDark, align: isAr ? "right" : "left", valign: "middle", margin: 0, fit: "shrink" };
       if (isAr) refOpts.rtlMode = true;
       slide.addText(refs[i], refOpts);
     }
@@ -658,10 +692,8 @@ async function build(content) {
     addFooter(slide);
   }
   async function renderV11Sources(c) {
-    const refs = (c.sources || []).filter(x => x && x.name).map(x => {
-      const t = x.title ? " " + String(x.title).trim().replace(/\.+$/, "") + "." : "";
-      return (x.name + ". (" + (x.year || "n.d.") + ")." + t + " " + (x.url || "")).replace(/\s+/g, " ").trim();
-    });
+    // يُفضّل نص «apa» المعتمد إن وُجد، وإلا يُركّب من الحقول الموجودة فقط
+    const refs = (c.sources || []).map(refToApa).filter(x => x);
     if (Array.isArray(c.iso26000) && c.iso26000.length) refs.push("Prepared in line with ISO 26000 guidance — clauses " + c.iso26000.join(", "));
     await renderRefs({ title: c.title || "المصادر بصيغة APA", subtitle: "قائمة المراجع الرسمية", refs: refs.slice(0, 7) });
   }
@@ -674,6 +706,22 @@ async function build(content) {
   };
 
   const renderers = { section: renderSection, list: renderList, refs: renderRefs, cover: renderCover, cards: renderCards, compact: renderCompact, cardsDesc: renderCardsDesc, numbered: renderNumbered, stairs: renderStairs, emergency: renderEmergency, dodont: renderDoDont, scenarios: renderScenarios, quiz: renderQuiz, closing: renderClosing };
+
+  // شبكة أمان للمراجع: لا يخرج عرض بلا شريحة مصادر إن توفّرت مراجع معتمدة لرمزه.
+  // تُبنى حصرا من نصوص «apa» المسجّلة في corpus.json — بلا أي تأليف — وتُدرج قبل
+  // شريحة الختام. وإن وُجدت شريحة مصادر أصلا لا يُغيّر شيء إطلاقا.
+  try {
+    const sl = content.slides;
+    if (Array.isArray(sl) && !sl.some(s => s && (s.type === "refs" || s.type === "sources"))) {
+      const auto = corpusRefs(CODE).map(refToApa).filter(x => x);
+      if (auto.length) {
+        const at = sl.findIndex(s => s && s.type === "closing");
+        const node = { type: "refs", title: LTR ? "References (APA)" : "المصادر بصيغة APA", subtitle: LTR ? "Official reference list" : "قائمة المراجع الرسمية", refs: auto.slice(0, 7) };
+        if (at >= 0) sl.splice(at, 0, node); else sl.push(node);
+        console.log("ℹ️ أُدرجت شريحة المصادر تلقائيا من corpus.json —", node.refs.length, "مرجعا");
+      }
+    }
+  } catch (e) { /* لا يوقف الإنتاج إطلاقا */ }
 
   // v6.4 fix: كشف v1.1 من أنواع الشرائح نفسها — وجود content.cover لا يلغي النمط
   const isV11 = Array.isArray(content.slides) && content.slides.some(s => s && s.type === "main_message_why");
