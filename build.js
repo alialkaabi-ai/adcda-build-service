@@ -109,6 +109,30 @@ function corpusRefs(code) {
   const t = __CORPUS && __CORPUS[code];
   return t && Array.isArray(t.refs) ? t.refs : [];
 }
+// ═══ تنظيف روابط المصادر من ذيل التتبّع ═══
+// روابط المصادر تصل من أدوات البحث ومعها معاملات تتبّع (utm_source=… وأخواتها)
+// لا علاقة لها بالجهة الرسمية، فتظهر في شريحة المراجع داخل عرض رسمي.
+// نحذف المفاتيح المعروفة فقط، ونُبقي أي معامل آخر كما هو حرفيًا — بلا أي تغيير
+// في وجهة الرابط. وإن لم يُحذف شيء يُعاد النص الأصلي بلا مساس.
+const TRACK_KEYS = /^(utm_[a-z_]+|fbclid|gclid|dclid|gbraid|wbraid|mc_cid|mc_eid|igshid|yclid|msclkid|_hsenc|_hsmi|vero_id|oly_enc_id|oly_anon_id)$/i;
+function stripTracking(u) {
+  const s = String(u == null ? "" : u).trim();
+  const qi = s.indexOf("?");
+  if (qi < 0) return s;
+  const fi = s.indexOf("#");
+  if (fi >= 0 && fi < qi) return s; // العلامة داخل الجزء المرجعي — لا نلمسه
+  const head = s.slice(0, qi);
+  const tail = s.slice(qi + 1);
+  const hi = tail.indexOf("#");
+  const query = hi < 0 ? tail : tail.slice(0, hi);
+  const hash = hi < 0 ? "" : tail.slice(hi);
+  const parts = query.split("&").filter(function (x) { return x !== ""; });
+  if (!parts.length) return s;
+  const kept = parts.filter(function (p) { return !TRACK_KEYS.test(p.split("=")[0]); });
+  if (kept.length === parts.length) return s; // لا شيء يُحذف
+  return head + (kept.length ? "?" + kept.join("&") : "") + hash;
+}
+
 function refToApa(r) {
   if (r == null) return "";
   if (typeof r === "string") return r.trim();
@@ -123,7 +147,7 @@ function refToApa(r) {
     author = String(r.name).trim().replace(/\.+$/, "");
   }
   const year = String(r.year || r.date || "").trim();
-  const url = String(r.url || r.link || "").trim();
+  const url = stripTracking(r.url || r.link || "");
   const dt = "(" + (year || "n.d.") + ").";
   let s;
   if (author) s = author + ". " + dt + (title ? " " + title + "." : "");
