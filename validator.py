@@ -60,7 +60,7 @@ def audit_free(d):
     types=[s.get("type") for s in slides]
     bad_t=[t for t in types if t not in ALLOWED_FREE]
     add("2 الأنواع من قائمة التصميم الرسمي","PASS" if not bad_t else "FAIL",str(bad_t))
-    cnt={t:types.count(t) for t in set(types)}
+    cnt={t:types.count(t) for t in sorted(set(types), key=lambda x: (x is None, x))}
     need_ok = cnt.get("section",0)>=2 and cnt.get("dodont",0)>=2 and all(cnt.get(t) for t in ("list","numbered","emergency","quiz","refs","closing"))
     add("3 الأركان الإلزامية (قسمان + افعل/لا تفعل ×2 + طوارئ + كويز + مصادر + خاتمة)","PASS" if need_ok else "FAIL",str(cnt))
     add("4 الخاتمة أخيرًا","PASS" if types and types[-1]=="closing" else "FAIL")
@@ -110,52 +110,91 @@ def audit_free(d):
     print(f"النتيجة: {p} ناجح / {f} فاشل (من {len(R)})")
     return f==0
 
+class _SlideMap(dict):
+    """خريطة شرائح متسامحة: الرقم المفقود يعود ككائن فارغ لا كاستثناء."""
+    def __missing__(self, k): return {}
+
+def _slide_no(s, i):
+    """رقم الشريحة في التسلسل المعتمد (١..١٥).
+
+    ملفات المحتوى الحقيقية لا تحمل مفتاح «n» إطلاقًا، و build.js يولّد شريحة
+    الغلاف تلقائيًا — فمصفوفة الشرائح تبدأ من objectives وطولها ١٤ بينما
+    العرض المُخرَج ١٥ شريحة. لذلك الترقيم الصحيح مشتقّ من النوع لا من الموضع:
+    الموضع+١ يزيح كل شريحة درجة واحدة ويُسقط القواعد ٢ و٥ و١٠ و١١ و١٣ زورًا.
+    نحترم «n» إن وُجد، ثم النوع، ثم الموضع كملاذ أخير.
+    """
+    if not isinstance(s, dict): return i + 1
+    if s.get("n"): return s["n"]
+    t = s.get("type")
+    if t in EXPECTED: return EXPECTED.index(t) + 1
+    return i + 1
+
 def audit(path):
     d=json.load(open(path,encoding="utf-8"))
     if not any((s0 or {}).get("type")=="main_message_why" for s0 in d.get("slides") or []):
         return audit_free(d)
-    sl={s["n"]:s for s in d["slides"]}
+    # ترقيم الشرائح بالنوع (انظر _slide_no) — وأي رقم مفقود يُقرأ ككائن فارغ
+    # بدل أن يُسقِط المدقّق كلّه.
+    sl=_SlideMap()
+    for _i,_s in enumerate(d["slides"]):
+        sl[_slide_no(_s,_i)] = _s or {}
     R=[]  # (item, status, detail)  status: PASS/FAIL/PENDING
     def add(i,st,dt=""): R.append((i,st,dt))
 
-    # 1. sequence 15
-    seq=[s["type"] for s in d["slides"]]
-    add("1 التسلسل 15 والقوس","PASS" if seq==EXPECTED else "FAIL", "" if seq==EXPECTED else str(seq))
+    # 1. sequence 15 — الغلاف يولّده build.js تلقائيًا، فمصفوفة المحتوى قد تبدأ
+    #    من objectives بـ ١٤ عنصرًا؛ كلا الشكلين يُخرج ١٥ شريحة صحيحة.
+    seq=[s.get("type") for s in d["slides"]]
+    if seq==EXPECTED:
+        add("1 التسلسل 15 والقوس","PASS")
+    elif seq==EXPECTED[1:]:
+        add("1 التسلسل 15 والقوس","PASS","14 عنصرًا تبدأ من objectives — الغلاف يولّده build.js تلقائيًا")
+    else:
+        add("1 التسلسل 15 والقوس","FAIL",str(seq))
 
     # 2. seven questions = required types present (covered by seq) + non-empty cores
-    core_ok = all([sl[4].get("text"), sl[3].get("stat"), sl[5].get("items"),
-                   sl[6].get("items"), sl[7].get("items"), sl[10].get("steps"),
-                   sl[13].get("report") or sl[13].get("safe_return")])
-    add("2 الأسئلة السبعة","PASS" if core_ok else "FAIL")
+    _cores=[("ش4 text",sl[4].get("text")),("ش3 stat",sl[3].get("stat")),
+            ("ش5 items",sl[5].get("items")),("ش6 items",sl[6].get("items")),
+            ("ش7 items",sl[7].get("items")),("ش10 steps",sl[10].get("steps")),
+            ("ش13 report/safe_return",sl[13].get("report") or sl[13].get("safe_return"))]
+    _miss=[k for k,val in _cores if not val]
+    add("2 الأسئلة السبعة","PASS" if not _miss else "FAIL","" if not _miss else "ناقص: "+", ".join(_miss))
 
     # 3. limits: title<=8, bullets<=5, each text<=12 words (warnings exempt? no — rule says bullets)
     bad=[]
-    for s in d["slides"]:
+    for _i,s in enumerate(d["slides"]):
+        _n=_slide_no(s,_i)
         t=s.get("title","")
-        if t and wc(t)>8: bad.append(f"ش{s['n']} عنوان {wc(t)} كلمة")
+        if t and wc(t)>8: bad.append(f"ش{_n} عنوان {wc(t)} كلمة")
         for lk in ("items","steps","when","say","report","safe_return","disposal"):
             lst=s.get(lk,[]) or []
-            if len(lst)>5: bad.append(f"ش{s['n']} {lk}: {len(lst)} نقاط")
+            if len(lst)>5: bad.append(f"ش{_n} {lk}: {len(lst)} نقاط")
             for b in lst:
-                if wc(b)>12: bad.append(f"ش{s['n']} نقطة {wc(b)} كلمة: {b[:30]}…")
+                if wc(b)>12: bad.append(f"ش{_n} نقطة {wc(b)} كلمة: {b[:30]}…")
         for p in s.get("pairs",[]) or []:
             for v in p.values():
-                if wc(v)>12: bad.append(f"ش{s['n']} زوج {wc(v)} كلمة")
+                if wc(v)>12: bad.append(f"ش{_n} زوج {wc(v)} كلمة")
         for g in s.get("groups",[]) or []:
-            if wc(g.get("behavior",""))>12: bad.append(f"ش{s['n']} سلوك فئة {wc(g['behavior'])} كلمة")
+            if wc(g.get("behavior",""))>12: bad.append(f"ش{_n} سلوك فئة {wc(g['behavior'])} كلمة")
     add("3 حدود الكلمات","PASS" if not bad else "FAIL","; ".join(bad))
 
     # 4. stats sourced (placeholder => PENDING)
     st=sl[3]
-    if "[" in st.get("stat","") or "[" in st["source"].get("name",""):
+    _srcname=str((st.get("source") or {}).get("name","")) if isinstance(st.get("source"),dict) else str(st.get("source") or "")
+    if "[" in str(st.get("stat","")) or "[" in _srcname:
         add("4 مصدر لكل رقم + تفسير","PENDING","إحصائية بانتظار وكيل البحث (بالتصميم)")
+    elif not st.get("stat"):
+        add("4 مصدر لكل رقم + تفسير","PASS","لا توجد إحصائية تحتاج مصدرًا")
     else:
-        ok=bool(st["source"].get("name")) and bool(st.get("stat_meaning"))
-        add("4 مصدر لكل رقم + تفسير","PASS" if ok else "FAIL")
+        ok=bool(_srcname) and bool(st.get("stat_meaning"))
+        add("4 مصدر لكل رقم + تفسير","PASS" if ok else "FAIL",
+            "" if ok else ("رقم بلا مصدر" if not _srcname else "رقم بلا تفسير"))
 
     # 5. risk two dims
-    r=sl[3].get("risk",{})
-    add("5 الخطر: احتمالية + شدة","PASS" if r.get("likelihood") and r.get("severity") else "FAIL")
+    r=sl[3].get("risk") or {}
+    if not isinstance(r,dict): r={}
+    _rm=[k for k,lbl in (("likelihood","احتمالية"),("severity","شدة")) if not r.get(k)]
+    add("5 الخطر: احتمالية + شدة","PASS" if not _rm else "FAIL",
+        "" if not _rm else ("ش3 بلا مفتاح risk إطلاقًا" if not r else "ناقص: "+", ".join(_rm)))
 
     # 6. 999 only + terminology
     blob=" ".join(t for s in d["slides"] for t in texts_of(s))
@@ -166,62 +205,90 @@ def audit(path):
 
     # 7. main message <=15, in s3, verbatim in s14
     mm=d.get("main_message","")
-    ok = mm and wc(mm)<=15 and sl[3].get("main_message")==mm and sl[14].get("main_message")==mm
-    add("7 الرسالة الرئيسية ≤15 ومكررة حرفيًا","PASS" if ok else "FAIL",f"{wc(mm)} كلمة")
+    _p7=[]
+    if not mm: _p7.append("لا توجد رسالة رئيسية")
+    else:
+        if wc(mm)>15: _p7.append(f"طولها {wc(mm)} كلمة > 15")
+        if sl[3].get("main_message")!=mm: _p7.append("ش3 لا تطابقها حرفيًا")
+        if sl[14].get("main_message")!=mm: _p7.append("ش14 لا تطابقها حرفيًا")
+    add("7 الرسالة الرئيسية ≤15 ومكررة حرفيًا","PASS" if not _p7 else "FAIL",
+        f"{wc(mm)} كلمة" if not _p7 else f"{wc(mm)} كلمة — " + "؛ ".join(_p7))
 
     # 8. scenario open/callback/close
-    ok = bool(sl[3].get("scenario")) and bool(sl[10].get("scenario_callback")) and bool(sl[14].get("scenario_close"))
-    add("8 السيناريو الإطاري 3→10→14","PASS" if ok else "FAIL")
+    _s8=[lbl for lbl,val in (("ش3 scenario",sl[3].get("scenario")),
+                             ("ش10 scenario_callback",sl[10].get("scenario_callback")),
+                             ("ش14 scenario_close",sl[14].get("scenario_close"))) if not val]
+    add("8 السيناريو الإطاري 3→10→14","PASS" if not _s8 else "FAIL",
+        "" if not _s8 else "ناقص: "+", ".join(_s8))
 
     # 9. empowerment + positive framing (exactly one critical_dont; no other "لا ت" in behavior lists)
     emp=bool(sl[7].get("empowerment_line"))
     cd = 1 if sl[9].get("critical_dont","").startswith("لا") else 0
     stray=[]
-    for s in d["slides"]:
+    for _i,s in enumerate(d["slides"]):
+        _n=_slide_no(s,_i)
         for lk in ("items","steps","when","say","report","safe_return","disposal"):
             for b in s.get(lk,[]) or []:
-                if re.match(r"^لا\s+ت",b): stray.append(f"ش{s['n']}: {b[:25]}")
+                if re.match(r"^لا\s+ت",b): stray.append(f"ش{_n}: {b[:25]}")
         for g in s.get("groups",[]) or []:
-            if re.match(r"^لا\s+ت",g.get("behavior","")): stray.append(f"ش{s['n']} فئة")
+            if re.match(r"^لا\s+ت",g.get("behavior","")): stray.append(f"ش{_n} فئة")
     ok = emp and cd==1 and not stray
     add("9 تمكين + صياغة إيجابية + نهي حرج واحد","PASS" if ok else "FAIL","; ".join(stray))
 
     # 10. interaction questions (6,11) + hooks (3,6,9)
-    ok = all([sl[6].get("interaction_question"), sl[11].get("interaction_question"),
-              sl[3].get("curiosity_hook"), sl[6].get("curiosity_hook"), sl[9].get("curiosity_hook")])
-    add("10 سؤالان تفاعليان + 3 أسطر فضول","PASS" if ok else "FAIL")
+    _s10=[lbl for lbl,val in (("ش6 سؤال تفاعلي",sl[6].get("interaction_question")),
+                              ("ش11 سؤال تفاعلي",sl[11].get("interaction_question")),
+                              ("ش3 سطر فضول",sl[3].get("curiosity_hook")),
+                              ("ش6 سطر فضول",sl[6].get("curiosity_hook")),
+                              ("ش9 سطر فضول",sl[9].get("curiosity_hook"))) if not val]
+    add("10 سؤالان تفاعليان + 3 أسطر فضول","PASS" if not _s10 else "FAIL",
+        "" if not _s10 else "ناقص: "+", ".join(_s10))
 
-    # 11. visuals on 3,4,10
-    ok = all(sl[n].get("visual",{}).get("kind") and sl[n]["visual"].get("desc") for n in (3,4,10))
-    add("11 الدليل البصري (3،4،10)","PASS" if ok else "FAIL")
+    # 11. visuals on 3,4,10 — فحص وجود؛ غياب المفتاح إجابة صحيحة (لا دليل بصري)
+    _novis=[n for n in (3,4,10)
+            if not ((sl[n].get("visual") or {}).get("kind") and (sl[n].get("visual") or {}).get("desc"))]
+    add("11 الدليل البصري (3،4،10)","PASS" if not _novis else "FAIL",
+        "" if not _novis else "بلا visual: " + ", ".join(f"ش{n}" for n in _novis))
 
     # 12. rhythm: no 3 consecutive same pattern
+    # فحص مقارنة لا وجود: إذا لم تحمل أيّ شريحة مفتاح pattern فكل القيم None
+    # وتتساوى تلقائيًا، فيُبلَّغ عن مخالفات وهمية. الصواب أن القاعدة «تعذّر فحصها».
     pats=[s.get("pattern") for s in d["slides"]]
-    viol=[i+1 for i in range(len(pats)-2) if pats[i]==pats[i+1]==pats[i+2]]
-    add("12 قاعدة الإيقاع (لا 3 متتالية)","PASS" if not viol else "FAIL",str(viol))
+    if not any(p is not None for p in pats):
+        add("12 قاعدة الإيقاع (لا 3 متتالية)","PENDING","لا تحمل أيّ شريحة مفتاح pattern — تعذّر الفحص")
+    else:
+        viol=[_slide_no(d["slides"][i],i) for i in range(len(pats)-2) if pats[i]==pats[i+1]==pats[i+2]]
+        add("12 قاعدة الإيقاع (لا 3 متتالية)","PASS" if not viol else "FAIL",str(viol))
 
     # 13. after_incident + audience/season
-    ok = sl[13]["type"]=="after_incident" and d.get("audience") and d.get("season")
-    add("13 بعد الحادث + الجمهور والموسم","PASS" if ok else "FAIL")
+    _s13=[lbl for lbl,val in (("ش13 ليست after_incident",sl[13].get("type")=="after_incident"),
+                              ("audience",d.get("audience")),("season",d.get("season"))) if not val]
+    add("13 بعد الحادث + الجمهور والموسم","PASS" if not _s13 else "FAIL",
+        "" if not _s13 else "ناقص: "+", ".join(_s13))
 
     # 14. threat-solution balance + ISO line present
-    ok = bool(d["standards"].get("compliance_line_ar")) and bool(sl[15].get("iso26000"))
-    add("14 كل خطر بحل + سطر ISO","PASS" if ok else "FAIL")
+    _std = d.get("standards") or {}
+    ok = bool(_std.get("compliance_line_ar")) and bool(sl[15].get("iso26000"))
+    add("14 كل خطر بحل + سطر ISO","PASS" if ok else "FAIL",
+        "" if ok else ("لا يوجد قسم standards" if not _std else "سطر الامتثال أو iso26000 ناقص"))
 
     # 15. language — automated subset: no double spaces, tanwin on ً common words heuristic skipped
-    dbl = [s["n"] for s in d["slides"] for t in texts_of(s) if "  " in t]
+    dbl = sorted({_slide_no(s,_i) for _i,s in enumerate(d["slides"]) for t in texts_of(s) if "  " in t})
     add("15 اللغة (فحص آلي جزئي)","PASS" if not dbl else "FAIL",f"مسافات مزدوجة: {dbl}")
 
     # 16. standards activation matches profile
     prof=d.get("topic_profile","")
-    cond=d["standards"]["conditional"]
+    cond=(_std.get("conditional") or {})
+    _line=str(_std.get("compliance_line_ar") or "")
     need45 = ("عمل" in prof); need22 = ("استجابة" in prof or "إخلاء" in prof)
-    ok = (bool(cond["iso45001"])==need45) and (cond["iso22320_22322"]==need22) \
-         and (("45001" in d["standards"]["compliance_line_ar"])==need45) \
-         and (("22320" in d["standards"]["compliance_line_ar"])==need22)
-    add("16 تفعيل المواصفات حسب النوع","PASS" if ok else "FAIL",prof)
+    if not _std:
+        add("16 تفعيل المواصفات حسب النوع","FAIL","لا يوجد قسم standards")
+    else:
+        ok = (bool(cond.get("iso45001"))==need45) and (bool(cond.get("iso22320_22322"))==need22) \
+             and (("45001" in _line)==need45) and (("22320" in _line)==need22)
+        add("16 تفعيل المواصفات حسب النوع","PASS" if ok else "FAIL",prof)
 
-    print(f"\n=== {d['topic_code']} — {d['title_ar']} ===")
+    print(f"\n=== {d.get('topic_code') or d.get('code','?')} — {d.get('title_ar') or d.get('title','?')} ===")
     p=sum(1 for _,s,_ in R if s=="PASS"); f=sum(1 for _,s,_ in R if s=="FAIL"); pe=sum(1 for _,s,_ in R if s=="PENDING")
     for i,s2,dt in R:
         mark={"PASS":"✅","FAIL":"❌","PENDING":"⏳"}[s2]
