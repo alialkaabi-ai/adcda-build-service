@@ -375,6 +375,82 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
 }
 
 </style>
+<style id="ali-sv-awards">
+/* ══ الطبقة الإشرافية + تبويب الجوائز — إضافة على مركز القيادة ══ */
+/* اللون الأزرق يميّز الوكيل الإشرافي عن الوكيل الإنتاجي الذهبي */
+.sv-band{grid-column:1/-1;position:relative;z-index:2;margin-top:8px;
+  border:1px solid rgba(46,123,224,.30);border-radius:12px;padding:11px 14px 13px;
+  background:linear-gradient(90deg,rgba(46,123,224,.13),rgba(10,31,61,.62) 70%)}
+.sv-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+.sv-head b{font-size:12.5px;color:var(--paper)}
+.sv-head i{font-style:normal;font-size:11px;color:var(--dim)}
+.sv-dot{width:8px;height:8px;border-radius:50%;background:#2E7BE0;flex:none;
+  box-shadow:0 0 8px rgba(46,123,224,.9);animation:svPulse 2.4s ease-in-out infinite}
+@keyframes svPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.sv-dot{animation:none}}
+.sv-count{margin-inline-start:auto;font-size:11px;font-weight:800;color:#7FB4F0;white-space:nowrap;
+  border:1px solid rgba(46,123,224,.42);background:rgba(46,123,224,.10);border-radius:999px;padding:4px 12px}
+.sv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sv-card{display:flex;flex-direction:column;gap:7px;background:rgba(10,31,61,.82);
+  border:1px solid rgba(46,123,224,.26);border-radius:10px;padding:10px 12px;
+  transition:border-color .3s,box-shadow .3s,transform .3s}
+.sv-card:hover{border-color:rgba(46,123,224,.58);box-shadow:0 6px 18px rgba(46,123,224,.16);transform:translateY(-2px)}
+.sv-row{display:flex;align-items:center;gap:9px}
+.sv-ic{width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:8px;font-size:15px;
+  line-height:1;background:rgba(46,123,224,.12);border:1px solid rgba(46,123,224,.30)}
+.sv-tx{min-width:0;flex:1}
+.sv-tx b{display:block;font-size:12.5px;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sv-tx i{display:block;font-style:normal;font-size:10px;color:#7E93B4;direction:ltr;text-align:right;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sv-tag{flex:none;font-size:9.5px;font-weight:800;color:#7FB4F0;border-radius:999px;padding:2px 8px;
+  border:1px solid rgba(46,123,224,.45);background:rgba(46,123,224,.10)}
+.sv-task{margin:0;font-size:10.5px;line-height:1.7;color:#AFC0D8}
+.sv-st{align-self:flex-start;font-size:9.5px;font-weight:800;color:#E5C04B;border-radius:999px;padding:2px 8px;
+  border:1px solid rgba(229,192,75,.35);background:rgba(229,192,75,.07)}
+.kv.sv-kv b{color:#7FB4F0}
+
+/* ══ تبويب الجوائز ══ */
+.aw-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:14px 16px 0}
+.aw-grid{display:grid;grid-template-columns:1.4fr .95fr;gap:12px;padding:14px 16px}
+.aw-list{display:flex;flex-direction:column;gap:8px}
+.aw-row{background:rgba(10,31,61,.72);border:1px solid var(--hair);border-radius:11px;padding:10px 12px;
+  transition:border-color .3s,transform .3s}
+.aw-row:hover{border-color:rgba(199,162,75,.42);transform:translateY(-1px)}
+.aw-l1{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.aw-rank{font-size:10.5px;color:var(--blue-soft);font-weight:600;flex:none}
+.aw-name{font-size:12.5px;font-weight:800;color:var(--paper);flex:1;min-width:0}
+.aw-name em{font-style:normal;font-size:10px;color:#7E93B4;direction:ltr;display:inline-block;
+  margin-inline-end:7px;unicode-bidi:isolate}
+.aw-fit{flex:none;font-size:9.5px;font-weight:800;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.aw-fit.hi{color:#6FCF8E;border:1px solid rgba(111,207,142,.40);background:rgba(111,207,142,.08)}
+.aw-fit.mid{color:var(--gold-soft);border:1px solid var(--line);background:rgba(199,162,75,.08)}
+.aw-fit.ref{color:var(--dim);border:1px solid var(--hair);background:rgba(141,162,192,.06)}
+.aw-l2{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:6px;
+  font-size:10.5px;color:var(--dim);line-height:1.7}
+.aw-body{flex:1;min-width:0}
+.aw-when{flex:none;font-size:9.5px;font-weight:800;color:#E5C04B;border-radius:999px;padding:2px 8px;
+  border:1px solid rgba(229,192,75,.32);background:rgba(229,192,75,.06);white-space:nowrap}
+.aw-src{flex:none;font-size:9.5px;color:var(--gold-soft);text-decoration:none;direction:ltr;
+  border-bottom:1px dashed rgba(199,162,75,.45);padding-bottom:1px}
+.aw-src:hover{color:#F0DCA8;border-bottom-color:rgba(199,162,75,.9)}
+.aw-why{margin:6px 0 0;font-size:10.5px;line-height:1.7;color:#AFC0D8}
+.aw-side{display:flex;flex-direction:column;gap:12px}
+.aw-crit{margin-top:2px}
+.aw-crit .ct{font-size:11px;font-weight:800;color:var(--paper);margin:10px 0 6px}
+.aw-crit .ct:first-child{margin-top:0}
+.aw-chip{display:inline-block;font-size:10px;color:#AFC0D8;border:1px solid var(--hair);
+  background:rgba(46,123,224,.07);border-radius:999px;padding:3px 10px;margin:0 0 5px 5px;line-height:1.6}
+.aw-chip.ltr{direction:ltr}
+.aw-none{font-size:10.5px;color:var(--dim);line-height:1.8}
+.aw-wait{display:flex;align-items:flex-start;gap:9px;font-size:10.5px;color:#AFC0D8;line-height:1.75;
+  border-top:1px solid rgba(141,162,192,.09);padding-top:9px;margin-top:2px}
+.aw-wait .wd{width:7px;height:7px;border-radius:50%;background:#E5C04B;flex:none;margin-top:6px;
+  box-shadow:0 0 6px rgba(229,192,75,.7)}
+.aw-foot{padding:12px 20px;font-size:11.5px;color:var(--dim);line-height:1.8;
+  border-top:1px solid var(--hair);background:rgba(8,26,51,.5)}
+@media(max-width:900px){.sv-grid{grid-template-columns:1fr}.aw-grid{grid-template-columns:1fr}
+  .aw-kpis{grid-template-columns:1fr 1fr}}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -394,6 +470,7 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
     <button class="ds-tab" data-t="studio">الاستوديو</button>
     <button class="ds-tab" data-t="kpi">المؤشرات</button>
     <button class="ds-tab" data-t="qbank">بنك الأسئلة</button>
+    <button class="ds-tab" data-t="awards">🏆 الجوائز</button>
   </div>
 
   <!-- ═══ غرفة العمليات ═══ -->
@@ -405,7 +482,8 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
           <div class="cc-panel">
             <div class="pt">حالة المنظومة</div>
             <div class="gauge"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(141,162,192,.15)" stroke-width="8"/><circle class="arc" cx="60" cy="60" r="50" fill="none" stroke="#6FCF8E" stroke-width="8" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="13" transform="rotate(-90 60 60)"/></svg><div class="gv"><b class="mono">96</b><span>/100</span></div></div>
-            <div class="kv"><span>إجمالي الوكلاء</span><b class="mono">14</b></div>
+            <div class="kv"><span>إجمالي الوكلاء</span><b class="mono">17</b></div>
+            <div class="kv sv-kv"><span>منهم إشرافيون</span><b class="mono">3</b></div>
             <div class="kv"><span>عروض معتمدة</span><b class="mono">70</b></div>
             <div class="kv"><span>بانتظار الاعتماد</span><b class="mono" style="color:#E5C04B">1</b></div>
             <div class="kv"><span>شرائح منتجة</span><b class="mono">3,666</b></div>
@@ -431,10 +509,30 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
             <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
             <div class="core-in">
               <svg width="34" height="34" viewBox="0 0 26 26"><path d="M7 17 L13 7 L19 17" fill="none" stroke="#F4F1E9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="13" cy="17" r="1.8" fill="#C7A24B"/></svg>
-              <b>قلب المنظومة</b><span class="mono">CORE&nbsp;·&nbsp;14&nbsp;AGENTS</span>
+              <b>قلب المنظومة</b><span class="mono">CORE&nbsp;·&nbsp;17&nbsp;AGENTS</span>
             </div>
           </div>
           <div class="cc-col" id="colL"></div>
+          <div class="sv-band">
+            <div class="sv-head"><span class="sv-dot"></span><b>الطبقة الإشرافية</b><i>لا تنتج محتوى — تراقب الأداء وتراجع الجودة وترصد الفرص</i><span class="sv-count">3 وكلاء إشرافيين</span></div>
+            <div class="sv-grid">
+              <div class="sv-card">
+                <div class="sv-row"><span class="sv-ic">📈</span><span class="sv-tx"><b>مراقب الأداء</b><i>Performance Monitor</i></span><span class="sv-tag">إشرافي</span></div>
+                <p class="sv-task">يرصد نِسَب النجاح وزمن التنفيذ والتشغيلات بلا مخرجات</p>
+                <span class="sv-st">قيد الربط</span>
+              </div>
+              <div class="sv-card">
+                <div class="sv-row"><span class="sv-ic">🧠</span><span class="sv-tx"><b>أخصائي الذكاء الاصطناعي</b><i>AI Specialist</i></span><span class="sv-tag">إشرافي</span></div>
+                <p class="sv-task">يراجع جودة النماذج والمخرجات ويقترح تحسين التوجيهات</p>
+                <span class="sv-st">قيد الربط</span>
+              </div>
+              <div class="sv-card">
+                <div class="sv-row"><span class="sv-ic">🏆</span><span class="sv-tx"><b>صيد الجوائز</b><i>Awards Scout</i></span><span class="sv-tag">إشرافي</span></div>
+                <p class="sv-task">يرصد الجوائز الحكومية ومواعيد التسجيل ويدرس الفائزين السابقين</p>
+                <span class="sv-st">قيد الربط</span>
+              </div>
+            </div>
+          </div>
           <div class="cc-out">
             <span class="oic"><svg viewBox="0 0 20 20" width="18" height="18"><path d="M5 2h7l4 4v12H5z M12 2v4h4 M8 11h6 M8 14h6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <div class="otx"><b>المخرج النهائي</b><span>عرض توعوي مكتمل · بانتظار الاعتماد البشري</span></div>
@@ -611,6 +709,104 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
         <div class="qb-detail" id="qbDetail"></div>
       </div>
       <div class="qb-foot"><span class="dot warn" style="width:7px;height:7px;border-radius:50%;background:#E5C04B;display:inline-block"></span> الأسئلة تُولّد آليًا من محتوى كل عرض ومصادره المعتمدة — النماذج المعروضة عيّنة توضيحية<span class="sep" style="display:inline-block;width:1px;height:11px;background:var(--hair);margin:0 8px;vertical-align:middle"></span> <b>الباركود قيد الإعداد</b> — سيربط كل عرض بصفحة اختباره لقياس الزوار والمستفيدين</div>
+    </div>
+  </div>
+
+  <div class="pane" id="p-awards">
+    <div class="cc live">
+      <div class="cc-top"><span class="cc-brand">AWARDS&nbsp;SCOUT</span><span class="cc-badge gold">وكيل صيد الجوائز</span><span class="cc-clock mono">10&nbsp;AWARDS</span></div>
+      <div class="aw-kpis">
+        <div class="sk"><b class="mono">10</b><span>جوائز موثّقة بمصادر رسمية</span></div>
+        <div class="sk"><b class="mono ok">4</b><span>ملاءمة عالية للمنظومة</span></div>
+        <div class="sk"><b class="mono" style="color:#E5C04B">قيد الربط</b><span>مواعيد التسجيل والعدّ التنازلي</span></div>
+        <div class="sk"><b class="mono" style="color:#E5C04B">قيد الربط</b><span>دراسة الفائزين السابقين</span></div>
+      </div>
+      <div class="aw-grid">
+        <div class="aw-list">
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">01</span><span class="aw-name">جائزة وزير الداخلية للتميز</span><span class="aw-fit hi">ملاءمة عالية</span></div>
+            <p class="aw-why">القناة المؤسسية الأقرب: الدفاع المدني جهة تابعة لوزارة الداخلية.</p>
+            <div class="aw-l2"><span class="aw-body">وزارة الداخلية — الدفاع المدني ضمن منظومتها</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.adpolice.gov.ae/ar-AE/Media-Center/News/2021/06/24/MoI-Receives-Applications-to-Participate-in-the-Minister-of-Interior-s-Excellence-Award-" target="_blank" rel="noopener noreferrer">adpolice.gov.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">02</span><span class="aw-name">جائزة أبوظبي للأداء الحكومي المتميز&nbsp;<em>ADAEP</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
+            <p class="aw-why">الجائزة المرجعية للجهات الحكومية في إمارة أبوظبي.</p>
+            <div class="aw-l2"><span class="aw-body">حكومة أبوظبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.mediaoffice.abudhabi/en/topic/abu-dhabi-award-for-excellence-in-government-performance-adaep/" target="_blank" rel="noopener noreferrer">mediaoffice.abudhabi ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">03</span><span class="aw-name">جائزة الشارقة للاتصال الحكومي&nbsp;<em>Sharjah Government Communication Award</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
+            <p class="aw-why">الأقرب لطبيعة عملنا: فئات للمحتوى التوعوي واتصال الأزمات والذكاء الاصطناعي.</p>
+            <div class="aw-l2"><span class="aw-body">المكتب الإعلامي لحكومة الشارقة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://gca.sgmb.ae/ar" target="_blank" rel="noopener noreferrer">gca.sgmb.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">04</span><span class="aw-name">جائزة الإمارات للذكاء الاصطناعي&nbsp;<em>UAE AI Gov Award</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
+            <p class="aw-why">المسار الاتحادي المخصص لتطبيقات الذكاء الاصطناعي في العمل الحكومي.</p>
+            <div class="aw-l2"><span class="aw-body">مكتب الذكاء الاصطناعي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">05</span><span class="aw-name">برنامج الشيخ خليفة للتميز الحكومي&nbsp;<em>Sheikh Khalifa Government Excellence Program</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
+            <p class="aw-why">المظلة الاتحادية للتميز، وفئاتها المؤسسية تشمل الذكاء الاصطناعي والاتصال الحكومي.</p>
+            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://tdra.gov.ae/ar/about/skgep" target="_blank" rel="noopener noreferrer">tdra.gov.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">06</span><span class="aw-name">جائزة محمد بن راشد للأداء الحكومي المتميز</span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
+            <p class="aw-why">أرفع جائزة اتحادية للأداء الحكومي.</p>
+            <div class="aw-l2"><span class="aw-body">برنامج الشيخ خليفة للتميز الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://uaecabinet.ae/ar/prime-ministers-initiatives/mohammed-bin-rashid-government-excellence-award" target="_blank" rel="noopener noreferrer">uaecabinet.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">07</span><span class="aw-name">جائزة الإمارات تبتكر&nbsp;<em>UAE Innovates Award</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
+            <p class="aw-why">معاييرها المنشورة تنطبق مباشرة على أداة تولّد محتوى توعوياً.</p>
+            <div class="aw-l2"><span class="aw-body">مركز محمد بن راشد للابتكار الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://mbrcgi.gov.ae/programs/uae-innovates-award/" target="_blank" rel="noopener noreferrer">mbrcgi.gov.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">08</span><span class="aw-name">جائزة الإمارات للروبوت والذكاء الاصطناعي لخدمة الإنسان&nbsp;<em>UAE AI &amp; Robotics Award for Good</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
+            <p class="aw-why">موجَّهة لتطبيقات الذكاء الاصطناعي ذات النفع العام، وتوعية السلامة ضمنها.</p>
+            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">09</span><span class="aw-name">برنامج دبي للتميز الحكومي&nbsp;<em>Dubai Government Excellence Program</em></span><span class="aw-fit ref">للاطّلاع</span></div>
+            <p class="aw-why">مرجع منهجي لمعايير التميز الحكومي المحلي.</p>
+            <div class="aw-l2"><span class="aw-body">الأمانة العامة للمجلس التنفيذي لإمارة دبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://dgep.gov.ae/" target="_blank" rel="noopener noreferrer">dgep.gov.ae ↗</a></div>
+          </div>
+          <div class="aw-row">
+            <div class="aw-l1"><span class="aw-rank mono">10</span><span class="aw-name">جائزة التميز الحكومي العربي&nbsp;<em>Arab Government Excellence Award</em></span><span class="aw-fit ref">للاطّلاع</span></div>
+            <p class="aw-why">منصة عربية فيها فئات للمبادرات المبتكرة وخدمة المجتمع.</p>
+            <div class="aw-l2"><span class="aw-body">المنظمة العربية للتنمية الإدارية — جامعة الدول العربية</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://ageaward.com/" target="_blank" rel="noopener noreferrer">ageaward.com ↗</a></div>
+          </div>
+        </div>
+        <div class="aw-side">
+          <div class="cc-panel">
+            <div class="pt">نقاط القوة المطلوبة</div>
+            <div class="aw-crit">
+            <div class="ct">جائزة الشارقة للاتصال الحكومي</div>
+            <span class="aw-chip">أفضل الحملات للتأثير الإيجابي</span><span class="aw-chip">أفضل اتصال بتقنيات الذكاء الاصطناعي</span><span class="aw-chip">أفضل محتوى اتصالي وإعلامي</span><span class="aw-chip">أفضل استراتيجية لاتصال الأزمات</span>
+            <div class="ct">برنامج الشيخ خليفة للتميز الحكومي</div>
+            <span class="aw-chip">أفضل جهة في تبني الذكاء الاصطناعي</span><span class="aw-chip">أفضل جهة في مجال الابتكار</span><span class="aw-chip">أفضل جهة في الاتصال الحكومي</span><span class="aw-chip">أفضل جهة في الاستباقية والجاهزية للمستقبل</span>
+            <div class="ct">جائزة الإمارات تبتكر</div>
+            <span class="aw-chip ltr">Novelty</span><span class="aw-chip ltr">Replicability</span><span class="aw-chip ltr">Impact</span><span class="aw-chip ltr">Agility</span>
+            <div class="ct">برنامج دبي للتميز الحكومي</div>
+            <span class="aw-chip">جائزة النخبة</span><span class="aw-chip">الجهة الحكومية الرائدة</span>
+            <div class="ct">جائزة التميز الحكومي العربي</div>
+            <span class="aw-chip ltr">Best Arab Initiative for Government Work Development</span><span class="aw-chip ltr">Best Smart Arab Government Application</span><span class="aw-chip ltr">Best Arab Initiative for Community Development</span><span class="aw-chip ltr">Best Arab Government Authority or Institution</span>
+            </div>
+            <div class="aw-wait"><span class="wd"></span><span>لم تُنشر فئات معلنة على المصدر الرسمي لـ: جائزة وزير الداخلية للتميز · جائزة أبوظبي للأداء الحكومي المتميز · جائزة الإمارات للذكاء الاصطناعي · جائزة محمد بن راشد للأداء الحكومي المتميز · جائزة الإمارات للروبوت والذكاء الاصطناعي لخدمة الإنسان — تُجمع فور إتاحتها.</span></div>
+          </div>
+          <div class="cc-panel">
+            <div class="pt">دراسة الفائزين السابقين</div>
+            <div class="aw-none">يقارن الوكيل ملفات الفائزين في الدورات السابقة بنقاط قوة منظومتنا، ويخرج بفجوة واضحة: ما الذي نملكه فعلاً، وما الذي يلزم تقويته قبل الترشّح.</div>
+            <div class="aw-wait"><span class="wd"></span><span>قيد الربط — لا تُعرض أي مقارنة قبل توثيقها من مصدر رسمي.</span></div>
+          </div>
+          <div class="cc-panel">
+            <div class="pt">جاهزية المنظومة</div>
+            <div class="kv"><span>عروض معتمدة</span><b class="mono">70</b></div>
+            <div class="kv"><span>مصادر رسمية معتمدة</span><b class="mono">43</b></div>
+            <div class="kv"><span>وكلاء عاملون</span><b class="mono">17</b></div>
+            <div class="kv"><span>أخطاء حرجة</span><b class="mono ok">0</b></div>
+            <div class="kv"><span>ملف الترشّح</span><b class="mono" style="color:#E5C04B">قيد الإعداد</b></div>
+          </div>
+        </div>
+      </div>
+      <div class="aw-foot">كل اسم جائزة وكل جهة في هذه اللوحة مأخوذ حرفياً من مصدر رسمي مرفق برابطه — ولا يُعرض أي اسم لم يُتحقَّق منه.<span class="sep" style="display:inline-block;width:1px;height:11px;background:var(--hair);margin:0 8px;vertical-align:middle"></span><b>المواعيد لا تُعرض عمداً</b> — تتغيّر كل دورة، ويتولّى وكيل صيد الجوائز سحبها من الجهة نفسها بدل تخمينها. «ملاءمة عالية/متوسطة» تقدير داخلي للأولوية، لا تصنيف رسمي من الجهة المانحة.</div>
     </div>
   </div>
 
