@@ -32,7 +32,73 @@ const COLORS = {
 const FONT = "Tajawal";
 const SLIDE_W = 13.33;
 
+// ===== توحيد وحدة الحرارة (الدرجة المئوية هي المعتمدة لدى الهيئة) =====
+// تحويل حتمي بالكامل بلا ذكاء اصطناعي: لا يحول إلا رقم مقترن صراحة بعلامة
+// درجة مع الحرف F، أو بكلمة فهرنهايت / Fahrenheit، أو بالرمز المخصص لها.
+// - «100°F» و«100 درجة فهرنهايت» و«100 degrees Fahrenheit» تحول.
+// - «100 F» بلا علامة درجة ولا كلمة صريحة لا تمس.
+// - الروابط لا تمس إطلاقا.
+// - رموز المواضيع مثل «F.1» لا تمس (الرقم يجب أن يسبق الوحدة).
+const F2C_DEG = "°º˚";
+const F2C_AR_F = "فهرنه[اي]ي?ت(?:ية|ة)?";
+const F2C_AR_DEG = "(?:درجة|درجات)";
+const F2C_UNIT =
+  "(?:[" + F2C_DEG + "]\\s*F\\b" +
+  "|℉" +
+  "|[" + F2C_DEG + "]?\\s*(?:degrees?|deg)\\.?\\s*F(?:ahrenheit)?\\b" +
+  "|[" + F2C_DEG + "]?\\s*Fahrenheit\\b" +
+  "|\\s*" + F2C_AR_DEG + "\\s*" + F2C_AR_F +
+  "|\\s*" + F2C_AR_F + ")";
+const F2C_NUM = "(-?\\d+(?:[.,]\\d+)?)";
+const F2C_DASH = "\\s*(?:-|–|—|ـ|إلى|to)\\s*";
+const F2C_RE_RANGE = new RegExp(F2C_NUM + F2C_DASH + F2C_NUM + "\\s*" + F2C_UNIT, "gi");
+const F2C_RE_ONE = new RegExp(F2C_NUM + "\\s*" + F2C_UNIT, "gi");
+const F2C_RE_URL = /(https?:\/\/\S+|www\.\S+)/gi;
+const F2C_RE_AR = /[؀-ۿ]/;
+
+function f2cNum(s) {
+  const n = parseFloat(String(s).replace(",", "."));
+  if (!isFinite(n)) return null;
+  const r = Math.round((((n - 32) * 5) / 9) * 10) / 10;
+  return Number.isInteger(r) ? String(r) : r.toFixed(1);
+}
+function f2cChunk(txt) {
+  const unit = F2C_RE_AR.test(txt) ? "°م" : "°C";
+  const out = txt.replace(F2C_RE_RANGE, (m, a, b) => {
+    const ca = f2cNum(a), cb = f2cNum(b);
+    return ca === null || cb === null ? m : ca + "–" + cb + " " + unit;
+  });
+  return out.replace(F2C_RE_ONE, (m, a) => {
+    const ca = f2cNum(a);
+    return ca === null ? m : ca + " " + unit;
+  });
+}
+function toCelsius(txt) {
+  if (typeof txt !== "string" || txt.length === 0) return txt;
+  if (!/[Ff℉ف]/.test(txt)) return txt;
+  const parts = txt.split(F2C_RE_URL);
+  for (let i = 0; i < parts.length; i++) {
+    if (i % 2 === 0) parts[i] = f2cChunk(parts[i]);   // الفهارس الفردية = روابط، تُترك كما هي
+  }
+  return parts.join("");
+}
+function toCelsiusDeep(v, _seen) {
+  if (typeof v === "string") return toCelsius(v);
+  if (!v || typeof v !== "object") return v;
+  _seen = _seen || new Set();
+  if (_seen.has(v)) return v;
+  _seen.add(v);
+  if (Array.isArray(v)) {
+    for (let i = 0; i < v.length; i++) v[i] = toCelsiusDeep(v[i], _seen);
+    return v;
+  }
+  for (const k of Object.keys(v)) v[k] = toCelsiusDeep(v[k], _seen);
+  return v;
+}
+
 async function build(content) {
+  // توحيد وحدة الحرارة قبل أي رسم — يشمل العربي والإنجليزي على حدّ سواء
+  try { content = toCelsiusDeep(content); } catch (e) { /* لا يوقف الإنتاج إطلاقًا */ }
   const ASSETS = path.resolve(__dirname, "assets");
   const CODE = content.code || content.topic_code || "F.X";
   const pres = new pptxgen();
@@ -390,7 +456,11 @@ async function build(content) {
     const cardH = Math.min(3.85, 0.30 + refs.length * step);
     slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 0.50, y: topY, w: 12.30, h: cardH, fill: { color: COLORS.white }, line: { color: COLORS.cardBorder, width: 0.75 }, rectRadius: 0.08, shadow: { type: "outer", blur: 8, offset: 2, angle: 90, color: "1F2E5A", opacity: 0.06 } });
     for (let i = 0; i < refs.length; i++) {
-      slide.addText(refs[i], { x: 0.85, y: topY + 0.18 + i * step, w: 11.60, h: step - 0.05, fontSize: 10.5, fontFace: FONT, color: COLORS.primaryDark, align: "left", valign: "middle", margin: 0 });
+      // المراجع العربية تُحاذى يمينًا بوضع RTL؛ المراجع اللاتينية تبقى يسارًا كما هي
+      const isAr = /[؀-ۿ]/.test(String(refs[i]));
+      const refOpts = { x: 0.85, y: topY + 0.18 + i * step, w: 11.60, h: step - 0.05, fontSize: 10.5, fontFace: FONT, color: COLORS.primaryDark, align: isAr ? "right" : "left", valign: "middle", margin: 0 };
+      if (isAr) refOpts.rtlMode = true;
+      slide.addText(refs[i], refOpts);
     }
     rem(slide, c.reminder); addFooter(slide);
   }
