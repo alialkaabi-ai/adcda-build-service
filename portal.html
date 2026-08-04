@@ -26,7 +26,7 @@
       return of(q,o).then(function(r){
         if(!r.ok) throw 0;
         return r.json().then(function(j){
-          if(Array.isArray(j)&&j.length>0) return new Response(JSON.stringify(j),{status:200,headers:{"Content-Type":"application/json"}});
+          if(Array.isArray(j)&&j.length>0) return new Response(JSON.stringify((function(live){var DEMO_QUEUE=1;if(!DEMO_QUEUE||!Array.isArray(live)||!Array.isArray(DATA))return live;var p={},n=0;DATA.forEach(function(h){var c=h&&h["\u0627\u0644\u0631\u0645\u0632"];var z=(h&&(h["\u062D\u0627\u0644\u0629 \u0627\u0644\u0625\u0646\u062A\u0627\u062C"]||h["\u0627\u0644\u062D\u0627\u0644\u0629"]))||"";if(c&&/\u0628\u0627\u0646\u062A\u0638\u0627\u0631|\u0645\u0631\u0627\u062C\u0639\u0629|\u062A\u0639\u062F\u064A\u0644/.test(z)){p[c]=h;n++;}});if(!n)return live;var seen={},out=live.map(function(h){var c=h&&h["\u0627\u0644\u0631\u0645\u0632"];if(c&&p[c]){seen[c]=1;return p[c];}return h;});for(var c in p)if(!seen[c])out.push(p[c]);return out;})(j)),{status:200,headers:{"Content-Type":"application/json"}});
           throw 0;
         });
       }).catch(function(){return new Response(JSON.stringify(DATA),{status:200,headers:{"Content-Type":"application/json"}});});
