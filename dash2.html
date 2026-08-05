@@ -451,7 +451,382 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
 @media(max-width:900px){.sv-grid{grid-template-columns:1fr}.aw-grid{grid-template-columns:1fr}
   .aw-kpis{grid-template-columns:1fr 1fr}}
 </style>
+<style id="ali-studio">
+/* ════════ استوديو المحتوى الذكي — لوحة تفاعلية داخل مركز القيادة ════════ */
+/* البادئة sx- حصرية لهذه اللوحة، لا تتقاطع مع أي صنف قائم في الملف */
+
+.sx-app{display:grid;grid-template-columns:252px minmax(0,1fr) 300px;gap:12px;padding:14px 16px 4px;align-items:start}
+.sx-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+
+/* ── بطاقة عامة ── */
+.sx-card{background:rgba(10,31,61,.72);border:1px solid var(--hair);border-radius:12px;padding:11px 12px}
+.sx-card.pad0{padding:0;overflow:hidden}
+.sx-ct{display:flex;align-items:center;gap:7px;font-size:11.5px;font-weight:800;color:var(--paper);margin-bottom:9px}
+.sx-ct .n{width:17px;height:17px;flex:none;display:grid;place-items:center;border-radius:50%;font-size:9.5px;font-weight:800;
+  background:rgba(46,123,224,.16);border:1px solid rgba(46,123,224,.42);color:#8FC0F5;font-family:'IBM Plex Mono',monospace}
+.sx-ct .lnk{margin-inline-start:auto;font-size:9.5px;font-weight:700;color:var(--blue-soft);cursor:pointer;
+  border-bottom:1px dashed rgba(46,123,224,.45);padding-bottom:1px;transition:color .2s}
+.sx-ct .lnk:hover{color:#9CCBFF}
+.sx-ct .ok{margin-inline-start:auto;font-size:9px;font-weight:800;color:#6FCF8E;border-radius:999px;padding:2px 8px;
+  border:1px solid rgba(111,207,142,.36);background:rgba(111,207,142,.08)}
+
+/* ── مبدّل نوع المحتوى ── */
+.sx-mods{display:flex;flex-direction:column;gap:7px}
+.sx-mod{display:flex;align-items:center;gap:9px;width:100%;text-align:start;cursor:pointer;
+  background:rgba(8,26,51,.55);border:1px solid var(--hair);border-radius:11px;padding:10px 11px;
+  color:var(--paper);font-family:inherit;transition:border-color .25s,background .25s,transform .25s}
+.sx-mod:hover{border-color:rgba(46,123,224,.5);transform:translateX(-2px)}
+.sx-mod .mi{width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:9px;line-height:1;color:#8FC0F5;
+  background:rgba(46,123,224,.10);border:1px solid rgba(46,123,224,.26);transition:color .25s}
+.sx-mod .mt{flex:1;min-width:0}
+.sx-mod .mt b{display:block;font-size:12px;font-weight:800}
+.sx-mod .mt i{display:block;font-style:normal;font-size:9.5px;color:var(--dim);margin-top:1px}
+.sx-mod .ar{flex:none;display:flex;align-items:center;color:var(--dim);transition:transform .25s,color .25s}
+.sx-mod.on{background:linear-gradient(90deg,rgba(11,78,162,.92),rgba(11,78,162,.66));border-color:rgba(46,123,224,.85);
+  box-shadow:0 6px 18px rgba(11,78,162,.30)}
+.sx-mod.on .mi{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.24);color:#fff}
+.sx-mod.on .mt i{color:#BFD8F5}
+.sx-mod.on .ar{color:var(--paper);transform:translateX(-3px)}
+.sx-mod:focus-visible,.sx-btn:focus-visible,.sx-sel:focus-visible,.sx-in:focus-visible,
+.sx-th:focus-visible,.sx-chip:focus-visible,.sx-ol:focus-visible{outline:2px solid var(--blue-soft);outline-offset:2px}
+
+/* ── الأزرار ── */
+.sx-btn{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;cursor:pointer;font-family:inherit;
+  font-size:12px;font-weight:800;color:#fff;border:0;border-radius:10px;padding:11px 12px;
+  background:linear-gradient(90deg,#0B4EA2,#1867C8);box-shadow:0 5px 16px rgba(11,78,162,.34);
+  transition:filter .2s,transform .2s,opacity .2s}
+.sx-btn:hover{filter:brightness(1.14);transform:translateY(-1px)}
+.sx-btn:active{transform:translateY(0)}
+.sx-btn.ghost{background:rgba(8,26,51,.6);border:1px solid var(--hair);color:var(--paper);box-shadow:none;font-weight:700}
+.sx-btn.ghost:hover{border-color:rgba(199,162,75,.45)}
+.sx-btn.gold{background:linear-gradient(90deg,#9C7A2E,#C7A24B);box-shadow:0 5px 16px rgba(199,162,75,.28)}
+.sx-btn[disabled]{opacity:.42;cursor:not-allowed;filter:none;transform:none;box-shadow:none}
+.sx-btn.sm{padding:8px 10px;font-size:11px;border-radius:9px}
+
+/* ── الحقول ── */
+.sx-lab{display:block;font-size:10px;color:var(--dim);margin:0 0 4px}
+.sx-in,.sx-sel,.sx-ta{width:100%;box-sizing:border-box;font-family:inherit;font-size:11.5px;color:var(--paper);
+  background:rgba(8,26,51,.66);border:1px solid var(--hair);border-radius:9px;padding:8px 10px;transition:border-color .2s}
+.sx-in:hover,.sx-sel:hover,.sx-ta:hover{border-color:rgba(46,123,224,.42)}
+.sx-ta{min-height:60px;resize:vertical;line-height:1.7}
+.sx-sel{cursor:pointer;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+  background-position:12px 15px,17px 15px;background-size:5px 5px,5px 5px;background-repeat:no-repeat}
+.sx-fr{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:6px 0;border-top:1px solid rgba(141,162,192,.09)}
+.sx-fr:first-of-type{border-top:0}
+.sx-fr>.sx-lab{margin:0;flex:none}
+.sx-fr>.sx-sel,.sx-fr>.sx-in{flex:1;max-width:148px}
+.sx-cnt{display:block;text-align:end;font-size:9px;color:var(--dim);margin-top:3px;font-family:'IBM Plex Mono',monospace}
+
+/* مفتاح تبديل */
+.sx-tg{position:relative;width:36px;height:19px;flex:none;border-radius:999px;cursor:pointer;border:1px solid var(--hair);
+  background:rgba(8,26,51,.8);transition:background .25s,border-color .25s}
+.sx-tg i{position:absolute;top:2px;inset-inline-end:2px;width:13px;height:13px;border-radius:50%;background:var(--dim);
+  transition:inset-inline-end .25s,background .25s}
+.sx-tg.on{background:rgba(11,78,162,.9);border-color:rgba(46,123,224,.8)}
+.sx-tg.on i{inset-inline-end:19px;background:#fff}
+
+/* ── رأس اللوحة الوسطى ── */
+.sx-hd{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:11px}
+.sx-hd .ht b{display:block;font-size:15px;font-weight:800;color:var(--paper)}
+.sx-hd .ht span{display:block;font-size:10.5px;color:var(--dim);margin-top:2px}
+
+/* ── شريط الخطوات ── */
+.sx-step{display:flex;align-items:center;gap:0;margin-inline-start:auto;flex-wrap:wrap}
+.sx-sp{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:52px}
+.sx-sp .b{width:22px;height:22px;display:grid;place-items:center;border-radius:50%;font-size:10px;font-weight:800;
+  font-family:'IBM Plex Mono',monospace;color:var(--dim);background:rgba(8,26,51,.7);border:1px solid var(--hair);
+  transition:all .35s}
+.sx-sp .l{font-size:9.5px;color:var(--dim);white-space:nowrap;transition:color .35s}
+.sx-sp.done .b{color:#6FCF8E;border-color:rgba(111,207,142,.55);background:rgba(111,207,142,.10)}
+.sx-sp.done .l{color:#8FD8A6}
+.sx-sp.on .b{color:#fff;border-color:#2E7BE0;background:#0B4EA2;box-shadow:0 0 0 4px rgba(46,123,224,.16)}
+.sx-sp.on .l{color:var(--paper);font-weight:800}
+.sx-bar{width:26px;height:2px;background:var(--hair);margin:0 1px 15px;border-radius:2px;transition:background .35s}
+.sx-bar.done{background:rgba(111,207,142,.55)}
+
+/* ── لوحة المعاينة ── */
+.sx-stage{position:relative;border:1px solid var(--hair);border-radius:13px;overflow:hidden;background:#07152B}
+.sx-stage.v916{max-width:330px;margin:0 auto}
+.sx-scene{position:relative;width:100%;aspect-ratio:16/9;display:block;transition:aspect-ratio .35s}
+.sx-stage.v916 .sx-scene{aspect-ratio:9/16}
+.sx-ovl{position:absolute;font-size:10px;font-family:'IBM Plex Mono',monospace;color:#DCE6F5;background:rgba(4,12,26,.76);
+  border:1px solid rgba(141,162,192,.24);border-radius:7px;padding:3px 9px;backdrop-filter:blur(3px)}
+.sx-ovl.tl{top:9px;inset-inline-start:9px}
+.sx-ovl.tr{top:9px;inset-inline-end:9px;font-family:'Tajawal',sans-serif;font-size:10px}
+.sx-sub{position:absolute;bottom:10px;inset-inline:12px;text-align:center;font-size:11.5px;line-height:1.75;color:#fff;
+  background:rgba(4,12,26,.74);border-radius:8px;padding:6px 11px;backdrop-filter:blur(3px)}
+.sx-gen{position:absolute;inset:0;display:none;place-items:center;background:rgba(6,17,35,.90);backdrop-filter:blur(4px);z-index:4}
+.sx-gen.on{display:grid}
+.sx-gen .gi{text-align:center;padding:0 20px}
+.sx-gen .rings{width:54px;height:54px;margin:0 auto 12px;position:relative}
+.sx-gen .rings i{position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:#2E7BE0;
+  animation:sxSpin 1.05s linear infinite}
+.sx-gen .rings i:nth-child(2){inset:9px;border-top-color:var(--gold);animation-duration:1.55s;animation-direction:reverse}
+.sx-gen .rings i:nth-child(3){inset:18px;border-top-color:#6FCF8E;animation-duration:.85s}
+@keyframes sxSpin{to{transform:rotate(360deg)}}
+.sx-gen b{display:block;font-size:12.5px;color:var(--paper);margin-bottom:5px}
+.sx-gen span{display:block;font-size:10.5px;color:#9FB6D4;min-height:16px}
+.sx-gp{width:190px;height:3px;margin:11px auto 0;border-radius:3px;background:rgba(141,162,192,.18);overflow:hidden}
+.sx-gp i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,#2E7BE0,#C7A24B);transition:width .3s}
+
+/* شريط تشغيل */
+.sx-tr{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 11px;border-top:1px solid var(--hair);
+  background:rgba(8,26,51,.62)}
+.sx-tb{width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:8px;cursor:pointer;font-size:11px;
+  color:var(--paper);background:rgba(8,26,51,.7);border:1px solid var(--hair);font-family:inherit;transition:all .2s}
+.sx-tb:hover{border-color:rgba(46,123,224,.6)}
+.sx-tb.play{width:32px;height:32px;font-size:13px;background:linear-gradient(135deg,#0B4EA2,#1867C8);border-color:transparent;
+  box-shadow:0 4px 12px rgba(11,78,162,.4)}
+.sx-seg{display:flex;gap:0;border:1px solid var(--hair);border-radius:8px;overflow:hidden}
+.sx-seg button{cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--dim);
+  background:transparent;border:0;padding:5px 10px;transition:all .2s}
+.sx-seg button.on{background:rgba(11,78,162,.9);color:#fff}
+.sx-rng{flex:1;min-width:70px;max-width:150px;height:3px;border-radius:3px;background:rgba(141,162,192,.2);position:relative;cursor:pointer}
+.sx-rng i{position:absolute;inset-inline-start:0;top:0;height:100%;width:58%;border-radius:3px;background:var(--blue-soft)}
+.sx-rng i::after{content:"";position:absolute;inset-inline-end:-4px;top:-3px;width:9px;height:9px;border-radius:50%;background:#fff}
+.sx-tspace{margin-inline-start:auto}
+
+/* ── شريط اللقطات / الشرائح ── */
+.sx-strip{display:flex;gap:8px;overflow-x:auto;padding:3px 1px 7px;scrollbar-width:thin}
+.sx-strip::-webkit-scrollbar{height:5px}
+.sx-strip::-webkit-scrollbar-thumb{background:rgba(141,162,192,.26);border-radius:3px}
+.sx-th{flex:none;width:104px;cursor:pointer;background:rgba(8,26,51,.6);border:1px solid var(--hair);border-radius:10px;
+  overflow:hidden;padding:0;font-family:inherit;text-align:start;transition:border-color .25s,transform .25s}
+.sx-th:hover{border-color:rgba(46,123,224,.5);transform:translateY(-2px)}
+.sx-th.on{border-color:#2E7BE0;box-shadow:0 0 0 2px rgba(46,123,224,.28)}
+.sx-th .tp{position:relative;width:100%;aspect-ratio:16/10;display:block}
+.sx-th .tn{position:absolute;top:4px;inset-inline-start:4px;font-size:8.5px;font-family:'IBM Plex Mono',monospace;
+  color:#DCE6F5;background:rgba(4,12,26,.7);border-radius:5px;padding:1px 5px}
+.sx-th .td{position:absolute;bottom:4px;inset-inline-end:4px;font-size:8.5px;font-family:'IBM Plex Mono',monospace;
+  color:#DCE6F5;background:rgba(4,12,26,.7);border-radius:5px;padding:1px 5px}
+.sx-th .tx{padding:6px 7px 7px}
+.sx-th .tx b{display:block;font-size:10px;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx-th .tx span{display:block;font-size:8.5px;color:var(--dim);line-height:1.5;margin-top:2px;
+  overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.sx-th.add{display:grid;place-items:center;min-height:104px;color:var(--dim);font-size:20px;border-style:dashed}
+.sx-th.add:hover{color:var(--blue-soft)}
+
+/* ── الجداول ── */
+.sx-tbl{width:100%;border-collapse:collapse;font-size:10.5px}
+.sx-tbl th{font-size:9.5px;font-weight:800;color:var(--dim);text-align:start;padding:7px 9px;
+  background:rgba(8,26,51,.6);border-bottom:1px solid var(--hair);white-space:nowrap}
+.sx-tbl td{padding:7px 9px;color:#C6D4E8;border-bottom:1px solid rgba(141,162,192,.08);vertical-align:middle}
+.sx-tbl tr:last-child td{border-bottom:0}
+.sx-tbl tr.on td{background:rgba(11,78,162,.24);color:var(--paper)}
+.sx-tbl tr{cursor:pointer;transition:background .2s}
+.sx-tbl tr:hover td{background:rgba(46,123,224,.09)}
+.sx-tbl .num,.sx-tbl .dur{font-family:'IBM Plex Mono',monospace;color:var(--dim);width:1%;white-space:nowrap}
+.sx-tbl .pen{width:1%;color:var(--dim);font-size:10px}
+
+/* ── بلاطات التحليل ── */
+.sx-tiles{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+.sx-tiles.c2{grid-template-columns:1fr 1fr}
+.sx-tile{background:rgba(8,26,51,.55);border:1px solid var(--hair);border-radius:9px;padding:8px 9px;min-width:0;
+  opacity:0;transform:translateY(6px);transition:opacity .4s,transform .4s}
+.sx-tile.in{opacity:1;transform:none}
+.sx-tile .th{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--dim);margin-bottom:4px}
+.sx-tile .th i{font-style:normal;font-size:10px}
+.sx-tile b{display:block;font-size:10.5px;font-weight:700;color:var(--paper);line-height:1.6}
+.sx-tile ul{margin:0;padding-inline-start:13px}
+.sx-tile li{font-size:10px;color:#C6D4E8;line-height:1.7}
+
+/* ── منتقي الأصول ── */
+.sx-pick{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 6px;scrollbar-width:thin}
+.sx-pick::-webkit-scrollbar{height:4px}
+.sx-pick::-webkit-scrollbar-thumb{background:rgba(141,162,192,.24);border-radius:3px}
+.sx-pk{flex:none;width:62px;cursor:pointer;background:transparent;border:0;padding:0;font-family:inherit;text-align:center}
+.sx-pk .pv{position:relative;width:62px;height:44px;border-radius:9px;overflow:hidden;border:1px solid var(--hair);
+  display:block;transition:border-color .25s,transform .25s}
+.sx-pk:hover .pv{transform:translateY(-2px);border-color:rgba(46,123,224,.5)}
+.sx-pk.on .pv{border-color:#2E7BE0;box-shadow:0 0 0 2px rgba(46,123,224,.3)}
+.sx-pk.on .pv::before{content:"";position:absolute;top:3px;inset-inline-end:3px;width:15px;height:15px;border-radius:50%;
+  background:#0B4EA2;border:1px solid rgba(255,255,255,.62);z-index:2}
+.sx-pk.on .pv::after{content:"";position:absolute;top:7.4px;inset-inline-end:7px;width:7px;height:3.4px;
+  border:solid #fff;border-width:0 0 1.6px 1.6px;transform:rotate(-45deg);z-index:3}
+.sx-pk span{display:block;font-size:8.5px;color:var(--dim);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx-pk.on span{color:var(--paper)}
+.sx-pk.rnd .pv{border-radius:50%;width:44px;height:44px;margin:0 auto}
+.sx-pk.rnd{width:52px}
+.sx-pk.addp .pv{display:grid;place-items:center;border-style:dashed;color:var(--dim);font-size:17px;background:rgba(8,26,51,.4)}
+
+/* ── محرر المخطط ── */
+.sx-ols{display:flex;flex-direction:column;gap:5px}
+.sx-ol{display:flex;align-items:center;gap:8px;width:100%;cursor:pointer;font-family:inherit;text-align:start;
+  background:rgba(8,26,51,.55);border:1px solid var(--hair);border-radius:9px;padding:7px 9px;color:var(--paper);
+  transition:border-color .25s,background .25s;opacity:0;transform:translateY(5px)}
+.sx-ol.in{opacity:1;transform:none;transition:opacity .35s,transform .35s,border-color .25s,background .25s}
+.sx-ol:hover{border-color:rgba(46,123,224,.5)}
+.sx-ol.on{border-color:#2E7BE0;background:rgba(11,78,162,.24)}
+.sx-ol .oi{width:18px;flex:none;font-size:9.5px;font-family:'IBM Plex Mono',monospace;color:var(--blue-soft)}
+.sx-ol .ox{flex:1;min-width:0}
+.sx-ol .ox b{display:block;font-size:10.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx-ol .ox i{display:block;font-style:normal;font-size:8.5px;color:var(--dim);margin-top:1px}
+.sx-ol .om{flex:none;display:flex;flex-direction:column;gap:2px}
+.sx-ol .om span{cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--dim);line-height:1;
+  padding:1px 3px;border-radius:3px;transition:all .2s}
+.sx-ol .om span:hover{color:var(--paper);background:rgba(46,123,224,.24)}
+
+/* ── سير الاعتماد ── */
+.sx-flow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sx-fs{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:700;color:var(--dim);border-radius:999px;
+  padding:4px 10px;border:1px solid var(--hair);background:rgba(8,26,51,.5);cursor:pointer;font-family:inherit;transition:all .25s}
+.sx-fs:hover{border-color:rgba(46,123,224,.5)}
+.sx-fs.on{color:#fff;background:rgba(11,78,162,.9);border-color:rgba(46,123,224,.85)}
+.sx-fs.done{color:#6FCF8E;border-color:rgba(111,207,142,.4);background:rgba(111,207,142,.08)}
+.sx-fa{display:inline-flex;align-items:center;color:var(--dim);opacity:.8}
+
+/* ── لوحة الحالة السفلية ── */
+.sx-stat{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 20px;font-size:10.5px;color:var(--dim);
+  border-top:1px solid var(--hair);background:rgba(8,26,51,.55)}
+.sx-stat .mid{margin-inline:auto;display:flex;align-items:center;gap:6px}
+.sx-dot{width:7px;height:7px;border-radius:50%;background:#6FCF8E;box-shadow:0 0 7px rgba(111,207,142,.8);
+  animation:sxPulse 2.4s ease-in-out infinite}
+@keyframes sxPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.sx-dot{animation:none}.sx-gen .rings i{animation:none}}
+
+/* ── الحاشية ── */
+.sx-foot{padding:12px 20px;font-size:11px;color:var(--dim);line-height:1.85;border-top:1px solid var(--hair);
+  background:rgba(8,26,51,.5)}
+.sx-foot b{color:#C6D4E8}
+.sx-sep{display:inline-block;width:1px;height:11px;background:var(--hair);margin:0 8px;vertical-align:middle}
+
+/* ── وظيفة متعثّرة ── */
+.sx-job{display:flex;align-items:center;gap:9px;border-radius:9px;padding:8px 10px;font-size:10px;line-height:1.6;
+  border:1px solid rgba(224,110,110,.34);background:rgba(224,110,110,.07);color:#E7B6B6}
+.sx-job>span:first-child{flex:none;display:inline-flex;align-items:center}
+.sx-job .jt{flex:1;min-width:0}
+.sx-job .jt b{display:block;color:#F0C9C9;font-size:10.5px}
+.sx-job.okj{border-color:rgba(111,207,142,.36);background:rgba(111,207,142,.07);color:#A9DCBB}
+.sx-job.okj .jt b{color:#C4EBD1}
+
+/* ── سجل النسخ والتعليقات ── */
+.sx-log{display:flex;flex-direction:column;gap:0}
+.sx-lg{display:flex;gap:8px;font-size:10px;color:var(--dim);padding:6px 0;border-top:1px solid rgba(141,162,192,.09);line-height:1.6}
+.sx-lg:first-child{border-top:0}
+.sx-lg .v{flex:none;font-family:'IBM Plex Mono',monospace;color:var(--gold-soft);font-size:9.5px}
+.sx-lg .m{flex:1;min-width:0;color:#C6D4E8}
+.sx-lg .w{flex:none;font-size:9px}
+.sx-cm{display:flex;gap:8px;padding:7px 0;border-top:1px solid rgba(141,162,192,.09)}
+.sx-cm:first-child{border-top:0}
+.sx-cm .av{width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:9px;font-weight:800;
+  color:#BFD8F5;background:rgba(46,123,224,.16);border:1px solid rgba(46,123,224,.34)}
+.sx-cm .cb{flex:1;min-width:0}
+.sx-cm .cb b{display:block;font-size:10px;color:var(--paper)}
+.sx-cm .cb p{margin:2px 0 0;font-size:10px;color:#C6D4E8;line-height:1.65}
+.sx-cm .cb time{display:block;font-size:8.5px;color:var(--dim);margin-top:2px}
+
+/* ── ملصق البوست ── */
+.sx-post{position:relative;width:100%;border-radius:11px;overflow:hidden;background:#0E1B31;
+  border:1px solid var(--hair);display:flex;flex-direction:column}
+.sx-pbar{display:flex;align-items:center;gap:9px;padding:9px 12px;background:#0B1A30;border-bottom:1px solid rgba(255,255,255,.06)}
+.sx-plogo{display:flex;align-items:center;gap:7px}
+.sx-plogo .gl{font-size:16px;color:#fff;font-weight:800;letter-spacing:-1px;line-height:1}
+.sx-plogo .gt{font-size:7px;line-height:1.35;color:#DDE6F3}
+.sx-plogo .gt b{display:block;font-size:8px;color:#fff}
+.sx-pyr{margin-inline-start:auto;text-align:end;font-size:7.5px;color:#C9D6EA;line-height:1.4}
+.sx-pyr b{display:block;font-size:11px;color:var(--gold-soft);font-family:'IBM Plex Mono',monospace}
+.sx-phero{position:relative;padding:16px 16px 12px;text-align:center}
+.sx-phero h4{margin:0;font-size:17px;font-weight:800;color:#fff;line-height:1.5}
+.sx-phero h4 em{font-style:normal;color:#FF6B5E;font-size:24px;display:block;margin:1px 0}
+.sx-phero p{margin:5px 0 0;font-size:10px;color:#C9D6EA}
+.sx-pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:0 12px 12px}
+.sx-pc{position:relative;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:8px;
+  padding:16px 5px 7px;text-align:center;min-width:0}
+.sx-pc .ic{position:absolute;top:-8px;inset-inline-start:50%;transform:translateX(50%);width:19px;height:19px;
+  border-radius:50%;display:grid;place-items:center;color:#fff;background:#C0392B;border:2px solid #0E1B31}
+.sx-pc.g .ic{background:#1E7E34}
+.sx-pc span{display:block;font-size:8px;line-height:1.55;color:#DDE6F3}
+.sx-pfoot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 12px;background:#0B1A30;
+  border-top:1px solid rgba(255,255,255,.06);font-size:8.5px;color:#C9D6EA}
+.sx-pfoot .em{font-weight:800;color:#fff}
+.sx-pfoot .em b{color:var(--gold-soft);font-family:'IBM Plex Mono',monospace;font-size:11px}
+.sx-pfoot .sc{display:flex;align-items:center;gap:6px;opacity:.8;color:#DDE6F3}
+.sx-pfoot .rt{margin-inline-start:auto;text-align:end;line-height:1.45}
+
+/* ── معاينة شريحة الهوية ── */
+.sx-slide{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--hair);
+  display:flex;flex-direction:column;background:#0B1A30}
+.sx-sl-top{display:flex;align-items:center;gap:8px;padding:9px 13px}
+.sx-sl-body{flex:1;display:flex;align-items:center;gap:12px;padding:0 16px;min-height:0}
+.sx-sl-body .tx{flex:1;min-width:0}
+.sx-sl-body .tx h4{margin:0;font-size:16px;font-weight:800;color:#fff;line-height:1.55}
+.sx-sl-body .tx p{margin:6px 0 0;font-size:10.5px;color:#C9D6EA}
+.sx-sl-body .im{flex:none;width:36%;aspect-ratio:4/3;border-radius:9px;overflow:hidden;border:1px solid rgba(255,255,255,.09)}
+.sx-sl-foot{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:7px 13px;font-size:8.5px;color:#A9BAD3;
+  border-top:1px solid rgba(255,255,255,.07)}
+.sx-sl-foot .rt{margin-inline-start:auto}
+.sx-dots{display:flex;gap:5px;justify-content:center;padding:8px 0 0}
+.sx-dots i{width:5px;height:5px;border-radius:50%;background:rgba(141,162,192,.3);cursor:pointer;transition:all .25s}
+.sx-dots i.on{background:var(--blue-soft);width:15px;border-radius:3px}
+
+/* ── ألوان وشعارات الهوية ── */
+.sx-sw{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.sx-swx{text-align:center;cursor:pointer;background:transparent;border:0;padding:0;font-family:inherit}
+.sx-swx .c{display:block;width:100%;height:30px;border-radius:8px;border:1px solid rgba(255,255,255,.14);transition:transform .25s}
+.sx-swx:hover .c{transform:translateY(-2px)}
+.sx-swx b{display:block;font-size:8px;color:var(--paper);font-weight:700;margin-top:4px;line-height:1.4}
+.sx-swx span{display:block;font-size:7.5px;color:var(--dim);font-family:'IBM Plex Mono',monospace;direction:ltr}
+.sx-lgs{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.sx-lg1{cursor:pointer;background:transparent;border:0;padding:0;font-family:inherit;text-align:center}
+.sx-lg1 .bx{display:grid;place-items:center;height:42px;border-radius:8px;border:1px solid var(--hair);transition:all .25s}
+.sx-lg1.on .bx{border-color:#2E7BE0;box-shadow:0 0 0 2px rgba(46,123,224,.28)}
+.sx-lg1 span{display:block;font-size:8.5px;color:var(--dim);margin-top:4px}
+.sx-lg1.on span{color:var(--paper)}
+.sx-rules{display:flex;flex-direction:column;gap:6px}
+.sx-rule{display:flex;align-items:flex-start;gap:7px;font-size:10px;color:#C6D4E8;line-height:1.65}
+.sx-rule i{flex:none;display:flex;align-items:center;font-style:normal;color:#6FCF8E;height:17px}
+.sx-chip{display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#AFC0D8;border:1px solid var(--hair);
+  background:rgba(46,123,224,.07);border-radius:999px;padding:3px 9px;margin:0 0 4px 4px;cursor:pointer;
+  font-family:inherit;transition:all .2s}
+.sx-chip:hover{border-color:rgba(46,123,224,.5);color:var(--paper)}
+.sx-chip.on{color:#fff;background:rgba(11,78,162,.85);border-color:rgba(46,123,224,.8)}
+.sx-chip.ltr{direction:ltr}
+
+/* مساحات مساعدة */
+.sx-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sx-gap{display:flex;flex-direction:column;gap:10px}
+.sx-mt{margin-top:9px}
+.sx-hide{display:none!important}
+.sx-note{font-size:9.5px;color:var(--dim);line-height:1.7}
+.sx-src{display:flex;align-items:center;gap:7px;font-size:10px;color:#C6D4E8;padding:6px 0;
+  border-top:1px solid rgba(141,162,192,.09)}
+.sx-src:first-of-type{border-top:0}
+.sx-src .fi{flex:none;display:inline-flex;align-items:center;color:var(--blue-soft)}
+.sx-src .fn{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sx-src .fe{flex:none;display:inline-flex;align-items:center;color:var(--dim);cursor:pointer;transition:color .2s}
+.sx-src .fe:hover{color:var(--blue-soft)}
+.sx-pill{font-size:9px;font-weight:800;border-radius:999px;padding:2px 8px;white-space:nowrap}
+.sx-pill.b{color:#8FC0F5;border:1px solid rgba(46,123,224,.42);background:rgba(46,123,224,.09)}
+.sx-pill.g{color:#6FCF8E;border:1px solid rgba(111,207,142,.36);background:rgba(111,207,142,.08)}
+.sx-pill.y{color:#E5C04B;border:1px solid rgba(229,192,75,.32);background:rgba(229,192,75,.07)}
+
+/* ── الأيقونات الرسمية والهوية البصرية ── */
+.sx-ic{display:inline-block;vertical-align:-.18em;flex:none;color:inherit}
+.sx-logo{display:block;width:auto;object-fit:contain}
+.sx-logo.w{filter:brightness(0) invert(1)}
+.sx-logo.k{filter:brightness(0)}
+.sx-logo.c{filter:none}
+.sx-logo.m{display:block;flex:none}
+.sx-pu{display:inline-block;width:auto;object-fit:contain;vertical-align:middle}
+.sx-mk{font-weight:800;letter-spacing:-1px;color:#fff}
+
+/* ── لوحة الصورة: تدرّج الهوية دائماً موجود، والصورة الفوتوغرافية تعلوه إن وُجدت ── */
+.sx-art{position:relative;display:block;width:100%;height:100%;overflow:hidden;background:#12233F}
+.sx-art>svg,.sx-art>img{position:absolute;inset-inline-start:0;top:0;width:100%;height:100%;display:block}
+.sx-art>img{object-fit:cover}
+
+@media(max-width:1080px){.sx-app{grid-template-columns:1fr}.sx-pgrid{grid-template-columns:repeat(3,1fr)}
+  .sx-tiles{grid-template-columns:1fr 1fr}.sx-sw{grid-template-columns:repeat(3,1fr)}}
+
+/* ── تنظيف بقيّة اللوحة من الرموز التعبيرية: أيقونات خطّية بدل الإيموجي ── */
+.sv-ic{color:#8FC0F5}
+.sv-ic .sx-ic,.qb-empty .ic .sx-ic{display:block}
+.aw-src::after{content:"";display:inline-block;width:5px;height:5px;margin-inline-start:5px;
+  /* مرآة السهم المائل للاتجاه العربي: يشير إلى أعلى اليسار بدل أعلى اليمين */
+  border:solid currentColor;border-width:1.2px 1.2px 0 0;transform:rotate(-90deg);vertical-align:1.5px;opacity:.85}
+</style>
 </head>
+
 <body>
 <div class="wrap">
   <header class="top">
@@ -459,7 +834,7 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
       <img src="data:image/png;base64,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" alt="ADCDA" style="height:46px;width:auto;filter:invert(1);opacity:.95"/>
       <div>ALI AI Command Center<div class="sub">مركز القيادة الذكي للمحتوى التوعوي · هيئة أبوظبي للدفاع المدني</div></div>
     </div>
-    <a class="back" href="/portal">→ فتح البوابة</a>
+    <a class="back" href="/portal">فتح البوابة&nbsp;<svg class="sx-ic" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.2 12H5.4"/><path d="M11 5.8 4.8 12l6.2 6.2"/></svg></a>
   </header>
 
   <div class="ds-tabs" id="tabs">
@@ -470,7 +845,7 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
     <button class="ds-tab" data-t="studio">الاستوديو</button>
     <button class="ds-tab" data-t="kpi">المؤشرات</button>
     <button class="ds-tab" data-t="qbank">بنك الأسئلة</button>
-    <button class="ds-tab" data-t="awards">🏆 الجوائز</button>
+    <button class="ds-tab" data-t="awards">الجوائز</button>
   </div>
 
   <!-- ═══ غرفة العمليات ═══ -->
@@ -517,17 +892,17 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
             <div class="sv-head"><span class="sv-dot"></span><b>الطبقة الإشرافية</b><i>لا تنتج محتوى — تراقب الأداء وتراجع الجودة وترصد الفرص</i><span class="sv-count">3 وكلاء إشرافيين</span></div>
             <div class="sv-grid">
               <div class="sv-card">
-                <div class="sv-row"><span class="sv-ic">📈</span><span class="sv-tx"><b>مراقب الأداء</b><i>Performance Monitor</i></span><span class="sv-tag">إشرافي</span></div>
+                <div class="sv-row"><span class="sv-ic"><svg class="sx-ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.4 17.6 9.2 11l3.8 3.4L20.6 6.6"/><path d="M15.4 6.6h5.2v5.2"/></svg></span><span class="sv-tx"><b>مراقب الأداء</b><i>Performance Monitor</i></span><span class="sv-tag">إشرافي</span></div>
                 <p class="sv-task">يرصد نِسَب النجاح وزمن التنفيذ والتشغيلات بلا مخرجات</p>
                 <span class="sv-st">قيد الربط</span>
               </div>
               <div class="sv-card">
-                <div class="sv-row"><span class="sv-ic">🧠</span><span class="sv-tx"><b>أخصائي الذكاء الاصطناعي</b><i>AI Specialist</i></span><span class="sv-tag">إشرافي</span></div>
+                <div class="sv-row"><span class="sv-ic"><svg class="sx-ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7.2" y="7.2" width="9.6" height="9.6" rx="2.1"/><path d="M10.2 3.4v3.8M13.8 3.4v3.8M10.2 16.8v3.8M13.8 16.8v3.8M3.4 10.2h3.8M3.4 13.8h3.8M16.8 10.2h3.8M16.8 13.8h3.8"/></svg></span><span class="sv-tx"><b>أخصائي الذكاء الاصطناعي</b><i>AI Specialist</i></span><span class="sv-tag">إشرافي</span></div>
                 <p class="sv-task">يراجع جودة النماذج والمخرجات ويقترح تحسين التوجيهات</p>
                 <span class="sv-st">قيد الربط</span>
               </div>
               <div class="sv-card">
-                <div class="sv-row"><span class="sv-ic">🏆</span><span class="sv-tx"><b>صيد الجوائز</b><i>Awards Scout</i></span><span class="sv-tag">إشرافي</span></div>
+                <div class="sv-row"><span class="sv-ic"><svg class="sx-ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3.8h8v4.6a4 4 0 0 1-8 0z"/><path d="M8 5.4H5.6A2.4 2.4 0 0 0 8 9.6"/><path d="M16 5.4h2.4A2.4 2.4 0 0 1 16 9.6"/><path d="M12 12.4v3.4"/><path d="M9.2 20.2h5.6l-.7-4.4H9.9z"/></svg></span><span class="sv-tx"><b>صيد الجوائز</b><i>Awards Scout</i></span><span class="sv-tag">إشرافي</span></div>
                 <p class="sv-task">يرصد الجوائز الحكومية ومواعيد التسجيل ويدرس الفائزين السابقين</p>
                 <span class="sv-st">قيد الربط</span>
               </div>
@@ -649,37 +1024,45 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
   <!-- ═══ الاستوديو ═══ -->
   <div class="pane" id="p-studio">
     <div class="cc live">
-      <div class="cc-top"><span class="cc-brand">AI&nbsp;STUDIO</span><span class="cc-badge ok">قيد التنفيذ · 68%</span><span class="cc-clock mono">12/14&nbsp;AGENTS</span></div>
-      <div class="sb-kpis">
-        <div class="sk"><b class="mono">18:42</b><span>الوقت المستغرق</span></div>
-        <div class="sk"><b class="mono">87</b><span>مهمة في هذا العرض</span></div>
-        <div class="sk"><b class="mono ok">96.7%</b><span>الجودة الحالية</span></div>
-        <div class="sk"><b class="mono">3</b><span>مراجعات بشرية</span></div>
-      </div>
-      <div class="st-flow">
-        <div class="st-col" id="stIn"></div>
-        <div class="st-prod">
-          <div class="frame">
-            <img src="https://ali-agent.higgsfield.app/assets/hero_hall.jpg" alt="الشريحة قيد التصميم" loading="lazy" />
-            <div class="cap"><b>إفساح الطريق للآليات الإسعافية</b><span>الشريحة 12 من 19 · باقة السلامة المرورية D</span></div>
+      <div class="cc-top"><span class="cc-brand">AI&nbsp;STUDIO</span><span class="cc-badge ok" id="sxBadge">جاهز للعمل</span><span class="cc-clock mono">12/14&nbsp;AGENTS</span></div>
+
+      <div class="sx-app">
+
+        <div class="sx-col">
+          <div class="sx-card">
+            <div class="sx-ct">نوع المحتوى</div>
+            <div class="sx-mods" id="sxMods"></div>
           </div>
-          <div class="pbar"><i style="width:68%"></i></div>
-          <span class="plbl mono">68%</span>
+          <div class="sx-card" id="sxSet"></div>
+          <div class="sx-card" id="sxRefs"></div>
+          <button class="sx-btn" id="sxExport" type="button"></button>
+          <button class="sx-btn ghost" id="sxSave" type="button"><svg class="sx-ic" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>&nbsp; حفظ المشروع</button>
         </div>
-        <div class="st-col" id="stOut"></div>
-      </div>
-      <div class="st-bottom">
-        <div class="cc-panel"><div class="pt">المهام الجارية</div><div id="tasks"></div></div>
-        <div class="cc-panel">
-          <div class="pt">المخرجات</div>
-          <div class="dl" id="deliv"></div>
-          <div class="kv"><span>لا يُسلَّم أي مخرج</span><b>دون توقيع بشري</b></div>
+
+        <div class="sx-col">
+          <div class="sx-hd">
+            <div class="ht"><b id="sxTitle"></b><span id="sxSub"></span></div>
+            <div class="sx-step" id="sxSteps"></div>
+          </div>
+          <div class="sx-gap" id="sxCenter"></div>
         </div>
+
+        <div class="sx-col" id="sxLeft"></div>
+
       </div>
+
+      <div class="sx-stat">
+        <span id="sxSaved">آخر حفظ: —</span>
+        <span class="mid"><span class="sx-dot"></span><b id="sxState" style="color:var(--paper)">حالة المشروع: مسودة</b></span>
+        <span class="mono">الإصدار 1.0.0</span>
+      </div>
+
+      <div class="sx-foot" id="sxFoot"></div>
     </div>
   </div>
 
   <!-- ═══ المؤشرات ═══ -->
+
   <div class="pane" id="p-kpi">
     <div class="cc live">
       <div class="cc-top"><span class="cc-brand">KPI&nbsp;BOARD</span><span class="cc-badge ok">أرقام حية</span><span class="cc-clock mono">Q3&nbsp;2026</span></div>
@@ -726,52 +1109,52 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">01</span><span class="aw-name">جائزة وزير الداخلية للتميز</span><span class="aw-fit hi">ملاءمة عالية</span></div>
             <p class="aw-why">القناة المؤسسية الأقرب: الدفاع المدني جهة تابعة لوزارة الداخلية.</p>
-            <div class="aw-l2"><span class="aw-body">وزارة الداخلية — الدفاع المدني ضمن منظومتها</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.adpolice.gov.ae/ar-AE/Media-Center/News/2021/06/24/MoI-Receives-Applications-to-Participate-in-the-Minister-of-Interior-s-Excellence-Award-" target="_blank" rel="noopener noreferrer">adpolice.gov.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">وزارة الداخلية — الدفاع المدني ضمن منظومتها</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.adpolice.gov.ae/ar-AE/Media-Center/News/2021/06/24/MoI-Receives-Applications-to-Participate-in-the-Minister-of-Interior-s-Excellence-Award-" target="_blank" rel="noopener noreferrer">adpolice.gov.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">02</span><span class="aw-name">جائزة أبوظبي للأداء الحكومي المتميز&nbsp;<em>ADAEP</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
             <p class="aw-why">الجائزة المرجعية للجهات الحكومية في إمارة أبوظبي.</p>
-            <div class="aw-l2"><span class="aw-body">حكومة أبوظبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.mediaoffice.abudhabi/en/topic/abu-dhabi-award-for-excellence-in-government-performance-adaep/" target="_blank" rel="noopener noreferrer">mediaoffice.abudhabi ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">حكومة أبوظبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://www.mediaoffice.abudhabi/en/topic/abu-dhabi-award-for-excellence-in-government-performance-adaep/" target="_blank" rel="noopener noreferrer">mediaoffice.abudhabi</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">03</span><span class="aw-name">جائزة الشارقة للاتصال الحكومي&nbsp;<em>Sharjah Government Communication Award</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
             <p class="aw-why">الأقرب لطبيعة عملنا: فئات للمحتوى التوعوي واتصال الأزمات والذكاء الاصطناعي.</p>
-            <div class="aw-l2"><span class="aw-body">المكتب الإعلامي لحكومة الشارقة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://gca.sgmb.ae/ar" target="_blank" rel="noopener noreferrer">gca.sgmb.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">المكتب الإعلامي لحكومة الشارقة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://gca.sgmb.ae/ar" target="_blank" rel="noopener noreferrer">gca.sgmb.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">04</span><span class="aw-name">جائزة الإمارات للذكاء الاصطناعي&nbsp;<em>UAE AI Gov Award</em></span><span class="aw-fit hi">ملاءمة عالية</span></div>
             <p class="aw-why">المسار الاتحادي المخصص لتطبيقات الذكاء الاصطناعي في العمل الحكومي.</p>
-            <div class="aw-l2"><span class="aw-body">مكتب الذكاء الاصطناعي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">مكتب الذكاء الاصطناعي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">05</span><span class="aw-name">برنامج الشيخ خليفة للتميز الحكومي&nbsp;<em>Sheikh Khalifa Government Excellence Program</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
             <p class="aw-why">المظلة الاتحادية للتميز، وفئاتها المؤسسية تشمل الذكاء الاصطناعي والاتصال الحكومي.</p>
-            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://tdra.gov.ae/ar/about/skgep" target="_blank" rel="noopener noreferrer">tdra.gov.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://tdra.gov.ae/ar/about/skgep" target="_blank" rel="noopener noreferrer">tdra.gov.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">06</span><span class="aw-name">جائزة محمد بن راشد للأداء الحكومي المتميز</span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
             <p class="aw-why">أرفع جائزة اتحادية للأداء الحكومي.</p>
-            <div class="aw-l2"><span class="aw-body">برنامج الشيخ خليفة للتميز الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://uaecabinet.ae/ar/prime-ministers-initiatives/mohammed-bin-rashid-government-excellence-award" target="_blank" rel="noopener noreferrer">uaecabinet.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">برنامج الشيخ خليفة للتميز الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://uaecabinet.ae/ar/prime-ministers-initiatives/mohammed-bin-rashid-government-excellence-award" target="_blank" rel="noopener noreferrer">uaecabinet.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">07</span><span class="aw-name">جائزة الإمارات تبتكر&nbsp;<em>UAE Innovates Award</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
             <p class="aw-why">معاييرها المنشورة تنطبق مباشرة على أداة تولّد محتوى توعوياً.</p>
-            <div class="aw-l2"><span class="aw-body">مركز محمد بن راشد للابتكار الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://mbrcgi.gov.ae/programs/uae-innovates-award/" target="_blank" rel="noopener noreferrer">mbrcgi.gov.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">مركز محمد بن راشد للابتكار الحكومي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://mbrcgi.gov.ae/programs/uae-innovates-award/" target="_blank" rel="noopener noreferrer">mbrcgi.gov.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">08</span><span class="aw-name">جائزة الإمارات للروبوت والذكاء الاصطناعي لخدمة الإنسان&nbsp;<em>UAE AI &amp; Robotics Award for Good</em></span><span class="aw-fit mid">ملاءمة متوسطة</span></div>
             <p class="aw-why">موجَّهة لتطبيقات الذكاء الاصطناعي ذات النفع العام، وتوعية السلامة ضمنها.</p>
-            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">حكومة دولة الإمارات العربية المتحدة</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://u.ae/ar/about-the-uae/strategies-initiatives-and-awards/awards/innovation" target="_blank" rel="noopener noreferrer">u.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">09</span><span class="aw-name">برنامج دبي للتميز الحكومي&nbsp;<em>Dubai Government Excellence Program</em></span><span class="aw-fit ref">للاطّلاع</span></div>
             <p class="aw-why">مرجع منهجي لمعايير التميز الحكومي المحلي.</p>
-            <div class="aw-l2"><span class="aw-body">الأمانة العامة للمجلس التنفيذي لإمارة دبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://dgep.gov.ae/" target="_blank" rel="noopener noreferrer">dgep.gov.ae ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">الأمانة العامة للمجلس التنفيذي لإمارة دبي</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://dgep.gov.ae/" target="_blank" rel="noopener noreferrer">dgep.gov.ae</a></div>
           </div>
           <div class="aw-row">
             <div class="aw-l1"><span class="aw-rank mono">10</span><span class="aw-name">جائزة التميز الحكومي العربي&nbsp;<em>Arab Government Excellence Award</em></span><span class="aw-fit ref">للاطّلاع</span></div>
             <p class="aw-why">منصة عربية فيها فئات للمبادرات المبتكرة وخدمة المجتمع.</p>
-            <div class="aw-l2"><span class="aw-body">المنظمة العربية للتنمية الإدارية — جامعة الدول العربية</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://ageaward.com/" target="_blank" rel="noopener noreferrer">ageaward.com ↗</a></div>
+            <div class="aw-l2"><span class="aw-body">المنظمة العربية للتنمية الإدارية — جامعة الدول العربية</span><span class="aw-when">التسجيل: قيد الربط</span><a class="aw-src mono" href="https://ageaward.com/" target="_blank" rel="noopener noreferrer">ageaward.com</a></div>
           </div>
         </div>
         <div class="aw-side">
@@ -991,7 +1374,7 @@ var PKN = {A:"باقة A · السلامة المدرسية",B:"باقة B · ا
     document.querySelectorAll("#qbList .qb-row").forEach(function (r) { r.classList.toggle("on", r.dataset.i == i); });
     var d = document.getElementById("qbDetail");
     if (!b[3].length) {
-      d.innerHTML = '<div class="qb-empty"><div class="ic">🧪</div><div class="dh" style="justify-content:center"><span class="dc">' + b[0] + '</span></div><div style="color:#D8E0EC;font-weight:700">' + b[1] + '</div><b>الاختبار بانتظار التوليد</b><div style="max-width:320px;font-size:11px">سيُولّد الاختبار آليًا من محتوى هذا العرض ومصادره المعتمدة عند إنشائه، بصيغة صح / خطأ.</div></div>';
+      d.innerHTML = '<div class="qb-empty"><div class="ic"><svg class="sx-ic" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.8" y="4.2" width="14.4" height="16.6" rx="2.2"/><path d="M9.2 2.9h5.6v2.6H9.2z"/><path d="M9 11.2h6M9 15.2h4"/></svg></div><div class="dh" style="justify-content:center"><span class="dc">' + b[0] + '</span></div><div style="color:#D8E0EC;font-weight:700">' + b[1] + '</div><b>الاختبار بانتظار التوليد</b><div style="max-width:320px;font-size:11px">سيُولّد الاختبار آليًا من محتوى هذا العرض ومصادره المعتمدة عند إنشائه، بصيغة صح / خطأ.</div></div>';
       return;
     }
     var qs = b[3].map(function (q, k) {
@@ -1083,19 +1466,794 @@ document.getElementById("logbody").innerHTML = LOG.map(function (r) {
 }).join("");
 
 /* ── الاستوديو ── */
-var INP = [["جمع المعلومات","وكيل 03",2],["تحليل الجمهور","وكيل 02",2],["تخطيط العرض","وكيل 03",2]];
-var OUT = [["التدقيق اللغوي","وكيل 06",1],["تدقيق الهوية","وكيل 07",0],["المراجعة النهائية","بشري",0]];
-function node(n, i) {
-  var lbl = n[2] === 2 ? "✓" : n[2] === 1 ? "…" : (i + 1);
-  var st = n[2] === 2 ? "مكتمل" : n[2] === 1 ? "قيد التنفيذ" : "في الانتظار";
-  return '<div class="sn s' + n[2] + '"><span class="bub">' + lbl + '</span><div><b>' + n[0] + '</b><span>' + n[1] + ' · ' + st + '</span></div></div>';
-}
-document.getElementById("stIn").innerHTML = INP.map(node).join("");
-document.getElementById("stOut").innerHTML = OUT.map(node).join("");
-var TASKS = [["تصميم الشريحة 12",58],["تدقيق الرسوم البيانية",30],["مطابقة الأيقونات",75],["مراجعة التباين اللوني",90]];
-document.getElementById("tasks").innerHTML = TASKS.map(function (t) { return faBar(t[0], t[1]); }).join("");
-var DEL = [["عرض تقديمي","89%","ok"],["نسخة PDF","في الانتظار","pr"],["النسخة الإنجليزية","58%","ok"],["ملخص تنفيذي","في الانتظار","pr"]];
-document.getElementById("deliv").innerHTML = DEL.map(function (d) { return '<div class="dr"><b>' + d[0] + '</b><span class="lst ' + d[2] + '">' + d[1] + '</span></div>'; }).join("");
+/* ══════════ استوديو المحتوى الذكي — لوحة تفاعلية داخل مركز القيادة ══════════ */
+/* كل ما في هذه اللوحة يعمل داخل الصفحة: لا طلب شبكة، لا webhook، لا تشغيلة n8n. */
+(function () {
+  var $ = function (i) { return document.getElementById(i); };
+  var E = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); };
+  var uid = 0;
+  /* ربط مُحكم: الحاويات الثابتة يُعاد رسم محتواها في كل دورة، فلو استُخدم addEventListener
+     لتراكمت المستمعات وتكرّر السجل. الإسناد إلى onXxx يستبدل المستمع السابق دائماً. */
+  function bindOnce(id, ev, fn) { var el = $(id); if (el) el["on" + ev] = fn; }
+
+  /* ── الهوية البصرية ── */
+  /* شعار الهيئة يُقرأ من ترويسة الصفحة نفسها — نسخة واحدة لا تتكرّر */
+  var _lg = null;
+  function logoSrc() {
+    if (_lg === null) { var i = document.querySelector('img[alt="ADCDA"]'); _lg = i ? i.src : ""; }
+    return _lg;
+  }
+  function adcda(h, cls) {
+    var s = logoSrc();
+    if (!s) return '<span class="sx-mk">&#171;&#187;</span>';
+    return '<img class="sx-logo ' + (cls || "w") + '" src="' + s + '" alt="هيئة أبوظبي للدفاع المدني" style="height:' + (h || 22) + 'px">';
+  }
+  /* الشعار بلون مطلوب — قناع alpha على الرسم الأحادي الأصلي، بلا ملفات إضافية */
+  function adcdaInk(h, col) {
+    var s = logoSrc();
+    if (!s) return '<span class="sx-mk">&#171;&#187;</span>';
+    var hh = h || 22, m = "url('" + s + "') center/contain no-repeat";
+    return '<span class="sx-logo m" role="img" aria-label="هيئة أبوظبي للدفاع المدني" style="height:' + hh +
+      "px;width:" + Math.round(hh * 3.34) + "px;background:" + col +
+      ";-webkit-mask:" + m + ";mask:" + m + '"></span>';
+  }
+  var PROUD = "data:image/png;base64,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";
+  function proud(h) {
+    return '<img class="sx-pu" src="' + PROUD + '" alt="فخورين بالإمارات" style="height:' + (h || 30) + 'px">';
+  }
+
+  /* ── مجموعة الأيقونات الرسمية (SVG داخلي — لا إيموجي، لا صور خارجية) ── */
+  var IC = {
+    pres: '<rect x="3" y="4" width="18" height="12" rx="1.6"/><path d="M12 16v4M8.5 20h7"/>',
+    post: '<rect x="3" y="4.5" width="18" height="15" rx="2"/><circle cx="8.6" cy="10" r="1.7"/><path d="M3.4 16.4l4.8-4.2 3.6 3.2 3.4-3 5.4 5"/>',
+    video: '<rect x="2.6" y="5" width="18.8" height="14" rx="2"/><path d="M7.6 5v14M16.4 5v14M2.6 9.6h5M2.6 14.4h5M16.4 9.6h5M16.4 14.4h5"/>',
+    brand: '<path d="M12 3.4c-4.8 0-8.6 3.6-8.6 8.2S7.2 20 12 20c1.3 0 2.1-.8 2.1-1.8 0-.5-.2-.9-.5-1.2-.3-.4-.5-.7-.5-1.2 0-1 .8-1.7 1.8-1.7h1.3c2.6 0 4.4-2 4.4-4.5 0-3.5-3.3-6.2-6.6-6.2Z"/><circle cx="7.6" cy="11.4" r="1"/><circle cx="10.8" cy="7.9" r="1"/><circle cx="15" cy="9" r="1"/>',
+    target: '<circle cx="12" cy="12" r="8.2"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r=".9"/>',
+    users: '<circle cx="9.2" cy="8" r="3.1"/><path d="M3.6 19.2c0-3.1 2.5-5.2 5.6-5.2s5.6 2.1 5.6 5.2"/><path d="M16.2 6.3a3 3 0 0 1 0 5.5M17.6 14.6c1.9.8 2.8 2.4 2.8 4.6"/>',
+    globe: '<circle cx="12" cy="12" r="8.4"/><path d="M3.6 12h16.8"/><path d="M12 3.6c2.3 2.4 3.5 5.4 3.5 8.4s-1.2 6-3.5 8.4c-2.3-2.4-3.5-5.4-3.5-8.4S9.7 6 12 3.6Z"/>',
+    mic: '<rect x="9" y="3" width="6" height="10.4" rx="3"/><path d="M5.6 11.2a6.4 6.4 0 0 0 12.8 0M12 17.6V21M9.2 21h5.6"/>',
+    folder: '<path d="M3.6 6.4h5.5l1.7 2.2h9.6v10.4a1.4 1.4 0 0 1-1.4 1.4H5a1.4 1.4 0 0 1-1.4-1.4Z"/>',
+    list: '<path d="M8.4 6.6h11.8M8.4 12h11.8M8.4 17.4h11.8M4.2 6.6h.02M4.2 12h.02M4.2 17.4h.02"/>',
+    chat: '<path d="M20.4 12.2c0 3.8-3.7 6.8-8.3 6.8-1 0-1.9-.14-2.8-.4L4 20.6l1.5-3.8c-1.2-1.2-1.9-2.8-1.9-4.6 0-3.8 3.7-6.8 8.5-6.8s8.3 3 8.3 6.8Z"/>',
+    clock: '<circle cx="12" cy="12" r="8.4"/><path d="M12 7.2V12l3.2 2"/>',
+    brush: '<path d="m14.6 4.6 4.8 4.8L10 18.8H5.2v-4.8Z"/><path d="m12.9 6.3 4.8 4.8"/>',
+    hash: '<path d="M9.4 4 7.6 20M16.4 4l-1.8 16M4.6 9.2h15M3.9 15h15"/>',
+    bulb: '<path d="M9.2 16.4a6 6 0 1 1 5.6 0v2.2H9.2Z"/><path d="M9.8 21h4.4"/>',
+    shield: '<path d="M12 3.3 19.2 6v5.5c0 4.2-2.9 7.6-7.2 9.2-4.3-1.6-7.2-5-7.2-9.2V6Z"/>',
+    type: '<path d="M4.8 19 12 4.8 19.2 19M8.2 14.4h7.6"/>',
+    star: '<path d="m12 3.6 2.5 5.3 5.8.8-4.2 4 1 5.8L12 16.7 6.9 19.5l1-5.8-4.2-4 5.8-.8Z"/>',
+    tag: '<path d="M11.2 3.6h9.2v9.2l-8.6 8.6a1.5 1.5 0 0 1-2.2 0L2.6 14a1.5 1.5 0 0 1 0-2.2Z"/><circle cx="16.4" cy="7.6" r="1.3"/>',
+    signal: '<path d="M5 15.4V19M9.6 11.8V19M14.4 8.2V19M19 4.6V19"/>',
+    music: '<path d="M9.4 17.6V6.6l9.4-1.9v10.9"/><circle cx="7" cy="17.6" r="2.4"/><circle cx="16.4" cy="15.6" r="2.4"/>',
+    volume: '<path d="M4.6 9.4h3.2L12 5.7v12.6l-4.2-3.7H4.6Z"/><path d="M15.4 9.7a3.5 3.5 0 0 1 0 4.6M17.9 7.4a7 7 0 0 1 0 9.2"/>',
+    doc: '<path d="M6.2 3.4h7.4l5.2 5.3v11.9H6.2Z"/><path d="M13.4 3.4v5.5h5.4"/>',
+    pen: '<path d="m4.2 19.8.8-3.7L15.6 5.5a1.9 1.9 0 0 1 2.7 0l.2.2a1.9 1.9 0 0 1 0 2.7L7.9 19.1Z"/>',
+    spark: '<path d="m11 3.6 1.8 4.8 4.8 1.8-4.8 1.8-1.8 4.8-1.8-4.8L4.4 10.2 9.2 8.4Z"/><path d="m18.2 15.2.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/>',
+    upload: '<path d="M12 20.4V8.6M8.2 12.2 12 8.4l3.8 3.8M4.4 4.2h15.2"/>',
+    down: '<path d="M12 3.6v11.8M8.2 11.6 12 15.4l3.8-3.8M4.4 19.8h15.2"/>',
+    pin: '<path d="M10 3.6h4l-.6 5.4 3.4 3v1.5H7.2V12l3.4-3Z"/><path d="M12 13.5v6.9"/>',
+    save: '<path d="M4.6 4.6h11.2l3.6 3.6v11.2H4.6Z"/><path d="M8 4.6v5h6.4v-5M8 19.4v-5.6h8v5.6"/>',
+    check: '<path d="m5 12.6 4.6 4.6L19 7.4"/>',
+    cross: '<path d="M6.6 6.6 17.4 17.4M17.4 6.6 6.6 17.4"/>',
+    warn: '<path d="M12 4.4 21 19.6H3Z"/><path d="M12 10.2v4M12 17h.02"/>',
+    retry: '<path d="M20.2 12a8.2 8.2 0 1 1-2.7-6.1"/><path d="M20.6 3.8v4.5h-4.5"/>',
+    play: '<path d="M8.2 5.4 18.4 12 8.2 18.6Z"/>',
+    pause: '<path d="M9.2 5.6v12.8M14.8 5.6v12.8"/>',
+    stop: '<rect x="6.6" y="6.6" width="10.8" height="10.8" rx="1.2"/>',
+    prev: '<path d="M18 5.8 9.8 12 18 18.2Z"/><path d="M6.4 5.6v12.8"/>',
+    next: '<path d="M6 5.8 14.2 12 6 18.2Z"/><path d="M17.6 5.6v12.8"/>',
+    up: '<path d="m6.5 14.6 5.5-5.5 5.5 5.5"/>',
+    dn: '<path d="m6.5 9.4 5.5 5.5 5.5-5.5"/>',
+    back: '<path d="M19.4 12H5M10.6 6.4 5 12l5.6 5.6"/>',
+    plus: '<path d="M12 5.4v13.2M5.4 12h13.2"/>',
+    chevL: '<path d="m14.6 5.8-6.2 6.2 6.2 6.2"/>',
+    chevR: '<path d="m9.4 5.8 6.2 6.2-6.2 6.2"/>',
+    hour: '<path d="M6.8 3.6h10.4M6.8 20.4h10.4M8 3.6v3.1L12 11l4-4.3V3.6M8 20.4v-3.1L12 13l4 4.3v3.1"/>',
+    checkC: '<circle cx="12" cy="12" r="8.6"/><path d="m8.2 12.2 2.7 2.7 5-5.4"/>',
+    cloud: '<path d="M7.2 18.4a3.9 3.9 0 0 1-.4-7.8 5.5 5.5 0 0 1 10.5 1.3 3.5 3.5 0 0 1-.2 6.5Z"/><path d="M12 15.6V8.8M9.5 11.3 12 8.7l2.5 2.6"/>',
+    grid: '<rect x="3.6" y="3.6" width="7" height="7" rx="1.2"/><rect x="13.4" y="3.6" width="7" height="7" rx="1.2"/><rect x="3.6" y="13.4" width="7" height="7" rx="1.2"/><rect x="13.4" y="13.4" width="7" height="7" rx="1.2"/>',
+    ruler: '<path d="M3.5 14.2 14.2 3.5l6.3 6.3L9.8 20.5Z"/><path d="m7 10.7 2 2M10 7.7l2 2M13 4.7l2 2"/>',
+    road: '<path d="M8.6 3.6 5.2 20.4M15.4 3.6l3.4 16.8M12 5v2.6M12 10.6v2.8M12 16.4V19"/>',
+    amb: '<path d="M2.8 16.2V8.4h10.4v7.8M13.2 10.4h3.4l3.6 3.4v2.4"/><path d="M2.8 16.2h1.6M9.4 16.2h5.2M19.6 16.2h1.6"/><circle cx="6.9" cy="16.8" r="1.7"/><circle cx="17.1" cy="16.8" r="1.7"/><path d="M6.4 12.3h3.4M8.1 10.6v3.4"/>',
+    phone: '<path d="M6.4 3.9h3.2l1.6 4-2 1.4a11 11 0 0 0 5.5 5.5l1.4-2 4 1.6v3.2c0 .9-.7 1.6-1.6 1.6A15.5 15.5 0 0 1 4.8 5.5c0-.9.7-1.6 1.6-1.6Z"/>',
+    law: '<path d="M12 4.2v15.6M6.2 8.2h11.6M8.2 20h7.6"/><path d="M6.2 8.2 3.4 14.2h5.6ZM17.8 8.2 15 14.2h5.6Z"/>',
+    book: '<path d="M4.2 5.4a2 2 0 0 1 2-2h13v15.4h-13a2 2 0 0 0-2 2Z"/><path d="M4.2 18.8a2 2 0 0 1 2-2h13"/>',
+    route: '<circle cx="6.2" cy="6.4" r="2.4"/><circle cx="17.8" cy="17.6" r="2.4"/><path d="M8.6 6.4h5a3.4 3.4 0 0 1 0 6.8h-3a3.4 3.4 0 0 0 0 6.8h4.8"/>',
+    mon: '<rect x="2.8" y="4.4" width="18.4" height="12" rx="1.6"/><path d="M8 20.4h8M12 16.4v4"/>',
+    mob: '<rect x="7.4" y="2.8" width="9.2" height="18.4" rx="2"/><path d="M10.6 18.6h2.8"/>',
+    zip: '<path d="M6 3.4h7.4l5.2 5.3v11.9H6Z"/><path d="M13.4 3.4v5.5h5.4"/><path d="M10 5.2h1.6M10 8h1.6M10 10.8h1.6M10 13.6h1.6"/>',
+    layers: '<path d="m12 3.4 8.6 4.4-8.6 4.4-8.6-4.4Z"/><path d="m3.4 12.2 8.6 4.4 8.6-4.4"/><path d="m3.4 16.4 8.6 4.4 8.6-4.4"/>',
+    aa: '<path d="M3.4 18.4 8 6.2l4.6 12.2M5 14.8h6"/><path d="M20.6 12.4v6M20.6 14.4a2.8 2.8 0 1 0 0 4"/>',
+    dot: '<circle cx="12" cy="12" r="3.2"/>'
+  };
+  function ic(k, s, cls) {
+    var d = IC[k] || IC.dot;
+    return '<svg class="sx-ic ' + (cls || "") + '" viewBox="0 0 24 24" width="' + (s || 17) + '" height="' + (s || 17) +
+      '" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + "</svg>";
+  }
+
+  /* ── لوحات الصور: صورة حقيقية إن وُجدت، وإلا لوحة هوية مصمّمة ── */
+  var ART = {
+    road:     ["#12406B", "#06152A", "a1"], amb:      ["#123A5E", "#05121F", "a2"],
+    corridor: ["#0B4EA2", "#071628", "a3"], pass:     ["#12305A", "#050F1C", "a4"],
+    hosp:     ["#12523A", "#04140D", "a5"],
+    man:      ["#1D3B66", "#0A1B33", "b1"], officer:  ["#12406B", "#07152B", "b2"],
+    fireman:  ["#6B2416", "#1A0806", "b3"], kid:      ["#2A4A2A", "#0A140A", "b4"],
+    home:     ["#1D3B66", "#08172C", "c1"], street:   ["#16406F", "#081A33", "c2"],
+    kmodern:  ["#2A3448", "#0C1018", "c3"], kfire:    ["#6B2416", "#1A0806", "c4"],
+    ops:      ["#0E2E52", "#050F1C", "c5"], highway:  ["#123F5E", "#06121F", "c6"],
+    aid:      ["#7A1F1F", "#1C0808", "d1"], cover:    ["#0B4EA2", "#07152B", "d2"],
+    family:   ["#3A2A55", "#100A18", "d3"],
+    shield:   ["#12523A", "#04140D", ""],   chart:    ["#12405A", "#06141F", ""],
+    warn:     ["#6B4A12", "#1A1206", ""],   steps:    ["#123A6B", "#08172C", ""],
+    book:     ["#2A2F55", "#0A0C18", ""],   call:     ["#0B4EA2", "#07152B", ""],
+    law:      ["#3A2F55", "#0C0A18", ""],   icons:    ["#123A6B", "#08172C", ""],
+    infog:    ["#12406B", "#07152B", ""],   post:     ["#1A3A66", "#08172C", ""],
+    cert:     ["#5A4718", "#16120A", ""],   tools:    ["#3A3020", "#12100A", ""]
+  };
+  function art(k) {
+    var a = ART[k] || ART.cover, n = "sxg" + (++uid);
+    return '<span class="sx-art">' +
+      '<svg viewBox="0 0 160 90" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+      '<defs><linearGradient id="' + n + '" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop offset="0" stop-color="' + a[0] + '"/><stop offset="1" stop-color="' + a[1] + '"/></linearGradient></defs>' +
+      '<rect width="160" height="90" fill="url(#' + n + ')"/>' +
+      '<g stroke="#fff" stroke-opacity=".055" stroke-width=".6"><path d="M0 22.5h160M0 45h160M0 67.5h160M40 0v90M80 0v90M120 0v90"/></g>' +
+      '<g fill="none" stroke="#fff" stroke-opacity=".17" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M74.5 34 66.5 45l8 11"/><path d="M85.5 34l8 11-8 11"/></g></svg>' +
+      (a[2] ? '<img src="img/' + a[2] + '.jpg" alt="" loading="lazy" onerror="this.parentNode.removeChild(this)">' : "") +
+      "</span>";
+  }
+
+  /* ── الوحدات ── */
+  var MODS = [
+    ["pres", "pres", "عرض تقديمي", "من موجز إلى عرض معتمد"],
+    ["post", "post", "بوست", "منشور جاهز لمنصات التواصل"],
+    ["video", "video", "فيديو", "سيناريو ومشاهد وتعليق صوتي"],
+    ["brand", "brand", "مركز الهوية", "ملف الهوية وقواعد تطبيقها"]
+  ];
+
+  /* ── الوكلاء الذين يظهرون أثناء التوليد ── */
+  var CREW = [
+    ["جمع المعلومات", "من المصادر المعتمدة فقط"],
+    ["تحليل الجمهور", "تحديد المستوى والنبرة"],
+    ["تخطيط المحتوى", "بناء الهيكل والتسلسل"],
+    ["تطبيق الهوية", "الألوان والخطوط والشعار"],
+    ["التدقيق اللغوي", "الإملاء والصياغة العربية"],
+    ["مطابقة المعايير", "مقارنة كل بند بمصدره"]
+  ];
+
+  /* ── الحالة ── */
+  var S = {
+    mod: "pres",
+    pres: { done: false, step: 0, sl: 0, appr: 0, ol: 0, count: "19", pack: "باقة السلامة المرورية D" },
+    post: { done: true, bg: 0, size: 0, appr: 0, brand: [1, 1, 1, 1, 1] },
+    video: { done: true, step: 1, sc: 2, t: 12, play: 0, ratio: 0, ch: 0, pl: 1, logo: 1 },
+    brand: { logo: 0, extra: [1, 1, 0, 0], sl: 0, tpl: 0, color: 0 },
+    log: [["v1.0.0", "إنشاء مساحة العمل وربط ملف الهوية", "النظام"]],
+    saved: "منذ دقيقتين"
+  };
+
+  /* ═════════ بيانات الوحدات — الموضوع الجاري: D.9 إفساح الطريق للآليات الإسعافية ═════════ */
+
+  var TOPIC = "إفساح الطريق للآليات الإسعافية";
+
+  var PRES = {
+    topic: TOPIC,
+    code: "D.9",
+    tiles: [["target", "نوع العرض", "توعوي تعليمي"], ["users", "الجمهور المستهدف", "السائقون البالغون"],
+            ["globe", "اللغة", "العربية"], ["mic", "النبرة", "جادة واضحة"],
+            ["folder", "الباقة", "السلامة المرورية D"], ["list", "موقع الشريحة", "12 من 19"]],
+    ol: [
+      ["شريحة الغلاف", "cover", "عنوان العرض والهوية", ["إفساح الطريق للآليات الإسعافية", "شعار الهيئة وشعار الحملة", "باقة السلامة المرورية D · 2026"]],
+      ["لماذا يهمّك — ثوانٍ تصنع الفرق", "shield", "الرسالة التي يخرج بها المتلقّي", ["كل ثانية تأخير قد تكلّف حياة", "الأثر على الأسرة والمجتمع", "مؤشر رقمي · يُملأ من المصدر المعتمد"]],
+      ["ما المقصود بإفساح الطريق", "road", "تعريف السلوك المطلوب", ["إخلاء مسار الآلية الإسعافية فوراً", "الفرق بين التوقّف والانحراف الآمن", "متى يبدأ التصرّف · عند سماع الصفارة أو رؤية الأضواء"]],
+      ["أرقام ومؤشرات", "chart", "الأرقام من المصدر لا من النموذج", ["متوسط زمن الاستجابة · يُملأ من المصدر المعتمد", "أثر التأخير على فرص النجاة · يُملأ من المصدر المعتمد", "المرجع مرفق في شريحة المصادر"]],
+      ["الأخطاء الشائعة", "warn", "سلوكيات ترفع الخطر", ["التوقّف المفاجئ في منتصف الطريق", "السير خلف الآلية الإسعافية", "الانشغال بالتصوير بدل إفساح الطريق"]],
+      ["كيف تفسح الطريق — خطوات عملية", "steps", "إجراءات قابلة للتطبيق فوراً", ["خفّف السرعة وابدأ الانتقال بهدوء", "اتّجه إلى اليمين وتوقّف عند اللزوم", "لا تدخل مسار الحافلات أو الرصيف"]],
+      ["الطرق السريعة والتقاطعات", "highway", "الحالات التي تحتاج تصرّفاً مختلفاً", ["على الطريق السريع افتح ممراً في المنتصف", "عند الإشارة أخلِ التقاطع بحذر", "التزم بتعليمات رجال الشرطة والدفاع المدني"]],
+      ["المسؤولية والمخالفة", "law", "الإطار النظامي", ["عدم إفساح الطريق مخالفة مرورية", "المسؤولية الأخلاقية قبل النظامية", "تفاصيل المخالفة · يُملأ من المصدر المعتمد"]],
+      ["خلاصة", "corridor", "تلخيص في ثلاث نقاط", ["السلوك بسيط والأثر كبير", "ثانية تفسحها قد تنقذ حياة", "الطريق مسؤولية مشتركة"]],
+      ["المصادر والمراجع", "book", "توثيق كامل بصيغة APA", ["كل رقم في العرض مرتبط بمرجعه", "المراجع من قائمة المصادر المعتمدة", "لا يُعرض أي مرجع خارج القائمة"]]
+    ],
+    steps: ["الموجز", "المخطط", "التصميم", "المراجعة", "التصدير"],
+    set: [["عدد الشرائح", ["19 شريحة", "14 شريحة", "10 شرائح"]], ["الباقة", ["السلامة المرورية D", "باقة السلامة A", "باقة الطوارئ"]],
+          ["القالب", ["الرسمي — أبوظبي", "المدرسي", "المختصر"]], ["اللغة", ["العربية", "الإنجليزية", "ثنائي اللغة"]],
+          ["مستوى المحتوى", ["مبسّط", "متوسط", "متقدّم"]]],
+    refs: ["دليل السلامة المرورية.pdf", "إرشادات الدفاع المدني.pdf", "زمن استجابة الإسعاف.pdf"]
+  };
+
+  var POST = {
+    topic: TOPIC,
+    head: ["أفسح الطريق", "للإسعاف", "ثوانٍ تُنقذ حياة"],
+    sub: "تصرّف واحد صحيح قد يصنع الفرق",
+    tiles: [["brush", "نوع التصميم", "تعليمي إنفوغرافيك"], ["hash", "الوسوم", "#إفساح_الطريق  #الدفاع_المدني"],
+            ["bulb", "النصائح", "10 نصائح من الباقة المعتمدة"], ["users", "الجمهور المستهدف", "السائقون وجميع مستخدمي الطريق"]],
+    msgs: ["انتبه مبكراً للصفارة والأضواء", "أفسح الطريق بهدوء ودون توقّف مفاجئ", "الطريق مسؤولية مشتركة"],
+    tips: [
+      [1, "انتبه للصفارة والأضواء قبل أن تراها"], [1, "خفّف السرعة وابدأ الانتقال بهدوء"],
+      [1, "اتّجه إلى اليمين وتوقّف عند اللزوم"], [0, "لا تتوقّف فجأة في منتصف الطريق"],
+      [1, "في الطريق السريع افتح ممراً في المنتصف"], [0, "لا تسر خلف الآلية الإسعافية"],
+      [1, "عند الإشارة أخلِ التقاطع بحذر"], [0, "لا تدخل مسار الحافلات أو الرصيف"],
+      [1, "التزم بتعليمات رجال الشرطة والدفاع المدني"], [0, "لا تنشغل بالتصوير أثناء مرور الإسعاف"]
+    ],
+    tipIc: ["signal", "clock", "road", "warn", "amb", "cross", "route", "law", "shield", "phone"],
+    bgs: [["corridor", "فتح الممر"], ["amb", "إسعاف يقترب"], ["highway", "طريق سريع"], ["street", "شارع سكني"], ["ops", "مركز العمليات"]],
+    brand: [["shield", "شعار الهيئة"], ["brand", "ألوان الهوية"], ["aa", "الخط الرئيسي — Tajawal"], ["star", "أيقونات متوافقة"], ["tag", "شعار الحملة"]],
+    sizes: [["مربع", "1080×1080"], ["ستوري", "1080×1920"], ["X (تويتر)", "1200×675"], ["لينكد إن", "1200×628"], ["A4 للطباعة", "297×420mm"]],
+    steps: ["الموجز", "التحليل", "التصميم", "المراجعة", "النشر"],
+    set: [["المنصة", ["إنستغرام", "X (تويتر)", "لينكد إن", "جميع المنصات"]], ["هدف الحملة", ["توعية وقائية", "استجابة موسمية", "تعريف بخدمة"]],
+          ["الدعوة لاتخاذ إجراء", ["اتصل على 999", "زر الموقع الرسمي", "شارك المنشور"]], ["اللغة", ["العربية", "English"]]],
+    refs: ["دليل السلامة المرورية.pdf", "إرشادات الدفاع المدني.pdf"]
+  };
+
+  var VID = {
+    topic: TOPIC,
+    tiles: [["video", "نوع الفيديو", "توعوي قصصي"], ["chat", "الرسالة الرئيسية", "أفسح الطريق فوراً عند سماع الصفارة"],
+            ["users", "الجمهور المستهدف", "السائقون البالغون"], ["globe", "اللغة", "العربية"],
+            ["mic", "النبرة", "جادة واحترافية"], ["clock", "المدة المستهدفة", ""]],
+    scenes: [
+      ["المقدمة", "طريق المدينة قبل الحدث", 6, "road", "ثوانٍ تفصل بين الحياة والموت", "تعليق افتتاحي", "على هذا الطريق، ثوانٍ قليلة قد تفصل بين الحياة والموت"],
+      ["ظهور الحالة", "إسعاف يقترب من الخلف", 6, "amb", "صفارة تعني أن أحدهم ينتظرك", "تحذير مهم", "حين تسمع الصفارة، فهناك من ينتظر وصولها"],
+      ["التصرّف الصحيح", "فتح ممر في منتصف الطريق", 8, "corridor", "أفسح الطريق فوراً — يميناً أو يساراً", "إرشاد مباشر", "خفّف سرعتك، اتّجه إلى الجانب، وافتح ممراً واضحاً للآلية الإسعافية"],
+      ["العبور", "مرور الإسعاف بين المركبات", 10, "pass", "لا تسر خلف الإسعاف", "تحذير", "لا تتبع الآلية الإسعافية ولا تسر خلفها — الطريق مفتوح لها وحدها"],
+      ["الوصول", "الوصول إلى المستشفى", 8, "hosp", "ثانية تفسحها قد تنقذ حياة", "خاتمة", "ثانية واحدة تفسحها اليوم قد تنقذ حياة إنسان"]
+    ],
+    chars: [["man", "مواطن"], ["officer", "ضابط"], ["fireman", "رجل إطفاء"], ["kid", "طفل"]],
+    places: [["home", "منزل"], ["street", "شارع سكني"], ["highway", "طريق سريع"], ["corridor", "فتح الممر"], ["ops", "مركز العمليات"]],
+    audio: [["mic", "نوع الصوت", "تعليق صوتي (ذكوري)"], ["signal", "النبرة", "جادة واضحة"], ["music", "الموسيقى", "توتر خفيف"], ["volume", "المؤثرات", "مفعّلة"]],
+    steps: ["الفكرة", "المشاهد", "الإنتاج", "المراجعة", "النشر"],
+    set: [["جودة الفيديو", ["4K (3840×2160)", "Full HD (1920×1080)", "HD (1280×720)"]], ["معدل الإطارات", ["30 FPS", "24 FPS", "60 FPS"]],
+          ["نسق الفيديو", ["MP4", "MOV", "WebM"]], ["نمط الإضاءة", ["طبيعي", "ليلي", "داخلي"]]],
+    refs: ["دليل السلامة المرورية.pdf", "إرشادات الدفاع المدني.pdf", "زمن استجابة الإسعاف.pdf"]
+  };
+
+  /* المدة المستهدفة تُشتق من مجموع مدد المشاهد — مصدر واحد للحقيقة فلا تتناقض اللوحات */
+  VID.dur = VID.scenes.reduce(function (a, s) { return a + s[2]; }, 0);
+  VID.tiles[5][2] = VID.dur + " ثانية";
+
+  var BRAND = {
+    file: "ADCDA Brand Pack 2026.zip",
+    logos: [["ملوّن", "#EEF3FA", "#0B4EA2"], ["أبيض", "#12233F", "#FFFFFF"], ["أسود", "#EEF3FA", "#0A0A0A"], ["شفاف", "", "#FFFFFF"]],
+    extra: ["عام الأسرة 2026", "فخورين بالإمارات", "معاً للمجتمع", "COP28 UAE"],
+    colors: [["الأزرق الأساسي", "#0B4EA2"], ["الكحلي الداكن", "#1F2E5A"], ["الأحمر التحذيري", "#C0392B"], ["الأخضر", "#1E7E34"], ["الخلفية", "#F7F8FA"]],
+    fonts: [["العنوان", "Tajawal Bold"], ["النص", "Tajawal Regular"]],
+    slides: [["إفساح الطريق للآليات الإسعافية", "باقة السلامة المرورية D · الشريحة 12 من 19", "corridor"],
+             ["السلامة من الإصابات والإسعافات الأولية", "حقيبة توعوية للطلاب", "aid"],
+             ["السلامة من الحروق في المنزل", "وقاية بسيطة تحميك أنت وأسرتك", "kfire"]],
+    tpls: [["infog", "إنفوغرافيك"], ["post", "بوست"], ["cert", "شهادة مشاركة"], ["cover", "شريحة غلاف"]],
+    rules: ["إظهار الشعار في الزاوية اليمنى العليا دائماً", "عدم تغيير ألوان الهوية المعتمدة",
+            "المحافظة على المساحات الآمنة حول الشعار", "استخدام الخطوط المعتمدة فقط", "عدم إزالة أو تعديل الفوتر في أي مخرج"]
+  };
+
+  var APPR = [["pen", "مسودة"], ["hour", "قيد المراجعة"], ["retry", "يحتاج تعديل"], ["checkC", "معتمد"]];
+
+  /* ═════════ أدوات بناء ═════════ */
+  function card(t, body, x) {
+    return '<div class="sx-card' + (x && x.pad0 ? " pad0" : "") + '">' +
+      (t ? '<div class="sx-ct">' + (x && x.n ? '<span class="n">' + x.n + "</span>" : "") + t +
+        (x && x.lnk ? '<span class="lnk">' + x.lnk + "</span>" : "") + (x && x.ok ? '<span class="ok">' + x.ok + "</span>" : "") + "</div>" : "") +
+      body + "</div>";
+  }
+  function tiles(list, cls) {
+    return '<div class="sx-tiles ' + (cls || "") + '">' + list.map(function (t, i) {
+      return '<div class="sx-tile" data-tile="' + i + '"><div class="th"><i>' + ic(t[0], 15) + "</i>" + E(t[1]) + "</div><b>" + E(t[2]) + "</b></div>";
+    }).join("") + "</div>";
+  }
+  function steps(list, idx) {
+    var h = "";
+    for (var i = 0; i < list.length; i++) {
+      var c = i < idx ? "done" : i === idx ? "on" : "";
+      h += '<div class="sx-sp ' + c + '"><span class="b">' + (i < idx ? ic("check", 12) : i + 1) + '</span><span class="l">' + E(list[i]) + "</span></div>";
+      if (i < list.length - 1) h += '<span class="sx-bar ' + (i < idx ? "done" : "") + '"></span>';
+    }
+    return h;
+  }
+  function sel(label, opts, id) {
+    return '<div class="sx-fr"><span class="sx-lab">' + E(label) + '</span><select class="sx-sel" id="' + (id || "") + '">' +
+      opts.map(function (o) { return "<option>" + E(o) + "</option>"; }).join("") + "</select></div>";
+  }
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+  function tc(t) { return "00:" + pad(Math.floor(t / 60)) + ":" + pad(Math.floor(t % 60)); }
+  function apprBar(m) {
+    return '<div class="sx-flow">' + APPR.map(function (a, i) {
+      var c = i < S[m].appr ? "done" : i === S[m].appr ? "on" : "";
+      return (i ? '<span class="sx-fa">' + ic("back", 13) + "</span>" : "") + '<button type="button" class="sx-fs ' + c + '" data-appr="' + i + '">' + ic(a[0], 15) + E(a[1]) + "</button>";
+    }).join("") + "</div>";
+  }
+  /* الشريط العلوي يتقدّم مع حالة الاعتماد: «قيد المراجعة» تنقل المؤشر إلى المراجعة، و«معتمد» إلى الخطوة الأخيرة */
+  function stepOf(m, base) {
+    var a = S[m].appr;
+    return a === 3 ? 4 : a === 1 ? 3 : a === 2 ? 2 : base;
+  }
+  function logBox() {
+    return card("سجل النسخ", '<div class="sx-log">' + S.log.slice().reverse().map(function (l) {
+      return '<div class="sx-lg"><span class="v">' + E(l[0]) + '</span><span class="m">' + E(l[1]) + '</span><span class="w">' + E(l[2]) + "</span></div>";
+    }).join("") + "</div>");
+  }
+  function pushLog(v, m, w) { S.log.push([v, m, w || "الاستوديو"]); }
+
+  /* ═════════ محرّك التوليد ═════════ */
+  var busy = false;
+  function generate(title, done) {
+    if (busy) return; busy = true;
+    var g = $("sxGen"); if (!g) { busy = false; done && done(); return; }
+    g.classList.add("on");
+    var t = g.querySelector("b"), m = g.querySelector("span"), p = g.querySelector(".sx-gp i");
+    t.textContent = title;
+    $("sxBadge").textContent = "قيد التوليد"; $("sxBadge").className = "cc-badge gold";
+    $("sxState").textContent = "حالة المشروع: قيد التوليد";
+    var i = 0;
+    (function next() {
+      if (i >= CREW.length) {
+        p.style.width = "100%";
+        setTimeout(function () {
+          g.classList.remove("on"); busy = false;
+          $("sxBadge").textContent = "بانتظار المراجعة"; $("sxBadge").className = "cc-badge ok";
+          $("sxState").textContent = "حالة المشروع: بانتظار المراجعة";
+          S.saved = "الآن"; done && done();
+        }, 340);
+        return;
+      }
+      m.innerHTML = "<b style='color:#8FC0F5;display:inline'>" + E(CREW[i][0]) + "</b> — " + E(CREW[i][1]);
+      p.style.width = Math.round(((i + 1) / CREW.length) * 94) + "%";
+      i++; setTimeout(next, 620);
+    })();
+  }
+  function genOverlay() {
+    return '<div class="sx-gen" id="sxGen"><div class="gi"><div class="rings"><i></i><i></i><i></i></div>' +
+      "<b></b><span></span><div class='sx-gp'><i></i></div></div></div>";
+  }
+
+  /* ═════════ الوحدة ١ — عرض تقديمي ═════════ */
+  function renderPres() {
+    var st = S.pres, d = st.done;
+    $("sxTitle").textContent = "استوديو العرض التقديمي";
+    $("sxSub").textContent = "من موجز واحد إلى عرض معتمد الهوية وموثّق المصادر";
+    $("sxSteps").innerHTML = steps(PRES.steps, stepOf("pres", st.step));
+
+    /* يمين */
+    $("sxSet").innerHTML = '<div class="sx-ct">إعدادات العرض</div>' + PRES.set.map(function (x) { return sel(x[0], x[1]); }).join("");
+    $("sxRefs").innerHTML = '<div class="sx-ct">مراجع المشروع<span class="lnk">إضافة مرجع</span></div>' +
+      PRES.refs.map(function (r) { return '<div class="sx-src"><span class="fi">' + ic("doc", 15) + '</span><span class="fn">' + E(r) + '</span><span class="fe">' + ic("pen", 13) + "</span></div>"; }).join("") +
+      '<div class="sx-note sx-mt">لا يدخل العرض أي رقم إلا من مرجع معتمد.</div>';
+
+    /* وسط */
+    var sl = PRES.ol[st.sl];
+    var c = '<div class="sx-stage">' + genOverlay() +
+      '<div class="sx-scene">' + slideArt(sl) + "</div>" +
+      '<div class="sx-tr"><button class="sx-tb" type="button" data-nav="-1">' + ic("chevL", 16) + "</button>" +
+      '<span class="sx-pill b mono">' + (st.sl + 1) + " / " + PRES.ol.length + "</span>" +
+      '<button class="sx-tb" type="button" data-nav="1">' + ic("chevR", 16) + "</button>" +
+      '<span class="sx-pill y">' + E(sl[2]) + "</span>" +
+      '<span class="sx-tspace sx-pill ' + (d ? "g" : "y") + '">' + (d ? "المخطط جاهز" : "بانتظار التوليد") + "</span></div></div>";
+
+    c += '<div class="sx-strip">' + PRES.ol.map(function (o, i) {
+      return '<button class="sx-th ' + (i === st.sl ? "on" : "") + '" type="button" data-sl="' + i + '">' +
+        '<span class="tp">' + art(o[1]) + '<span class="tn">' + (i + 1) + "</span></span>" +
+        '<span class="tx"><b>' + E(o[0]) + "</b><span>" + E(o[2]) + "</span></span></button>";
+    }).join("") + '<button class="sx-th add" type="button" title="إضافة شريحة">+</button></div>';
+
+    c += card("ملاحظات المقدّم والتوجيه البصري", '<table class="sx-tbl"><thead><tr><th class="num">#</th><th>نقاط الشريحة</th><th>ملاحظة المقدّم</th></tr></thead><tbody>' +
+      sl[3].map(function (p, i) {
+        var ph = p.indexOf("يُملأ من المصدر") >= 0;
+        return "<tr><td class='num'>" + (i + 1) + "</td><td>" + (ph ? '<span class="sx-pill y">' + E(p) + "</span>" : E(p)) +
+          "</td><td>" + (ph ? "يُثبت من المرجع قبل الاعتماد" : "اشرح النقطة في سطرين") + "</td></tr>";
+      }).join("") + "</tbody></table>", { pad0: 1 });
+
+    c += card("سير الاعتماد", apprBar("pres") +
+      '<div class="sx-note sx-mt">لا يُسلَّم أي مخرج دون توقيع بشري.</div>');
+    c += logBox();
+    $("sxCenter").innerHTML = c;
+
+    /* يسار */
+    var l = card("اكتب موضوع العرض", '<textarea class="sx-ta" id="sxTopic" maxlength="500">' + E(PRES.topic) + "</textarea>" +
+      '<span class="sx-cnt" id="sxCnt"></span>' +
+      '<button class="sx-btn sx-mt" id="sxGo" type="button">' + ic("spark", 16) + "&nbsp; ولّد مخطط العرض</button>", { n: 1 });
+
+    l += card("تحليل الموجز بالذكاء الاصطناعي", d ? tiles(PRES.tiles, "c2") :
+      '<div class="sx-note">اضغط «ولّد مخطط العرض» ليبدأ الوكلاء بتحليل الموجز وبناء الهيكل.</div>',
+      { n: 2, ok: d ? "تم التحليل" : "" });
+
+    l += card("مخطط العرض", d ? '<div class="sx-ols">' + PRES.ol.map(function (o, i) {
+      return '<div class="sx-ol ' + (i === st.sl ? "on" : "") + '" data-sl="' + i + '" tabindex="0"><span class="oi">' + pad(i + 1) + "</span>" +
+        '<span class="ox"><b>' + E(o[0]) + "</b><i>" + E(o[2]) + "</i></span>" +
+        '<span class="om"><span data-mv="' + i + ',-1">' + ic("up", 12) + '</span><span data-mv="' + i + ',1">' + ic("dn", 12) + '</span></span></div>';
+    }).join("") + "</div>" : '<div class="sx-note">يظهر المخطط بعد التوليد — ويمكنك إعادة ترتيب الشرائح بالأسهم.</div>', { n: 3, lnk: d ? "إعادة ترتيب" : "" });
+
+    l += card("الهوية البصرية", POST.brand.map(function (b, i) {
+      return '<button class="sx-chip on" type="button" data-bk="' + i + '">' + ic(b[0], 14) + " " + E(b[1]) + "</button>";
+    }).join("") + '<div class="sx-note sx-mt">الهوية مقفولة على «ADCDA — 2026 الهوية الأساسية».</div>', { n: 4 });
+
+    l += card("ملاحظات المراجعين", '<div class="sx-cm"><span class="av">م.ع</span><span class="cb"><b>مراجع المحتوى</b>' +
+      "<p>شريحة «أرقام ومؤشرات» تنتظر تثبيت المرجع قبل الاعتماد.</p><time>منذ 8 دقائق</time></span></div>" +
+      '<div class="sx-cm"><span class="av">ه.ب</span><span class="cb"><b>مدقّق الهوية</b>' +
+      "<p>الشعار والفوتر مطابقان لقواعد التطبيق.</p><time>منذ 3 دقائق</time></span></div>" +
+      '<div class="sx-row sx-mt"><input class="sx-in" id="sxCmIn" placeholder="أضف ملاحظة…" style="flex:1"><button class="sx-btn sm" id="sxCmGo" type="button" style="width:auto">إرسال</button></div>');
+    $("sxLeft").innerHTML = l;
+
+    exportBtn("pres", ic("upload", 16) + "&nbsp; تصدير العرض (PPTX / PDF)");
+    bindPres();
+  }
+  function slideArt(o) {
+    return '<div style="position:absolute;inset:0">' + art(o[1]) + "</div>" +
+      '<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 8%;background:linear-gradient(90deg,rgba(4,12,26,.86),rgba(4,12,26,.34))">' +
+      '<b style="font-size:19px;color:#fff;line-height:1.5">' + E(o[0]) + "</b>" +
+      '<span style="font-size:11px;color:#C9D6EA;margin-top:6px">' + E(o[2]) + "</span>" +
+      '<span style="margin-top:9px;font-size:9.5px;color:#8FC0F5;border:1px solid rgba(46,123,224,.4);background:rgba(46,123,224,.1);border-radius:999px;padding:3px 9px;align-self:flex-start">التوجيه البصري: ' + E(o[1]) + "</span></div>" +
+      '<span class="sx-ovl tr">شريحة ' + (PRES.ol.indexOf(o) + 1) + " من " + PRES.ol.length + "</span>";
+  }
+  function bindPres() {
+    var ta = $("sxTopic"), cnt = $("sxCnt");
+    function upd() { cnt.textContent = ta.value.length + "/500"; }
+    if (ta) { upd(); ta.addEventListener("input", upd); }
+    $("sxGo").addEventListener("click", function () {
+      generate("الوكلاء يبنون مخطط العرض…", function () {
+        S.pres.done = true; S.pres.step = 1; S.pres.appr = 1;
+        pushLog("v1.1.0", "توليد مخطط من 10 شرائح + ملاحظات المقدّم", "6 وكلاء");
+        renderPres(); revealSeq();
+      });
+    });
+    bindOnce("sxCenter", "click", function (e) {
+      var n = e.target.closest("[data-nav]"), s = e.target.closest("[data-sl]"), a = e.target.closest("[data-appr]");
+      if (n) { S.pres.sl = (S.pres.sl + (+n.dataset.nav) + PRES.ol.length) % PRES.ol.length; renderPres(); }
+      else if (s) { S.pres.sl = +s.dataset.sl; renderPres(); }
+      else if (a) { setAppr("pres", +a.dataset.appr); }
+    });
+    bindOnce("sxLeft", "click", function (e) {
+      var mv = e.target.closest("[data-mv]"), s = e.target.closest(".sx-ol"), bk = e.target.closest("[data-bk]");
+      if (mv) {
+        var p = mv.dataset.mv.split(","), i = +p[0], d = +p[1], j = i + d;
+        if (j >= 0 && j < PRES.ol.length) { var t = PRES.ol[i]; PRES.ol[i] = PRES.ol[j]; PRES.ol[j] = t; S.pres.sl = j; renderPres(); revealSeq(); }
+      } else if (s) { S.pres.sl = +s.dataset.sl; renderPres(); }
+      else if (bk) { bk.classList.toggle("on"); }
+    });
+    var ci = $("sxCmIn"), cg = $("sxCmGo");
+    if (cg) cg.addEventListener("click", function () {
+      var v = (ci.value || "").trim(); if (!v) return;
+      var box = cg.closest(".sx-card");
+      var d = document.createElement("div"); d.className = "sx-cm";
+      d.innerHTML = '<span class="av">أنت</span><span class="cb"><b>ملاحظة يدوية</b><p></p><time>الآن</time></span>';
+      d.querySelector("p").textContent = v;
+      box.insertBefore(d, box.querySelector(".sx-row")); ci.value = "";
+    });
+    revealSeq();
+  }
+
+  /* ═════════ الوحدة ٢ — بوست ═════════ */
+  function renderPost() {
+    var st = S.post;
+    $("sxTitle").textContent = "استوديو المنشورات";
+    $("sxSub").textContent = "منشور واحد بمقاسات كل المنصات، مقفول على الهوية المعتمدة";
+    $("sxSteps").innerHTML = steps(POST.steps, stepOf("post", st.done ? 2 : 0));
+
+    $("sxSet").innerHTML = '<div class="sx-ct">إعدادات المنشور</div>' + POST.set.map(function (x) { return sel(x[0], x[1]); }).join("");
+    $("sxRefs").innerHTML = '<div class="sx-ct">مراجع المشروع<span class="lnk">إضافة مرجع</span></div>' +
+      POST.refs.map(function (r) { return '<div class="sx-src"><span class="fi">' + ic("doc", 15) + '</span><span class="fn">' + E(r) + '</span><span class="fe">' + ic("pen", 13) + "</span></div>"; }).join("");
+
+    var c = '<div class="sx-stage" style="border:0;background:transparent">' + genOverlay() + poster() + "</div>";
+    c += '<div class="sx-row">' +
+      '<div style="flex:1;min-width:210px">' + card("تصدير المقاسات", '<div class="sx-row">' + POST.sizes.map(function (s, i) {
+        return '<button class="sx-chip ' + (i === st.size ? "on" : "") + '" type="button" data-sz="' + i + '">' + E(s[0]) + ' <b class="mono" style="font-weight:600;opacity:.8">' + E(s[1]) + "</b></button>";
+      }).join("") + "</div>") + "</div>" +
+      "</div>";
+    c += card("سير الاعتماد", apprBar("post") + '<div class="sx-note sx-mt">لا يُنشر أي منشور دون توقيع بشري.</div>');
+    c += logBox();
+    $("sxCenter").innerHTML = c;
+
+    var l = card("اكتب موضوع البوست", '<input class="sx-in" id="sxTopic" value="' + E(POST.topic) + '">' +
+      '<button class="sx-btn sx-mt" id="sxGo" type="button">' + ic("spark", 16) + "&nbsp; حلّل الموضوع وولّد البوست</button>", { n: 1 });
+    l += card("تحليل الموضوع", st.done ? tiles(POST.tiles, "c2") +
+      '<div class="sx-tile in sx-mt" style="grid-column:1/-1"><div class="th"><i>' + ic("pin", 15) + '</i>الرسائل الرئيسية</div><ul>' +
+      POST.msgs.map(function (m) { return "<li>" + E(m) + "</li>"; }).join("") + "</ul></div>" :
+      '<div class="sx-note">اضغط الزر أعلاه ليحلّل الوكلاء الموضوع.</div>', { n: 2, ok: st.done ? "تم التحليل" : "" });
+    l += card("اختيار الخلفية", '<div class="sx-pick">' + POST.bgs.map(function (b, i) {
+      return '<button class="sx-pk ' + (i === st.bg ? "on" : "") + '" type="button" data-bg="' + i + '"><span class="pv">' + art(b[0]) + "</span><span>" + E(b[1]) + "</span></button>";
+    }).join("") + "</div>", { n: 3, lnk: "مكتبة الخلفيات" });
+    l += card("الهوية البصرية", POST.brand.map(function (b, i) {
+      return '<button class="sx-chip ' + (st.brand[i] ? "on" : "") + '" type="button" data-bk="' + i + '">' + ic(b[0], 14) + " " + E(b[1]) + "</button>";
+    }).join(""), { n: 4 });
+    l += card("", '<div class="sx-job okj"><span>' + ic("check", 15) + '</span><span class="jt"><b>مطابقة الهوية</b>الشعار والألوان والخط مطابقة لقواعد التطبيق الخمس.</span></div>');
+    $("sxLeft").innerHTML = l;
+
+    exportBtn("post", ic("upload", 16) + "&nbsp; تصدير المنشور");
+    bindPost();
+  }
+  function poster() {
+    var st = S.post, bg = POST.bgs[st.bg];
+    var h = '<div class="sx-post"><div class="sx-pbar"><span class="sx-plogo">' + adcda(26, "w") +
+      '<span class="gt"><b>هيئة أبوظبي للدفاع المدني</b>ABU DHABI CIVIL DEFENCE AUTHORITY</span></span>' +
+      '<span class="sx-pyr">عام الأسرة<b>2026</b></span></div>';
+    h += '<div class="sx-phero"><div style="position:absolute;inset:0;opacity:.22">' + art(bg[0]) + "</div>" +
+      '<div style="position:relative"><h4>' + E(POST.head[0]) + "<em>" + E(POST.head[1]) + "</em>" + E(POST.head[2]) + "</h4>" +
+      "<p>" + E(POST.sub) + "</p></div></div>";
+    h += '<div class="sx-pgrid">' + POST.tips.map(function (t) {
+      return '<div class="sx-pc' + (t[0] ? " g" : "") + '"><span class="ic">' + ic(t[0] ? "check" : "cross", 13) + "</span><span>" + E(t[1]) + "</span></div>";
+    }).join("") + "</div>";
+    h += '<div class="sx-pfoot"><span class="em">في حال الطوارئ اتصل على <b>999</b></span>' +
+      '<span class="sc">' + ic("globe", 12) + ic("chat", 12) + ic("play", 12) + ic("music", 12) + '</span><span class="mono" style="direction:ltr">www.adcda.gov.ae</span>' +
+      '<span class="rt">' + proud(30) + "</span></div></div>";
+    return h;
+  }
+  function bindPost() {
+    $("sxGo").addEventListener("click", function () {
+      generate("الوكلاء يبنون المنشور…", function () {
+        S.post.done = true; S.post.appr = 1;
+        pushLog("v1.2.0", "توليد منشور توعوي بعشر نصائح + خمسة مقاسات", "6 وكلاء");
+        renderPost(); revealSeq();
+      });
+    });
+    bindOnce("sxLeft", "click", function (e) {
+      var b = e.target.closest("[data-bg]"), k = e.target.closest("[data-bk]");
+      if (b) { S.post.bg = +b.dataset.bg; renderPost(); }
+      else if (k) { var i = +k.dataset.bk; S.post.brand[i] = S.post.brand[i] ? 0 : 1; renderPost(); }
+    });
+    bindOnce("sxCenter", "click", function (e) {
+      var s = e.target.closest("[data-sz]"), a = e.target.closest("[data-appr]");
+      if (s) { S.post.size = +s.dataset.sz; renderPost(); }
+      else if (a) setAppr("post", +a.dataset.appr);
+    });
+    revealSeq();
+  }
+
+  /* ═════════ الوحدة ٣ — فيديو ═════════ */
+  function renderVideo() {
+    var st = S.video, sc = VID.scenes[st.sc];
+    var total = VID.scenes.reduce(function (a, s) { return a + s[2]; }, 0);
+    $("sxTitle").textContent = "استوديو الفيديو التوعوي";
+    $("sxSub").textContent = "لوحة إخراج وإنتاج الفيديو بالذكاء الاصطناعي";
+    $("sxSteps").innerHTML = steps(VID.steps, stepOf("video", st.step));
+
+    $("sxSet").innerHTML = '<div class="sx-ct">إعدادات الفيديو</div>' + VID.set.map(function (x) { return sel(x[0], x[1]); }).join("") +
+      '<div class="sx-fr"><span class="sx-lab">إضافة شعار النهاية</span><span class="sx-tg ' + (st.logo ? "on" : "") + '" id="sxLogo"><i></i></span></div>';
+    $("sxRefs").innerHTML = '<div class="sx-ct">مراجع المشروع<span class="lnk">إضافة مرجع</span></div>' +
+      VID.refs.map(function (r) { return '<div class="sx-src"><span class="fi">' + ic("doc", 15) + '</span><span class="fn">' + E(r) + '</span><span class="fe">' + ic("pen", 13) + "</span></div>"; }).join("");
+
+    var el = VID.scenes.slice(0, st.sc).reduce(function (a, s) { return a + s[2]; }, 0) + (st.t - VID.scenes.slice(0, st.sc).reduce(function (a, s) { return a + s[2]; }, 0));
+    var c = '<div class="sx-stage' + (st.ratio ? " v916" : "") + '" id="sxStage">' + genOverlay() +
+      '<div class="sx-scene">' + art(sc[3]) +
+      '<span class="sx-ovl tl mono" id="sxTC">' + tc(st.t) + " / " + tc(total) + "</span>" +
+      '<span class="sx-ovl tr">مشهد ' + (st.sc + 1) + " من " + VID.scenes.length + "</span>" +
+      '<span class="sx-sub">' + E(sc[6]) + "</span></div>" +
+      '<div class="sx-tr"><button class="sx-tb play" type="button" id="sxPlay">' + (st.play ? ic("pause", 15) : ic("play", 15)) + "</button>" +
+      /* واجهة عربية: التقدّم للأمام يسارًا والرجوع يمينًا، فتُعكس رؤوس الأسهم لتطابق الاتجاه */
+      '<button class="sx-tb" type="button" data-sn="-1" title="المشهد السابق">' + ic("next", 15) + '</button><button class="sx-tb" type="button" id="sxStop" title="إيقاف">' + ic("stop", 14) + "</button>" +
+      '<button class="sx-tb" type="button" data-sn="1" title="المشهد التالي">' + ic("prev", 15) + "</button>" +
+      '<span class="sx-seg"><button type="button" data-rt="0" class="' + (st.ratio ? "" : "on") + '">16:9</button>' +
+      '<button type="button" data-rt="1" class="' + (st.ratio ? "on" : "") + '">9:16</button></span>' +
+      '<span class="sx-vol">' + ic("volume", 14) + '</span><span class="sx-rng"><i></i></span>' +
+      '<span class="sx-tspace sx-pill g mono">' + tc(total) + "</span></div></div>";
+
+    c += card("لوحة القصّ (Storyboard)", '<div class="sx-strip">' + VID.scenes.map(function (s, i) {
+      return '<button class="sx-th ' + (i === st.sc ? "on" : "") + '" type="button" data-sc="' + i + '">' +
+        '<span class="tp">' + art(s[3]) + '<span class="tn">' + (i + 1) + '</span><span class="td">' + tc(s[2]).slice(3) + "</span></span>" +
+        '<span class="tx"><b>المشهد ' + (i + 1) + " · " + E(s[0]) + "</b><span>" + E(s[1]) + "</span></span></button>";
+    }).join("") + '<button class="sx-th add" type="button" title="إضافة مشهد">+</button></div>' +
+      '<div class="sx-note">المجمّع الحالي <b class="mono" style="color:#C6D4E8">' + tc(total).slice(3) + '</b> من مدة مستهدفة <b class="mono" style="color:#C6D4E8">' + tc(VID.dur).slice(3) + '</b>' + (total === VID.dur ? " — المشاهد مكتملة ومطابقة للمدة المستهدفة." : total < VID.dur ? " — يتبقّى " + tc(VID.dur - total).slice(3) + " من المشاهد." : " — تتجاوز المدة المستهدفة بـ " + tc(total - VID.dur).slice(3) + ".") + "</div>",
+      { lnk: "عرض الجدول الزمني" });
+
+    c += card("النص والصوت لكل مشهد", '<table class="sx-tbl"><thead><tr><th class="num">#</th><th>النص الظاهر على الشاشة</th><th>التعليق الصوتي</th><th class="dur">المدة</th></tr></thead><tbody>' +
+      VID.scenes.map(function (s, i) {
+        return '<tr class="' + (i === st.sc ? "on" : "") + '" data-sc="' + i + '"><td class="num">' + (i + 1) + "</td><td>" + E(s[4]) +
+          '</td><td>' + E(s[5]) + '</td><td class="dur">' + tc(s[2]).slice(3) + "</td></tr>";
+      }).join("") + "</tbody></table>", { pad0: 1 });
+
+    c += card("سير الاعتماد", apprBar("video") + '<div class="sx-note sx-mt">لا يُصدَّر الفيديو دون توقيع بشري.</div>');
+    c += '<div class="sx-row" style="align-items:flex-start">' +
+      '<div style="flex:1;min-width:200px">' + card("وظائف التوليد", '<div class="sx-job" id="sxJob"><span>' + ic("warn", 15) + '</span><span class="jt"><b>تعثّرت: توليد التعليق الصوتي — المشهد 4</b>عاد المشروع إلى آخر حالة مستقرة، والسجل محفوظ لإعادة المحاولة.</span>' +
+        '<button class="sx-btn sm" id="sxRetry" type="button" style="width:auto">إعادة المحاولة</button></div>' +
+        '<div class="sx-job okj sx-mt"><span>' + ic("check", 15) + '</span><span class="jt"><b>اكتمل: تقطيع المشاهد وتوليد النص</b>خمسة مشاهد بنصوصها وتوقيتها.</span></div>') + "</div></div>";
+    c += logBox();
+    $("sxCenter").innerHTML = c;
+
+    var l = card("فكرة الفيديو", '<span class="sx-lab">اكتب فكرة الفيديو أو الموضوع</span>' +
+      '<textarea class="sx-ta" id="sxTopic" maxlength="500">' + E(VID.topic) + "</textarea><span class='sx-cnt' id='sxCnt'></span>" +
+      '<button class="sx-btn sx-mt" id="sxGo" type="button">' + ic("spark", 16) + "&nbsp; حلّل الفكرة</button>", { n: 1 });
+    l += card("تحليل الفكرة بالذكاء الاصطناعي", tiles(VID.tiles, "c2"), { n: 2, ok: "تم التحليل بنجاح" });
+    l += card("الشخصيات", '<div class="sx-pick">' + VID.chars.map(function (ch, i) {
+      return '<button class="sx-pk rnd ' + (i === st.ch ? "on" : "") + '" type="button" data-ch="' + i + '"><span class="pv">' + art(ch[0]) + "</span><span>" + E(ch[1]) + "</span></button>";
+    }).join("") + '<button class="sx-pk rnd addp" type="button"><span class="pv">+</span><span>إضافة</span></button></div>', { n: 3, lnk: "إدارة الشخصيات" });
+    l += card("الأماكن والخلفيات", '<div class="sx-pick">' + VID.places.map(function (p, i) {
+      return '<button class="sx-pk ' + (i === st.pl ? "on" : "") + '" type="button" data-pl="' + i + '"><span class="pv">' + art(p[0]) + "</span><span>" + E(p[1]) + "</span></button>";
+    }).join("") + '<button class="sx-pk addp" type="button"><span class="pv">+</span><span>إضافة</span></button></div>', { n: 4, lnk: "مكتبة الخلفيات" });
+    l += card("الأصوات والتعليق", tiles(VID.audio, "c2"), { n: 5, lnk: "إعدادات الصوت" });
+    $("sxLeft").innerHTML = l;
+
+    exportBtn("video", ic("upload", 16) + "&nbsp; تصدير الفيديو");
+    bindVideo();
+  }
+  function bindVideo() {
+    var ta = $("sxTopic"), cnt = $("sxCnt");
+    function upd() { cnt.textContent = ta.value.length + "/500"; }
+    if (ta) { upd(); ta.addEventListener("input", upd); }
+    $("sxGo").addEventListener("click", function () {
+      generate("الوكلاء يبنون المشاهد…", function () {
+        S.video.step = 1; S.video.sc = 0; S.video.t = 0;
+        pushLog("v1.3.0", "إعادة توليد المشاهد الخمسة ونصوصها", "6 وكلاء");
+        renderVideo(); revealSeq();
+      });
+    });
+    var lg = $("sxLogo"); if (lg) lg.addEventListener("click", function () { S.video.logo = S.video.logo ? 0 : 1; lg.classList.toggle("on"); });
+    bindOnce("sxLeft", "click", function (e) {
+      var ch = e.target.closest("[data-ch]"), pl = e.target.closest("[data-pl]");
+      if (ch) { S.video.ch = +ch.dataset.ch; renderVideo(); }
+      else if (pl) { S.video.pl = +pl.dataset.pl; renderVideo(); }
+    });
+    bindOnce("sxCenter", "click", function (e) {
+      var sc = e.target.closest("[data-sc]"), sn = e.target.closest("[data-sn]"), rt = e.target.closest("[data-rt]"), a = e.target.closest("[data-appr]");
+      if (sc) { setScene(+sc.dataset.sc); }
+      else if (sn) { setScene((S.video.sc + (+sn.dataset.sn) + VID.scenes.length) % VID.scenes.length); }
+      else if (rt) { S.video.ratio = +rt.dataset.rt; renderVideo(); }
+      else if (a) setAppr("video", +a.dataset.appr);
+      else if (e.target.closest("#sxPlay")) togglePlay();
+      else if (e.target.closest("#sxStop")) { stopPlay(); setScene(0); }
+      else if (e.target.closest("#sxRetry")) retryJob();
+    });
+    revealSeq();
+  }
+  function startAt(i) { return VID.scenes.slice(0, i).reduce(function (a, s) { return a + s[2]; }, 0); }
+  function setScene(i) { stopPlay(); S.video.sc = i; S.video.t = startAt(i); renderVideo(); }
+  var timer = null;
+  function stopPlay() { if (timer) { clearInterval(timer); timer = null; } S.video.play = 0; var p = $("sxPlay"); if (p) p.innerHTML = ic("play", 15); }
+  function togglePlay() {
+    if (S.video.play) { stopPlay(); return; }
+    S.video.play = 1; var p = $("sxPlay"); if (p) p.innerHTML = ic("pause", 15);
+    var total = VID.scenes.reduce(function (a, s) { return a + s[2]; }, 0);
+    timer = setInterval(function () {
+      S.video.t += 1;
+      if (S.video.t >= total) { stopPlay(); S.video.t = total; renderVideo(); return; }
+      var acc = 0, k = 0;
+      for (var i = 0; i < VID.scenes.length; i++) { acc += VID.scenes[i][2]; if (S.video.t < acc) { k = i; break; } }
+      var tcEl = $("sxTC");
+      if (k !== S.video.sc) { S.video.sc = k; renderVideo(); }
+      else if (tcEl) tcEl.textContent = tc(S.video.t) + " / " + tc(total);
+    }, 620);
+  }
+  function retryJob() {
+    var j = $("sxJob"); if (!j) return;
+    j.innerHTML = '<span>' + ic("retry", 15) + '</span><span class="jt"><b>إعادة المحاولة جارية…</b>استئناف من آخر حالة مستقرة.</span>';
+    setTimeout(function () {
+      j.className = "sx-job okj";
+      j.innerHTML = '<span>' + ic("check", 15) + '</span><span class="jt"><b>اكتمل: توليد التعليق الصوتي — المشهد 4</b>أُعيدت الوظيفة من السجل المحفوظ دون فقد أي عمل سابق.</span>';
+      pushLog("v1.3.1", "إعادة تشغيل وظيفة التعليق الصوتي للمشهد 4", "الاستوديو");
+    }, 1300);
+  }
+
+  /* ═════════ الوحدة ٤ — الهوية البصرية ═════════ */
+  function renderBrand() {
+    var st = S.brand, sl = BRAND.slides[st.sl];
+    $("sxTitle").textContent = "ملف الهوية البصرية";
+    $("sxSub").textContent = "مرجع واحد تُبنى عليه كل المخرجات — والتوليد يشير إلى نسخة محدّدة منه";
+    $("sxSteps").innerHTML = "";
+
+    $("sxSet").innerHTML = '<div class="sx-ct">حفظ الهوية</div>' +
+      '<div class="sx-note" style="margin-bottom:8px">حفظ الإعدادات الحالية كهوية افتراضية للاستخدام لاحقاً.</div>' +
+      '<input class="sx-in" value="ADCDA — 2026 الهوية الأساسية">' +
+      '<button class="sx-btn gold sx-mt" id="sxBrandSave" type="button">' + ic("save", 16) + "&nbsp; حفظ الهوية</button>";
+    $("sxRefs").innerHTML = '<div class="sx-ct">قواعد التطبيق</div><div class="sx-rules">' +
+      BRAND.rules.map(function (r) { return '<div class="sx-rule"><i>' + ic("check", 13) + '</i><span>' + E(r) + "</span></div>"; }).join("") + "</div>";
+
+    var c = card("معاينة تطبيق الهوية",
+      '<div class="sx-slide"><div class="sx-sl-top">' + adcda(20, "w") +
+      '<span style="font-size:7.5px;line-height:1.35;color:#DDE6F3"><b style="display:block;font-size:8.5px;color:#fff">هيئة أبوظبي للدفاع المدني</b>ABU DHABI CIVIL DEFENCE AUTHORITY</span></div>' +
+      '<div class="sx-sl-body"><span class="tx"><h4>' + E(sl[0]) + "</h4><p>" + E(sl[1]) + "</p></span>" +
+      '<span class="im">' + art(sl[2]) + "</span></div>" +
+      '<div class="sx-sl-foot"><span class="mono" style="direction:ltr">www.adcda.gov.ae</span><span>عاصمة أكثر أمناً وسلامة</span>' +
+      '<span class="rt">الإصدار الأول © 2026 هيئة أبوظبي للدفاع المدني — جميع الحقوق محفوظة</span></div></div>' +
+      '<div class="sx-dots">' + BRAND.slides.map(function (_, i) { return '<i class="' + (i === st.sl ? "on" : "") + '" data-bs="' + i + '"></i>'; }).join("") + "</div>",
+      { lnk: "شريحة الغلاف" });
+
+    c += card("قوالب سريعة", '<div class="sx-strip">' + BRAND.tpls.map(function (t, i) {
+      return '<button class="sx-th ' + (i === st.tpl ? "on" : "") + '" type="button" data-tp="' + i + '">' +
+        '<span class="tp">' + art(t[0]) + '</span><span class="tx"><b>' + E(t[1]) + "</b></span></button>";
+    }).join("") + "</div>");
+
+    c += '<div class="sx-row" style="align-items:flex-start">' +
+      '<div style="flex:1;min-width:200px">' + card("الألوان المعتمدة", '<div class="sx-sw">' + BRAND.colors.map(function (cl, i) {
+        return '<button class="sx-swx" type="button" data-cl="' + i + '"><span class="c" style="background:' + cl[1] + '"></span><b>' + E(cl[0]) + "</b><span>" + cl[1] + "</span></button>";
+      }).join("") + "</div>") + "</div>" +
+      '<div style="flex:1;min-width:200px">' + card("الخطوط", BRAND.fonts.map(function (f) {
+        return '<div class="sx-fr"><span class="sx-lab">' + E(f[0]) + '</span><span class="sx-pill b">' + E(f[1]) + "</span></div>";
+      }).join("") + '<div class="sx-note sx-mt">لا يُستخدم أي خط خارج المعتمد.</div>') + "</div></div>";
+    $("sxCenter").innerHTML = c;
+
+    var l = card("ملف الهوية", '<div class="sx-job okj"><span>' + ic("check", 15) + '</span><span class="jt"><b>' + E(BRAND.file) + "</b>تم رفع الملف بنجاح — النسخة المرجعية للتوليد.</span></div>" +
+      '<button class="sx-btn ghost sx-mt" type="button">استبدال الملف</button>', { n: 1 });
+    l += card("الشعار الرئيسي", '<div class="sx-lgs">' + BRAND.logos.map(function (g, i) {
+      return '<button class="sx-lg1 ' + (i === st.logo ? "on" : "") + '" type="button" data-lg="' + i + '">' +
+        '<span class="bx" style="background:' + (g[1] || "repeating-conic-gradient(#16243D 0% 25%,#0E1A2E 0% 50%) 0/10px 10px") + '">' +
+        adcdaInk(17, g[2]) + "</span>" +
+        '<span>' + E(g[0]) + "</span></button>";
+    }).join("") + "</div>", { n: 2, lnk: "استبدال" });
+    l += card("الشعارات الإضافية", BRAND.extra.map(function (x, i) {
+      return '<button class="sx-chip ' + (st.extra[i] ? "on" : "") + '" type="button" data-ex="' + i + '">' + (st.extra[i] ? ic("check", 12) + " " : "") + E(x) + "</button>";
+    }).join("") + '<button class="sx-chip" type="button">+ إضافة شعار</button>' +
+      '<div class="sx-note sx-mt">شعارات الحملات والمناسبات — تُفعّل حسب الحملة الجارية.</div>', { n: 3 });
+    l += card("الفوتر", '<div class="sx-note" style="line-height:2">' + ic("globe", 14) + ' <span class="mono" style="direction:ltr">www.adcda.gov.ae</span><br>@civildefencead &nbsp;·&nbsp; عاصمة أكثر أمناً وسلامة<br>' +
+      "الإصدار الأول © 2026 هيئة أبوظبي للدفاع المدني — جميع الحقوق محفوظة</div>" +
+      '<button class="sx-btn ghost sx-mt" type="button">تعديل الفوتر</button>', { n: 4, lnk: "يظهر في كل مخرج" });
+    $("sxLeft").innerHTML = l;
+
+    var b = $("sxExport"); b.innerHTML = ic("target", 16) + "&nbsp; تطبيق الهوية على كل المخرجات"; b.disabled = false; b.className = "sx-btn gold";
+    bindBrand();
+  }
+  function bindBrand() {
+    bindOnce("sxLeft", "click", function (e) {
+      var lg = e.target.closest("[data-lg]"), ex = e.target.closest("[data-ex]");
+      if (lg) { S.brand.logo = +lg.dataset.lg; renderBrand(); }
+      else if (ex) { var i = +ex.dataset.ex; S.brand.extra[i] = S.brand.extra[i] ? 0 : 1; renderBrand(); }
+    });
+    bindOnce("sxCenter", "click", function (e) {
+      var bs = e.target.closest("[data-bs]"), tp = e.target.closest("[data-tp]"), cl = e.target.closest("[data-cl]");
+      if (bs) { S.brand.sl = +bs.dataset.bs; renderBrand(); }
+      else if (tp) { S.brand.tpl = +tp.dataset.tp; renderBrand(); }
+      else if (cl) { S.brand.color = +cl.dataset.cl; renderBrand(); }
+    });
+    var sv = $("sxBrandSave");
+    if (sv) sv.addEventListener("click", function () {
+      sv.innerHTML = ic("check", 16) + "&nbsp; حُفظت الهوية";
+      pushLog("v1.0.1", "تحديث ملف الهوية المرجعي", "مركز الهوية");
+      setTimeout(function () { sv.innerHTML = ic("save", 16) + "&nbsp; حفظ الهوية"; }, 1800);
+    });
+  }
+
+  /* ═════════ مشترك ═════════ */
+  function setAppr(m, i) {
+    S[m].appr = i;
+    var nm = APPR[i][1];
+    $("sxState").textContent = "حالة المشروع: " + nm;
+    $("sxBadge").textContent = nm;
+    $("sxBadge").className = "cc-badge " + (i === 3 ? "ok" : "gold");
+    if (i === 3) pushLog("v1.9.0", "اعتماد بشري — فُتح التصدير", "مراجع بشري");
+    render();
+  }
+  function exportBtn(m, label) {
+    var b = $("sxExport"), ok = S[m].appr === 3;
+    b.innerHTML = label; b.className = "sx-btn" + (ok ? "" : ""); b.disabled = !ok;
+    b.title = ok ? "" : "التصدير مقفول حتى الاعتماد البشري";
+    b.onclick = function () {
+      if (!ok) return;
+      b.innerHTML = ic("check", 16) + "&nbsp; تم التصدير";
+      pushLog("v2.0.0", "تصدير المخرج النهائي بعد التوقيع البشري", "الاستوديو");
+      setTimeout(function () { render(); }, 1500);
+    };
+    var h = $("sxSave");
+    if (h) h.onclick = function () { S.saved = "الآن"; $("sxSaved").textContent = "آخر حفظ: الآن"; h.innerHTML = ic("check", 16) + "&nbsp; حُفظ المشروع"; setTimeout(function () { h.innerHTML = ic("save", 16) + "&nbsp; حفظ المشروع"; }, 1500); };
+  }
+  function revealSeq() {
+    var n = document.querySelectorAll("#p-studio .sx-tile:not(.in), #p-studio .sx-ol:not(.in)");
+    for (var i = 0; i < n.length; i++) (function (el, k) { setTimeout(function () { el.classList.add("in"); }, 55 * k); })(n[i], i);
+  }
+  function renderMods() {
+    $("sxMods").innerHTML = MODS.map(function (m) {
+      return '<button class="sx-mod ' + (m[0] === S.mod ? "on" : "") + '" type="button" data-m="' + m[0] + '">' +
+        '<span class="mi">' + ic(m[1], 20) + '</span><span class="mt"><b>' + E(m[2]) + "</b><i>" + E(m[3]) + '</i></span><span class="ar">' + ic("chevR", 15) + "</span></button>";
+    }).join("");
+  }
+  function render() {
+    stopPlay(); renderMods();
+    $("sxSaved").textContent = "آخر حفظ: " + S.saved;
+    if (S.mod === "pres") renderPres();
+    else if (S.mod === "post") renderPost();
+    else if (S.mod === "video") renderVideo();
+    else renderBrand();
+  }
+  var FOOT = 'هذه اللوحة <b>نموذج تفاعلي كامل لمساحة الإنشاء</b> — تعمل داخل الصفحة بالكامل: لا تستدعي أي خدمة خارجية ولا تستهلك أي تشغيلة.' +
+    '<span class="sx-sep"></span>المحتوى المعروض <b>عيّنة عرض</b>؛ وفي التشغيل الفعلي يُبنى كل عنصر من قائمة المصادر المعتمدة، وأي رقم غير مثبَّت يظهر بوسم <b>«يُملأ من المصدر المعتمد»</b> بدل أن يُخمَّن.' +
+    '<span class="sx-sep"></span><b>لا يُسلَّم أي مخرج دون توقيع بشري</b> — زر التصدير يبقى مقفولاً حتى تصل حالة المشروع إلى «معتمد».' +
+    '<span class="sx-sep"></span>وحدتا <b>المنشورات والفيديو</b> واجهتان جاهزتان بانتظار الربط بخط الإنتاج.';
+
+  function init() {
+    if (!$("sxMods")) return;
+    $("sxFoot").innerHTML = FOOT;
+    $("sxMods").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-m]"); if (!b || busy) return;
+      S.mod = b.dataset.m; render();
+    });
+    render();
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init); else init();
+})();
 
 /* ── المؤشرات ── */
 var kInit = false;
