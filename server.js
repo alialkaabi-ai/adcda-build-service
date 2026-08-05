@@ -28,6 +28,9 @@ app.get("/dash2", (_req, res) => res.sendFile(path.join(__dirname, "dash2.html")
 
 app.get("/portal", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
 
+// صور استوديو المحتوى الذكي — تُخدَّم من مجلد img/ (يعود 404 تلقائياً إن لم يوجد المجلد)
+app.use("/img", express.static(path.join(__dirname, "img")));
+
 app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.4" }));
 
 app.get("/topic/:code", (req, res) => {
