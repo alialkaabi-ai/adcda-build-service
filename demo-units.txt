@@ -207,3 +207,45 @@
   setInterval(sweep,700); sweep();
 })();
 </script>
+
+<style id="demo-docs-css">
+#demo-about .ab-ul a.ab-lnk{color:#2E7BE0;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(46,123,224,.35);transition:color .2s,border-color .2s}
+#demo-about .ab-ul a.ab-lnk:hover{color:#0B4EA2;border-bottom-color:#0B4EA2}
+#demo-about .ab-ul a.ab-lnk svg{vertical-align:-2px;margin-inline-start:5px}
+</style>
+<script id="demo-docs-js">
+(function(){
+  var ICON='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4h7v7"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/></svg>';
+  var MAP=[
+    ['الدليل القياسي لإدارة المحتوى التوعوي.','/docs/content-management-guide.pdf'],
+    ['جدول الأهداف التوعوية السنوي.','/docs/awareness-goals-2026.pdf'],
+    ['معايير اختيار وتقييم محاضر / مقدّم برامج التوعية المجتمعية.','/docs/lecturer-selection-criteria.pdf']
+  ];
+  function link(el, txt, url){
+    var a=document.createElement('a');
+    a.href=url; a.target='_blank'; a.rel='noopener';
+    a.className='ab-lnk'; a.textContent=txt;
+    a.insertAdjacentHTML('beforeend', ICON);
+    el.textContent=''; el.appendChild(a);
+  }
+  function sweep(){
+    var li=document.querySelectorAll('#demo-about .ab-ul li');
+    for(var i=0;i<li.length;i++){
+      var el=li[i];
+      if(el.getAttribute('data-doc')) continue;
+      var t=(el.textContent||'').trim();
+      for(var j=0;j<MAP.length;j++){
+        if(t===MAP[j][0]){
+          el.setAttribute('data-doc','1');
+          (function(el,t,url){
+            fetch(url,{method:'HEAD'}).then(function(r){ if(r.ok) link(el,t,url); }).catch(function(){});
+          })(el,t,MAP[j][1]);
+          break;
+        }
+      }
+    }
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
