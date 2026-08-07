@@ -28,6 +28,27 @@ app.get("/dash2", (_req, res) => res.sendFile(path.join(__dirname, "dash2.html")
 
 app.get("/portal", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
 
+// ===== بوابة ديمو /portal2 — نفس البوابة مع القسم التعريفي الجديد =====
+// portal.html لا يُعدَّل إطلاقاً؛ النسخة الحالية تبقى كما هي على /portal كنسخة احتياطية.
+let PORTAL_DEMO = null;
+app.get("/portal2", (_req, res) => {
+  try {
+    if (!PORTAL_DEMO) {
+      const base = fs.readFileSync(path.join(__dirname, "portal.html"), "utf8");
+      const css  = fs.readFileSync(path.join(__dirname, "demo-init.css"), "utf8");
+      const html = fs.readFileSync(path.join(__dirname, "demo-init.txt"), "utf8");
+      const ci = base.indexOf("#init-sec{padding:90px 24px;");
+      const cj = base.indexOf("</style>", ci);
+      const hi = base.indexOf("var HTML =", cj);
+      const hj = base.indexOf("';\n  function sweep", hi);
+      if (ci < 0 || cj < 0 || hi < 0 || hj < 0) return res.status(500).send("portal2: anchors not found");
+      PORTAL_DEMO = base.slice(0, ci) + css + base.slice(cj, hi) + html + base.slice(hj + 2);
+    }
+    res.type("html").send(PORTAL_DEMO);
+  } catch (e) { res.status(500).send("portal2 error: " + e.message); }
+});
+
+
 // صور استوديو المحتوى الذكي — تُخدَّم من مجلد img/ (يعود 404 تلقائياً إن لم يوجد المجلد)
 app.use("/img", express.static(path.join(__dirname, "img")));
 
