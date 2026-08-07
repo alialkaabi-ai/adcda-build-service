@@ -148,8 +148,18 @@
       }
       if(tech.style.paddingTop!=='0px') tech.style.paddingTop='0px';
     }
-    var hd=document.querySelector('#init-sec .init-head');
-    if(hd && hd.style.display!=='none') hd.style.display='none';
+    var sec=document.getElementById('init-sec');
+    if(sec){
+      var hd=sec.querySelector('.init-head');
+      if(hd && hd.style.display!=='none') hd.style.display='none';
+      if(sec.style.paddingTop!=='0px'){ sec.style.paddingTop='0px'; sec.style.paddingBottom='70px'; }
+      var ab=document.getElementById('about');
+      if(ab){
+        if(ab.nextElementSibling!==sec) ab.parentNode.insertBefore(sec, ab.nextSibling);
+        var bg=getComputedStyle(ab).backgroundColor;
+        if(bg && sec.style.backgroundColor!==bg) sec.style.background=bg;
+      }
+    }
   }
   var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
   setInterval(sweep,700); sweep();
