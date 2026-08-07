@@ -43,8 +43,11 @@ app.get(["/portal", "/portal2"], (_req, res) => {
       const hi = base.indexOf("var HTML =", cj);
       const hj = base.indexOf("';\n  function sweep", hi);
       if (ci < 0 || cj < 0 || hi < 0 || hj < 0) return res.status(500).send("portal2: anchors not found");
-      const units = fs.readFileSync(path.join(__dirname, "demo-units.txt"), "utf8");
+      let units = fs.readFileSync(path.join(__dirname, "demo-units.txt"), "utf8");
       let out = base.slice(0, ci) + css + base.slice(cj, hi) + html + base.slice(hj + 2);
+      const SRC_RE = /\["[^"]{2,}","[^"]{2,}","\\u0639\\u0627\\u0644\\u064A\\u0629[^"]*"\]/g;
+      const srcCount = (base.match(SRC_RE) || []).length;
+      if (srcCount > 0) units = units.replace(/__SRC_COUNT__/g, String(srcCount));
       const bi = out.lastIndexOf("</body>");
       PORTAL_DEMO = bi < 0 ? out + units : out.slice(0, bi) + units + out.slice(bi);
     }
