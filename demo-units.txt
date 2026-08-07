@@ -1,0 +1,53 @@
+<style id="demo-units-css">
+#demo-u4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
+#demo-u4 .u4{position:relative;background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 30px rgba(8,42,94,.07);padding:30px 20px;text-align:center;outline:none;transition:transform .28s cubic-bezier(.2,.8,.25,1),box-shadow .28s,border-color .28s}
+#demo-u4 .u4:hover,#demo-u4 .u4:focus{transform:translateY(-6px);box-shadow:0 16px 34px rgba(8,42,94,.14);border-color:rgba(46,123,224,.35)}
+#demo-u4 .u4-ic{display:inline-flex;padding:15px;border-radius:16px;background:rgba(91,163,254,.12);transition:background .28s}
+#demo-u4 .u4:hover .u4-ic,#demo-u4 .u4:focus .u4-ic{background:rgba(91,163,254,.22)}
+#demo-u4 .u4-t{color:#082A5E;font-weight:800;font-size:16px;margin-top:13px}
+#demo-u4 .u4-s{color:#50709B;font-size:12.5px;font-weight:600;margin-top:6px}
+#demo-u4 .u4-pop{position:absolute;right:50%;transform:translate(50%,-8px);top:calc(100% + 12px);width:min(320px,84vw);background:#082A5E;border-radius:14px;padding:15px 17px;box-shadow:0 18px 40px rgba(8,42,94,.34);opacity:0;visibility:hidden;transition:opacity .24s,transform .24s;z-index:8;pointer-events:none;text-align:right}
+#demo-u4 .u4:hover .u4-pop,#demo-u4 .u4:focus .u4-pop{opacity:1;visibility:visible;transform:translate(50%,0)}
+#demo-u4 .u4-pop::after{content:"";position:absolute;right:50%;margin-right:-6px;top:-5px;width:12px;height:12px;background:#082A5E;transform:rotate(45deg);border-radius:2px}
+#demo-u4 .u4-ph{font-size:13px;font-weight:800;color:#fff;text-align:center;margin-bottom:10px}
+#demo-u4 .u4-r{padding:7px 0;border-top:1px solid rgba(255,255,255,.12)}
+#demo-u4 .u4-r b{display:block;color:#fff;font-size:12.5px;font-weight:800}
+#demo-u4 .u4-r i{display:block;color:#93B7EC;font-size:11.5px;font-style:normal;line-height:1.7;margin-top:2px}
+</style>
+<script id="demo-units-js">
+(function(){
+  var TILES = "<div class=\"u4\" tabindex=\"0\"><div class=\"u4-ic\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 3 10.4 13.6\"/><path d=\"M21 3l-6.8 18-3.7-7.5L3 9.8 21 3Z\"/></svg></div><div class=\"u4-t\">الطلب والإنتاج</div><div class=\"u4-s\">٣ وحدات</div><div class=\"u4-pop\"><div class=\"u4-ph\">الطلب والإنتاج</div><div class=\"u4-r\"><b>طلب جديد</b><i>إرسال طلب إنتاج محتوى مؤصّل إلى محرّك n8n</i></div><div class=\"u4-r\"><b>طلباتي</b><i>متابعة حالة طلباتك خطوة بخطوة</i></div><div class=\"u4-r\"><b>اقتراح مواضيع</b><i>تحليل المخاطر وتوليد مواضيع وحملات</i></div></div></div><div class=\"u4\" tabindex=\"0\"><div class=\"u4-ic\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5.5c0 4.6 3 7.6 7 9.5 4-1.9 7-4.9 7-9.5V6l-7-3Z\"/><path d=\"M9 12l2.2 2.2L15.5 10\"/></svg></div><div class=\"u4-t\">التدقيق والاعتماد</div><div class=\"u4-s\">٣ وحدات</div><div class=\"u4-pop\"><div class=\"u4-ph\">التدقيق والاعتماد</div><div class=\"u4-r\"><b>مراجعة واعتماد</b><i>قرار المحكّم البشري قبل أي نشر</i></div><div class=\"u4-r\"><b>المدقق التوعوي</b><i>تقييم آلي فوري وفق معايير الهيئة</i></div><div class=\"u4-r\"><b>المراجع</b><i>مكتبة المصادر الرسمية بصيغة APA</i></div></div></div><div class=\"u4\" tabindex=\"0\"><div class=\"u4-ic\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 20V10.5\"/><path d=\"M9.5 20V4\"/><path d=\"M15 20v-8\"/><path d=\"M20.5 20V7.5\"/></svg></div><div class=\"u4-t\">المتابعة والتحليل</div><div class=\"u4-s\">٣ وحدات</div><div class=\"u4-pop\"><div class=\"u4-ph\">المتابعة والتحليل</div><div class=\"u4-r\"><b>لوحة المتابعة</b><i>نظرة شاملة: ٧٠ موضوعًا · ٨ باقات</i></div><div class=\"u4-r\"><b>التحليلات</b><i>اتجاهات ونمو التغطية عبر الوقت</i></div><div class=\"u4-r\"><b>سجل النشاط</b><i>أثر تدقيقي لآخر العمليات</i></div></div></div><div class=\"u4\" tabindex=\"0\"><div class=\"u4-ic\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 5.5h14a1.5 1.5 0 011.5 1.5v12a1.5 1.5 0 01-1.5 1.5H5A1.5 1.5 0 013.5 19V7A1.5 1.5 0 015 5.5Z\"/><path d=\"M3.5 10h17\"/><path d=\"M8 3.5v4\"/><path d=\"M16 3.5v4\"/></svg></div><div class=\"u4-t\">التخطيط والإدارة</div><div class=\"u4-s\">٣ وحدات</div><div class=\"u4-pop\"><div class=\"u4-ph\">التخطيط والإدارة</div><div class=\"u4-r\"><b>استشراف</b><i>خطة الشهر التوعوية — تلقائيًا</i></div><div class=\"u4-r\"><b>الباقات (QR)</b><i>ثماني باقات برموز مسح ميدانية</i></div><div class=\"u4-r\"><b>الإعدادات</b><i>ربط البوابة بمحرّك n8n</i></div></div></div>";
+  var TITLE = 'كل ما تحتاجه — في مكان واحد';
+  var SUB   = 'اثنتا عشرة وحدة في أربع مجموعات — مرّر المؤشر على أي مجموعة لعرض وحداتها.';
+  function findHeading(){
+    var a=document.querySelectorAll('h2,h3,div,span');
+    for(var i=0;i<a.length;i++){ if((a[i].textContent||'').trim()===TITLE) return a[i]; }
+    return null;
+  }
+  function findGrid(h){
+    var n=h;
+    for(var up=0; up<8 && n && n!==document.body; up++){
+      var d=n.querySelectorAll('div');
+      for(var i=0;i<d.length;i++){
+        if(d[i].id==='demo-u4') return null;
+        if(d[i].children.length>=10 && getComputedStyle(d[i]).display==='grid') return d[i];
+      }
+      n=n.parentElement;
+    }
+    return null;
+  }
+  function sweep(){
+    if(document.getElementById('demo-u4')) return;
+    var h=findHeading(); if(!h) return;
+    var g=findGrid(h); if(!g) return;
+    g.id='demo-u4';
+    g.setAttribute('style','display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px');
+    g.innerHTML=TILES;
+    var p=h.parentElement;
+    if(p){ var s=p.querySelectorAll('div,p');
+      for(var i=0;i<s.length;i++){ if((s[i].textContent||'').indexOf('اثنتا عشرة وحدة تغطي')===0){ s[i].textContent=SUB; break; } } }
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
