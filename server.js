@@ -26,12 +26,13 @@ app.get("/dash", (_req, res) => res.sendFile(path.join(__dirname, "dash2.html"))
 app.get("/dash-old", (_req, res) => res.sendFile(path.join(__dirname, "dash.html")));
 app.get("/dash2", (_req, res) => res.sendFile(path.join(__dirname, "dash2.html")));
 
-app.get("/portal", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
+// النسخة الأصلية من البوابة — نسخة احتياطية كما هي
+app.get("/portal-old", (_req, res) => res.sendFile(path.join(__dirname, "portal.html")));
 
 // ===== بوابة ديمو /portal2 — نفس البوابة مع القسم التعريفي الجديد =====
 // portal.html لا يُعدَّل إطلاقاً؛ النسخة الحالية تبقى كما هي على /portal كنسخة احتياطية.
 let PORTAL_DEMO = null;
-app.get("/portal2", (_req, res) => {
+app.get(["/portal", "/portal2"], (_req, res) => {
   try {
     if (!PORTAL_DEMO) {
       const base = fs.readFileSync(path.join(__dirname, "portal.html"), "utf8");
