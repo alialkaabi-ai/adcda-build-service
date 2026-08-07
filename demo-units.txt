@@ -1,7 +1,7 @@
 <style id="demo-units-css">
 #demo-u4{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px}
 #demo-u4 .u4{position:relative;background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 30px rgba(8,42,94,.07);padding:30px 20px;text-align:center;outline:none;transition:transform .28s cubic-bezier(.2,.8,.25,1),box-shadow .28s,border-color .28s}
-#demo-u4 .u4:hover,#demo-u4 .u4:focus{transform:translateY(-6px);box-shadow:0 16px 34px rgba(8,42,94,.14);border-color:rgba(46,123,224,.35)}
+#demo-u4 .u4:hover,#demo-u4 .u4:focus{transform:translateY(-6px);box-shadow:0 16px 34px rgba(8,42,94,.14);border-color:rgba(46,123,224,.35);z-index:30}
 #demo-u4 .u4-ic{display:inline-flex;padding:15px;border-radius:16px;background:rgba(91,163,254,.12);transition:background .28s}
 #demo-u4 .u4:hover .u4-ic,#demo-u4 .u4:focus .u4-ic{background:rgba(91,163,254,.22)}
 #demo-u4 .u4-t{color:#082A5E;font-weight:800;font-size:16px;margin-top:13px}
@@ -97,25 +97,37 @@
 </script>
 
 <style id="demo-serv-css">
-.sv-c{background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 30px rgba(8,42,94,.07);padding:26px;text-align:right}
-.sv-c .sv-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.sv-c .sv-i{display:inline-flex;align-items:center;justify-content:center;background:#001A56;border-radius:13px;padding:11px;flex:none}
-.sv-c .sv-t{color:#082A5E;font-size:16.5px;font-weight:800;line-height:1.5}
-.sv-c .sv-d{color:#50709B;font-size:13.5px;line-height:1.95}
+#demo-serv{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+#demo-serv .sv-c{position:relative;background:rgba(255,255,255,.66);border:1px solid rgba(255,255,255,.9);border-radius:18px;box-shadow:0 10px 30px rgba(8,42,94,.07);padding:26px;text-align:right;outline:none;transition:transform .28s cubic-bezier(.2,.8,.25,1),box-shadow .28s,border-color .28s}
+#demo-serv .sv-c:hover,#demo-serv .sv-c:focus{transform:translateY(-6px);box-shadow:0 16px 34px rgba(8,42,94,.14);border-color:rgba(46,123,224,.35);z-index:30}
+#demo-serv .sv-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+#demo-serv .sv-i{display:inline-flex;align-items:center;justify-content:center;background:#001A56;border-radius:13px;padding:11px;flex:none;transition:background .28s}
+#demo-serv .sv-c:hover .sv-i,#demo-serv .sv-c:focus .sv-i{background:#0B4EA2}
+#demo-serv .sv-t{color:#082A5E;font-size:16.5px;font-weight:800;line-height:1.5}
+#demo-serv .sv-d{color:#50709B;font-size:13.5px;line-height:1.95}
+#demo-serv .sv-pop{position:absolute;right:50%;transform:translate(50%,-8px);top:calc(100% + 12px);width:min(330px,84vw);background:#082A5E;border-radius:14px;padding:15px 17px;box-shadow:0 18px 40px rgba(8,42,94,.34);opacity:0;visibility:hidden;transition:opacity .24s,transform .24s;z-index:9;pointer-events:none;text-align:right}
+#demo-serv .sv-c:hover .sv-pop,#demo-serv .sv-c:focus .sv-pop{opacity:1;visibility:visible;transform:translate(50%,0)}
+#demo-serv .sv-pop::after{content:"";position:absolute;right:50%;margin-right:-6px;top:-5px;width:12px;height:12px;background:#082A5E;transform:rotate(45deg);border-radius:2px}
+#demo-serv .sv-ph{font-size:13px;font-weight:800;color:#fff;text-align:center;margin-bottom:10px}
+#demo-serv .sv-r{padding:7px 0;border-top:1px solid rgba(255,255,255,.12)}
+#demo-serv .sv-r b{display:block;color:#fff;font-size:12.5px;font-weight:800}
+#demo-serv .sv-r i{display:block;color:#93B7EC;font-size:11.5px;font-style:normal;line-height:1.7;margin-top:2px}
+#demo-serv .sv-b{display:inline-block;margin-inline-start:7px;background:rgba(126,217,163,.22);color:#8FE3B4;font-size:10px;font-weight:800;font-style:normal;border-radius:12px;padding:2px 8px;vertical-align:middle}
 </style>
 <script id="demo-serv-js">
 (function(){
-  var EXTRA = "<div class=\"sv-c\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 21a9 9 0 100-18 9 9 0 000 18Z\"/><path d=\"M12 7.4V12l3.2 1.9\"/></svg></span><span class=\"sv-t\">من أسبوع إلى ثلاث دقائق</span></div><div class=\"sv-d\">زمن إنتاج العرض الواحد، من الطلب إلى التسليم.</div></div><div class=\"sv-c\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 9.5V4h5.5\"/><path d=\"M20 14.5V20h-5.5\"/><path d=\"M4 4l6 6\"/><path d=\"M20 20l-6-6\"/></svg></span><span class=\"sv-t\">يتوسّع بلا إعادة بناء</span></div><div class=\"sv-d\">إضافة وكلاء جدد ولغات جديدة دون تغيير المنظومة.</div></div><div class=\"sv-c\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6.5 3.5h11a1 1 0 011 1v15a1 1 0 01-1 1h-11a1 1 0 01-1-1v-15a1 1 0 011-1Z\"/><path d=\"M8.8 8h6.4\"/><path d=\"M8.8 11.6h6.4\"/><path d=\"M8.8 15.2h4\"/></svg></span><span class=\"sv-t\">سجل تدقيق لكل مخرج</span></div><div class=\"sv-d\">مصدره ومسار اعتماده ومَن راجعه ومتى.</div></div>";
+  var CARDS = "<div class=\"sv-c\" tabindex=\"0\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M13.5 3 5 13.5h6L10.5 21 19 10.5h-6L13.5 3Z\"/></svg></span><span class=\"sv-t\">الإنتاج المؤصّل</span></div><div class=\"sv-d\">يحوّل طلبًا بسيطًا إلى عرض أو بوست بهوية الهيئة ومن مصادر معتمدة فقط.</div><div class=\"sv-pop\"><div class=\"sv-ph\">داخل خط الإنتاج</div><div class=\"sv-r\"><b>من أسبوع إلى ثلاث دقائق</b><i>زمن إنتاج العرض الواحد، من الطلب إلى التسليم.</i></div><div class=\"sv-r\"><b>١٥ شريحة في ٤ دفعات</b><i>بنية موحّدة من الغلاف إلى المراجع.</i></div><div class=\"sv-r\"><b>عشر محطات حتى الاعتماد</b><i>١٥٥ عقدة مجمّعة في عشر محطات.</i></div></div></div><div class=\"sv-c\" tabindex=\"0\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3v1.5M12 19.5V21M4.2 12H3M21 12h-1.2M6.3 6.3 5.3 5.3M18.7 18.7l-1-1M17.7 6.3l1-1M5.3 18.7l1-1\"/><path d=\"M12 16a4 4 0 100-8 4 4 0 000 8Z\"/></svg></span><span class=\"sv-t\">الذكاء الاستباقي</span></div><div class=\"sv-d\">لا ينتظر الطلب — يعمل استباقيًا.</div><div class=\"sv-pop\"><div class=\"sv-ph\">ماذا يفعل من نفسه</div><div class=\"sv-r\"><b>يحلّل المخاطر</b><i>يرصد ما يستدعي توعية قبل أن يُطلب.</i></div><div class=\"sv-r\"><b>يقترح مواضيع وحملات</b><i>مواضيع جديدة تُضاف للفهرس بترقيمها.</i></div><div class=\"sv-r\"><b>يرسم خطة الشهر</b><i>خطة توعوية شهرية تلقائيًا.</i></div></div></div><div class=\"sv-c\" tabindex=\"0\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3 5 6v5.5c0 4.6 3 7.6 7 9.5 4-1.9 7-4.9 7-9.5V6l-7-3Z\"/><path d=\"M9 12l2.2 2.2L15.5 10\"/></svg></span><span class=\"sv-t\">الجودة والاعتماد</span></div><div class=\"sv-d\">لا مادة تُنشر دون قرار محكّم بشري.</div><div class=\"sv-pop\"><div class=\"sv-ph\">طبقات الضبط</div><div class=\"sv-r\"><b>المدقق التوعوي<em class=\"sv-b\">جديد</em></b><i>تقييم آلي فوري وفق معايير الهيئة — درجة وملاحظات قبل الاعتماد.</i></div><div class=\"sv-r\"><b>بوّابة الجودة</b><i>خط الدفاع البشري: قرار محكّم مسجَّل وفق قوائم التحقّق.</i></div><div class=\"sv-r\"><b>سجل تدقيق لكل مخرج</b><i>مصدره ومسار اعتماده ومَن راجعه ومتى.</i></div></div></div><div class=\"sv-c\" tabindex=\"0\"><div class=\"sv-h\"><span class=\"sv-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#fff\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 6.4c0-1.4 3.6-2.4 8-2.4s8 1 8 2.4-3.6 2.4-8 2.4-8-1-8-2.4Z\"/><path d=\"M4 6.4v11.2c0 1.4 3.6 2.4 8 2.4s8-1 8-2.4V6.4\"/><path d=\"M4 12c0 1.4 3.6 2.4 8 2.4s8-1 8-2.4\"/></svg></span><span class=\"sv-t\">المصادر والتوسّع</span></div><div class=\"sv-d\">مرجعية واحدة تكبر مع الحاجة.</div><div class=\"sv-pop\"><div class=\"sv-ph\">الأساس والمرونة</div><div class=\"sv-r\"><b>مكتبة المصادر</b><i>العمود الفقري للمصداقية — كل المحتوى يستند إليها وتُراقَب دوريًا.</i></div><div class=\"sv-r\"><b>٧١ جهة رسمية معتمدة</b><i>محلية وخليجية ودولية.</i></div><div class=\"sv-r\"><b>يتوسّع بلا إعادة بناء</b><i>إضافة وكلاء جدد ولغات جديدة دون تغيير المنظومة.</i></div></div></div>";
   function sweep(){
+    if(document.getElementById('demo-serv')) return;
     var sec=document.getElementById('services'); if(!sec) return;
-    if(sec.querySelector('.sv-c')) return;
     var d=sec.querySelectorAll('div'), g=null;
     for(var i=0;i<d.length;i++){
       if(d[i].children.length===5 && getComputedStyle(d[i]).display==='grid'){ g=d[i]; break; }
     }
     if(!g) return;
-    var w=document.createElement('div'); w.innerHTML=EXTRA;
-    while(w.firstElementChild) g.appendChild(w.firstElementChild);
+    g.id='demo-serv';
+    g.setAttribute('style','display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px');
+    g.innerHTML=CARDS;
   }
   var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
   setInterval(sweep,700); sweep();
