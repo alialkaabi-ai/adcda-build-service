@@ -133,3 +133,25 @@
   setInterval(sweep,700); sweep();
 })();
 </script>
+
+<script id="demo-hide-js">
+(function(){
+  function sweep(){
+    var tech=document.getElementById('tech');
+    if(tech){
+      var w = tech.children.length===1 ? tech.children[0] : tech;
+      var k = w.children;
+      for(var i=0;i<k.length;i++){
+        var t=(k[i].textContent||'').trim();
+        if(t.indexOf('جاهز تبدأ')===0) continue;
+        if(k[i].style.display!=='none') k[i].style.display='none';
+      }
+      if(tech.style.paddingTop!=='0px') tech.style.paddingTop='0px';
+    }
+    var hd=document.querySelector('#init-sec .init-head');
+    if(hd && hd.style.display!=='none') hd.style.display='none';
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
