@@ -90,6 +90,9 @@
     g.id='demo-about';
     g.setAttribute('style','display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:stretch');
     g.innerHTML=CARDS;
+    var cn=null, dd=ab.querySelectorAll('div');
+    for(var q=0;q<dd.length;q++){ if(dd[q]!==g && dd[q].children.length===4 && getComputedStyle(dd[q]).display==='grid'){ cn=dd[q]; break; } }
+    if(cn && cn.parentNode===g.parentNode && cn.previousElementSibling!==null){ g.parentNode.insertBefore(cn, g); cn.style.marginTop='0px'; cn.style.marginBottom='34px'; }
   }
   var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
   setInterval(sweep,700); sweep();
