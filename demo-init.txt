@@ -1,0 +1,79 @@
+var HTML =
+  '<div class="init-wrap">'+
+    '<div class="init-head">'+
+      '<div class="init-eyebrow">المبادرة</div>'+
+      '<h2>ALI AGENT بوابة المحتوى التوعوي</h2>'+
+      '<p class="init-sub">منظومة توعوية موحّدة تجمع محتوى السلامة والوقاية ضمن مرجعية واحدة متسقة، بنسختيها العربية والإنجليزية، تخدم المدارس والمجتمع وشركاء العمل المؤسسي.</p>'+
+      '<div class="init-bar"></div>'+
+    '</div>'+
+    '<div class="init-grid">'+
+      '<div class="init-card">'+
+        '<div class="init-ct"><div class="init-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17.5 9 12l3.5 3.5L20.5 7"/><path d="M20.5 12V7h-5"/></svg></div><div class="t">القيمة المضافة</div></div>'+
+        '<p>توحّد المبادرة المحتوى التوعوي في مرجع واحد يرفع الاتساق ويمنع التعارض بين المصادر، ويعزّز الشفافية وقابلية التتبع وضبط المخاطر. وتتيح مرونة عالية في سرعة إنتاج المحتوى وحوكمته، وسهولة في الإتاحة والوصول إليه بنسختيه العربية والإنجليزية، بما يضمن استدامة العمل المؤسسي وقابليته للتطوير المستمر بأقل كلفة وجهد.</p>'+
+        '<ul class="init-ol">'+
+          '<li><b>من أسبوع إلى ثلاث دقائق لكل عرض.</b></li>'+
+          '<li><b>يتوسّع بإضافة وكلاء ولغات جديدة.</b></li>'+
+          '<li><b>كل مخرج معه سجل تدقيق كامل.</b></li>'+
+        '</ul>'+
+      '</div>'+
+      '<div class="init-card">'+
+        '<div class="init-ct"><div class="init-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h9a3 3 0 013 3v13H8a3 3 0 00-3 3V4z"/><path d="M17 20h2V7"/><path d="M8.5 8.5H13"/><path d="M8.5 12H13"/></svg></div><div class="t">الدليل التشغيلي</div></div>'+
+        '<p>تستند المبادرة إلى تحديثٍ للعمليات الإدارية ذات العلاقة بإدارة المحتوى التوعوي، وإلى إعداد الأدلة والوثائق الضابطة التي تنظّم دورة الإنتاج والاعتماد، وتشمل:</p>'+
+        '<ul class="init-ul">'+
+          '<li>الدليل القياسي لإدارة المحتوى التوعوي.</li>'+
+          '<li>جدول الأهداف التوعوية السنوي.</li>'+
+          '<li>معايير اختيار وتقييم محاضر / مقدّم برامج التوعية المجتمعية.</li>'+
+        '</ul>'+
+      '</div>'+
+      '<div class="init-card">'+
+        '<div class="init-ct"><div class="init-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5"/><path d="M5 10.5v8M9.5 10.5v8M14.5 10.5v8M19 10.5v8"/><path d="M3 21h18"/></svg></div><div class="t">الأثر والقيمة المضافة</div></div>'+
+        '<p>تخدم هذه المنظومة الطابع المؤسسي للحقيبة التوعوية الموحّدة عبر مرجعية واحدة قابلة للتتبع والتطوير، تعزّز الشفافية وقابلية التتبع وضبط المخاطر، وتختصر الوقت والكلفة، وتضمن جودة واتساق المحتوى وحداثته، وتُبقي المبادرة قابلة للتوسّع مستقبلاً بما يواكب الأولويات الوطنية في مجالي السلامة والوقاية.</p>'+
+      '</div>'+
+      '<div class="out-grid span">'+
+          '<div class="out" tabindex="0">'+
+            '<div class="out-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 4h17.6v10.5a2 2 0 01-2 2H5.2a2 2 0 01-2-2V4Z"/><path d="M12 16.5V20"/><path d="M9 20h6"/><path d="M7.5 12.5V9.8M12 12.5V7.6M16.5 12.5v-4"/></svg></div>'+
+            '<div class="out-t">عرض تقديمي</div>'+
+            '<div class="out-s">ملف عرض جاهز للاعتماد</div>'+
+            '<div class="pop">'+
+              '<div class="pop-h">كيف يُنتَج العرض</div>'+
+              '<div class="pop-ch"><span>١٥ شريحة في ٤ دفعات</span><span>١٦ فحصاً حتمياً</span><span>٦ مدققين ورئيس لجنة</span><span>بناء بالهوية V6</span></div>'+
+              '<span class="pop-n">عشر محطات من الطلب إلى الاعتماد — ولا تسليم قبل توقيع المحكّم البشري.</span>'+
+            '</div>'+
+          '</div>'+
+          '<div class="out" tabindex="0">'+
+            '<div class="out-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5h15A1.5 1.5 0 0121 6v12a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 18V6a1.5 1.5 0 011.5-1.5Z"/><path d="M3.2 16.6 8 11.8l4 4 3.4-3.4 4.4 4.4"/><path d="M9 9.1a1.15 1.15 0 11-2.3 0 1.15 1.15 0 012.3 0Z"/></svg></div>'+
+            '<div class="out-t">بوست</div>'+
+            '<div class="out-s">تصميم جاهز للنشر</div>'+
+            '<div class="pop">'+
+              '<div class="pop-h">كيف يُنتَج البوست</div>'+
+              '<div class="pop-ch"><span>صورة واحدة</span><span>موضوع جديد أو اقتراح مُحوَّل</span><span>المصادر والثوابت نفسها</span><span>تصميم بالهوية المؤسسية</span></div>'+
+              '<span class="pop-n">لا نشر قبل توقيع المحكّم البشري.</span>'+
+            '</div>'+
+          '</div>'+
+          '<div class="out" tabindex="0">'+
+            '<div class="out-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 4.5h15A1.5 1.5 0 0121 6v12a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 18V6a1.5 1.5 0 011.5-1.5Z"/><path d="M10.3 9.2 14.9 12l-4.6 2.8V9.2Z"/></svg></div>'+
+            '<div class="out-t">فيديو توعوي</div>'+
+            '<div class="out-s">من الفكرة إلى فيديو جاهز</div>'+
+            '<div class="out-soon">قريباً</div>'+
+            '<div class="pop">'+
+              '<div class="pop-h">كيف يُنتَج الفيديو</div>'+
+              '<div class="pop-ch"><span>تُكتب الفكرة</span><span>تُصاغ في موجّه محوكم</span><span>يُولَّد الفيديو</span></div>'+
+              '<span class="pop-n">مسار مبسّط من الفكرة إلى الفيديو — الموجّه مضبوط بالمصادر والثوابت المعتمدة، ولا نشر قبل توقيع المحكّم البشري.</span>'+
+            '</div>'+
+          '</div>'+
+      '</div>'+
+      '<div class="init-card full">'+
+        '<div class="init-ct"><div class="init-ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2E7BE0" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5.5c0 4.6 3 7.6 7 9.5 4-1.9 7-4.9 7-9.5V6l-7-3Z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg></div><div class="t">منظومة محوكمة وفق المعايير الدولية</div></div>'+
+        '<p>أُنتجت الحقيبة التوعوية عبر توظيف متقدّم لتقنيات الذكاء الاصطناعي التوليدي ضمن إطار حوكمة محكم يقوم على مبدأ أن يبقى أداةً خاضعة للرقابة لا منتجاً مستقلاً؛ إذ يمر كل مخرج عبر طبقات متتابعة من المعالجة الآلية والمراجعة البشرية المستقلة، مع بوابات لضبط الجودة وتوحيد الهوية البصرية المؤسسية وحوكمة المفاهيم والمصطلحات. وقد صُممت هذه المنظومة استرشاداً بمجموعة من المواصفات الدولية (ISO) ذات الصلة، تشمل:</p>'+
+        '<div class="init-iso">'+
+          '<div class="row"><span class="desc">نظام إدارة الذكاء الاصطناعي</span><span class="code">ISO/IEC 42001</span></div>'+
+          '<div class="row"><span class="desc">نظام إدارة المخاطر</span><span class="code">ISO/IEC 23894</span></div>'+
+          '<div class="row"><span class="desc">نظام إدارة الجودة</span><span class="code">ISO 9001</span></div>'+
+          '<div class="row"><span class="desc">مبادئ ضبط المصطلحات والمفاهيم</span><span class="code">ISO 704</span></div>'+
+          '<div class="row"><span class="desc">جودة خدمات الترجمة</span><span class="code">ISO 17100</span></div>'+
+          '<div class="row"><span class="desc">مبادئ المسؤولية المجتمعية</span><span class="code">ISO 26000</span></div>'+
+        '</div>'+
+        '<div class="init-note">نسترشد بمنهجيات هذه المعايير في التصميم والتشغيل، ولا يُعد ذلك ادعاءً بحيازة شهادة رسمية.</div>'+
+      '</div>'+
+    '</div>'+
+  '</div>';
