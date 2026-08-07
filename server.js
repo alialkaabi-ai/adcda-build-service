@@ -42,7 +42,10 @@ app.get("/portal2", (_req, res) => {
       const hi = base.indexOf("var HTML =", cj);
       const hj = base.indexOf("';\n  function sweep", hi);
       if (ci < 0 || cj < 0 || hi < 0 || hj < 0) return res.status(500).send("portal2: anchors not found");
-      PORTAL_DEMO = base.slice(0, ci) + css + base.slice(cj, hi) + html + base.slice(hj + 2);
+      const units = fs.readFileSync(path.join(__dirname, "demo-units.txt"), "utf8");
+      let out = base.slice(0, ci) + css + base.slice(cj, hi) + html + base.slice(hj + 2);
+      const bi = out.lastIndexOf("</body>");
+      PORTAL_DEMO = bi < 0 ? out + units : out.slice(0, bi) + units + out.slice(bi);
     }
     res.type("html").send(PORTAL_DEMO);
   } catch (e) { res.status(500).send("portal2 error: " + e.message); }
