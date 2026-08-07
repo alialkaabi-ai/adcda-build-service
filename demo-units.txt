@@ -58,3 +58,40 @@
   setInterval(sweep,700); sweep();
 })();
 </script>
+
+<style id="demo-about-css">
+#demo-about{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:stretch}
+#demo-about .ab-c{background:#fff;border:1px solid #EEF2F8;border-radius:18px;box-shadow:0 10px 30px rgba(8,42,94,.06);padding:26px 24px;text-align:right}
+#demo-about .ab-h{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+#demo-about .ab-i{display:inline-flex;padding:11px;border-radius:12px;background:rgba(91,163,254,.12);flex:none}
+#demo-about .ab-t{color:#082A5E;font-size:15.5px;font-weight:800;line-height:1.5}
+#demo-about .ab-c p{margin:0;color:#50709B;font-size:13.5px;line-height:1.95}
+#demo-about .ab-ul{list-style:none;margin:12px 0 0;padding:0}
+#demo-about .ab-ul li{position:relative;padding-right:18px;margin-bottom:8px;color:#50709B;font-size:13.5px;line-height:1.9}
+#demo-about .ab-ul li:last-child{margin-bottom:0}
+#demo-about .ab-ul li::before{content:"";position:absolute;right:2px;top:10px;width:6px;height:6px;border-radius:50%;background:#5BA3FE}
+#demo-about .ab-ol{list-style:none;margin:14px 0 0;padding:0;counter-reset:ab}
+#demo-about .ab-ol li{counter-increment:ab;position:relative;padding-right:30px;margin-bottom:10px;color:#50709B;font-size:13.5px;line-height:1.9}
+#demo-about .ab-ol li:last-child{margin-bottom:0}
+#demo-about .ab-ol li::before{content:counter(ab);position:absolute;right:0;top:2px;width:21px;height:21px;border-radius:7px;background:rgba(91,163,254,.14);color:#2E7BE0;font-size:11.5px;font-weight:800;display:flex;align-items:center;justify-content:center}
+#demo-about .ab-ol b{color:#082A5E;font-weight:800}
+</style>
+<script id="demo-about-js">
+(function(){
+  var CARDS = "<div class=\"ab-c\"><div class=\"ab-h\"><span class=\"ab-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3.5 17.5 9 12l3.5 3.5L20.5 7\"/><path d=\"M20.5 12V7h-5\"/></svg></span><span class=\"ab-t\">القيمة المضافة</span></div><p>توحّد المبادرة المحتوى التوعوي في مرجع واحد يرفع الاتساق ويمنع التعارض بين المصادر، ويعزّز الشفافية وقابلية التتبع وضبط المخاطر. وتتيح مرونة عالية في سرعة إنتاج المحتوى وحوكمته، وسهولة في الإتاحة والوصول إليه بنسختيه العربية والإنجليزية، بما يضمن استدامة العمل المؤسسي وقابليته للتطوير المستمر بأقل كلفة وجهد.</p><ul class=\"ab-ol\"><li><b>من أسبوع إلى ثلاث دقائق لكل عرض.</b></li><li><b>يتوسّع بإضافة وكلاء ولغات جديدة.</b></li><li><b>كل مخرج معه سجل تدقيق كامل.</b></li></ul></div><div class=\"ab-c\"><div class=\"ab-h\"><span class=\"ab-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 4h9a3 3 0 013 3v13H8a3 3 0 00-3 3V4z\"/><path d=\"M17 20h2V7\"/><path d=\"M8.5 8.5H13\"/><path d=\"M8.5 12H13\"/></svg></span><span class=\"ab-t\">الدليل التشغيلي</span></div><p>تستند المبادرة إلى تحديثٍ للعمليات الإدارية ذات العلاقة بإدارة المحتوى التوعوي، وإلى إعداد الأدلة والوثائق الضابطة التي تنظّم دورة الإنتاج والاعتماد، وتشمل:</p><ul class=\"ab-ul\"><li>الدليل القياسي لإدارة المحتوى التوعوي.</li><li>جدول الأهداف التوعوية السنوي.</li><li>معايير اختيار وتقييم محاضر / مقدّم برامج التوعية المجتمعية.</li></ul></div><div class=\"ab-c\"><div class=\"ab-h\"><span class=\"ab-i\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#2E7BE0\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 9.5 12 4l9 5.5\"/><path d=\"M5 10.5v8M9.5 10.5v8M14.5 10.5v8M19 10.5v8\"/><path d=\"M3 21h18\"/></svg></span><span class=\"ab-t\">الأثر والقيمة المضافة</span></div><p>تخدم هذه المنظومة الطابع المؤسسي للحقيبة التوعوية الموحّدة عبر مرجعية واحدة قابلة للتتبع والتطوير، تعزّز الشفافية وقابلية التتبع وضبط المخاطر، وتختصر الوقت والكلفة، وتضمن جودة واتساق المحتوى وحداثته، وتُبقي المبادرة قابلة للتوسّع مستقبلاً بما يواكب الأولويات الوطنية في مجالي السلامة والوقاية.</p></div>";
+  function sweep(){
+    if(document.getElementById('demo-about')) return;
+    var ab=document.getElementById('about'); if(!ab) return;
+    var d=ab.querySelectorAll('div'), g=null;
+    for(var i=0;i<d.length;i++){
+      if(d[i].children.length===3 && getComputedStyle(d[i]).display==='grid'){ g=d[i]; break; }
+    }
+    if(!g) return;
+    g.id='demo-about';
+    g.setAttribute('style','display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:stretch');
+    g.innerHTML=CARDS;
+  }
+  var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
+  setInterval(sweep,700); sweep();
+})();
+</script>
