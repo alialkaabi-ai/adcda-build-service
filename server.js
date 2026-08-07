@@ -59,6 +59,9 @@ app.get(["/portal", "/portal2"], (_req, res) => {
 // صور استوديو المحتوى الذكي — تُخدَّم من مجلد img/ (يعود 404 تلقائياً إن لم يوجد المجلد)
 app.use("/img", express.static(path.join(__dirname, "img")));
 
+// وثائق الدليل التشغيلي — تُخدَّم من مجلد docs/ (تعود 404 تلقائياً إن لم يوجد المجلد)
+app.use("/docs", express.static(path.join(__dirname, "docs")));
+
 app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.4" }));
 
 app.get("/topic/:code", (req, res) => {
