@@ -172,7 +172,7 @@
   function ar(n){ return String(n).replace(/[0-9]/g,function(d){return AR[+d];}); }
   function fmt(n){ var s=ar(n); return s.length>3 ? s.replace(/\B(?=(.{3})+$)/g,'٬') : s; }
   function num(t){ var s=(t||'').replace(/[٬,\s]/g,'').replace(/[٠-٩]/g,function(c){return String(AR.indexOf(c));}); var v=parseInt(s,10); return isNaN(v)?0:v; }
-  function retarget(label, target){
+  function retarget(label, target, newLabel){
     var els=document.querySelectorAll('div,span,p');
     for(var i=0;i<els.length;i++){
       var e=els[i];
@@ -183,6 +183,7 @@
       for(var j=0;j<k.length;j++){ if(k[j]!==e && /[٠-٩0-9]/.test(k[j].textContent||'')){ n=k[j]; break; } }
       if(!n || n.getAttribute('data-pinned')==='1') return;
       n.setAttribute('data-pinned','1');
+      if(newLabel && e.textContent!==newLabel) e.textContent=newLabel;
       var want=fmt(target), timer=null, done=false;
       function run(){
         done=true;
@@ -198,7 +199,10 @@
       return;
     }
   }
-  function sweep(){ retarget('شريحة منتَجة',3666); }
+  function sweep(){
+    retarget('شريحة منتَجة',3666);
+    retarget('مرجعًا رسميًا',__SRC_COUNT__,'مصدرًا معتمدًا');
+  }
   var mo=new MutationObserver(sweep); mo.observe(document.body,{childList:true,subtree:true});
   setInterval(sweep,700); sweep();
 })();
