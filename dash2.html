@@ -846,6 +846,7 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
     <button class="ds-tab" data-t="kpi">المؤشرات</button>
     <button class="ds-tab" data-t="qbank">بنك الأسئلة</button>
     <button class="ds-tab" data-t="awards">الجوائز</button>
+    <button class="ds-tab" data-t="audit">المدققين</button>
   </div>
 
   <!-- ═══ غرفة العمليات ═══ -->
@@ -1192,6 +1193,255 @@ header.top a.back:hover{background:rgba(199,162,75,.08)}
       <div class="aw-foot">كل اسم جائزة وكل جهة في هذه اللوحة مأخوذ حرفياً من مصدر رسمي مرفق برابطه — ولا يُعرض أي اسم لم يُتحقَّق منه.<span class="sep" style="display:inline-block;width:1px;height:11px;background:var(--hair);margin:0 8px;vertical-align:middle"></span><b>المواعيد لا تُعرض عمداً</b> — تتغيّر كل دورة، ويتولّى وكيل صيد الجوائز سحبها من الجهة نفسها بدل تخمينها. «ملاءمة عالية/متوسطة» تقدير داخلي للأولوية، لا تصنيف رسمي من الجهة المانحة.</div>
     </div>
   </div>
+
+
+  <!-- ═══ المدققون ═══ -->
+  <div class="pane" id="p-audit">
+    <div class="cc live">
+      <div class="cc-top"><span class="cc-brand">INTERNAL&nbsp;AUDIT</span><span class="cc-badge gold">أربعة مدققين ورئيس تدقيق</span><span class="cc-clock mono" id="adSrc">—</span></div>
+
+      <div class="ad-lead">طبقة تدقيق داخلي مستقلة عن الإنتاج، تعمل شهريًا على ما سجّلته المنظومة فعلاً، وتُخرج تقريرًا واحدًا بالأحكام والتوصيات. لا يملك أي مدقق صلاحية إيقاف أو رفض مخرج — يرصد ويوصي فقط، وهذا هو منهج <b>ISO 19011</b> نفسه.</div>
+
+      <div class="ad-sect">قواعد التدقيق الستّ</div>
+      <div class="ad-rules">
+        <div class="ad-rule"><b>حتمي بالكامل</b><span>كود صِرف بلا ذكاء اصطناعي وبلا استدعاءات خارجية. نفس المدخلات تعطي نفس الحكم دائمًا.</span></div>
+        <div class="ad-rule"><b>لا صلاحية رفض</b><span>المدقق يرفع ملاحظة ولا يوقف الإنتاج، فلا يتضارب مع البوابات واللجنة والمحكّم.</span></div>
+        <div class="ad-rule"><b>استقلال عن الإنتاج</b><span>لا يشارك أي مدقق في كتابة ما يدقّقه، ولا يقرأ إلا الأثر المسجَّل.</span></div>
+        <div class="ad-rule"><b>صفر أثر على الإنتاج</b><span>يقرأ ما سجّلته المنظومة أصلاً، فلا يبطّئ خط الإنتاج ولا يزيد كلفته.</span></div>
+        <div class="ad-rule"><b>الصفر ليس مطابقة</b><span>ما لا يوجد له قياس يُكتب «غير متاح»، والصفر ممنوع كبديل لأنه يُقرأ خطأً.</span></div>
+        <div class="ad-rule"><b>متابعة الإجراء التصحيحي</b><span>لكل توصية معرّف ثابت وعمر بالدورات. ما عُولج يُغلق، وما بقي ثلاث دورات يُرفع عليه علم.</span></div>
+      </div>
+
+      <div class="ad-sect">من يدقّق ماذا</div>
+      <div class="ad-auds">
+        <div class="ad-aud">
+          <div class="h"><span class="ic">🔎</span><b>مدقق المصدر والمحتوى</b></div>
+          <div class="sc">هل كل مخرج مؤصّل من مصدر معتمد، وواضح اللغة، ومنضبط المصطلح؟</div>
+          <div class="rd"><i>يقرأ</i> قائمة المصادر المعتمدة · المخرجات الموقوفة لغياب مصدر · حالات التكرار المكتشفة · دروس المحكّم المتعلقة بالمصطلح</div>
+          <div class="std"><span>ISO 30401</span><span>ISO 24495-1</span><span>ISO 704</span></div>
+        </div>
+        <div class="ad-aud">
+          <div class="h"><span class="ic">⚙️</span><b>مدقق الجودة والبوابات</b></div>
+          <div class="sc">هل اشتغلت الفحوص الحتمية، وما معدّل الفشل واتجاهه عن الشهر السابق؟</div>
+          <div class="rd"><i>يقرأ</i> مؤشرات التشغيل الشهرية · نسبة الفشل وفرقها · المسار الأكثر إخفاقًا · متوسط زمن الدورة · آخر تقييم مخرجات</div>
+          <div class="std"><span>ISO 9001</span><span>ISO/IEC 25010</span><span>ISO/IEC 25059</span></div>
+        </div>
+        <div class="ad-aud">
+          <div class="h"><span class="ic">⚖️</span><b>مدقق الامتثال والاعتماد</b></div>
+          <div class="sc">هل مرّ كل مخرج على الفحص القانوني واللجنة والتوقيع البشري، وهل السجل مكتمل؟</div>
+          <div class="rd"><i>يقرأ</i> قرارات اللجنة ونسبة الردّ · دروس المحكّم البشري · سجل المخاطر · تدقيق مجموع السجل مقابل إجماليه</div>
+          <div class="std"><span>ISO 19011</span><span>ISO/IEC 42001</span><span>ISO/IEC 23894</span><span>ISO 15489-1</span><span>ISO 37301</span><span>ISO 26000</span></div>
+        </div>
+        <div class="ad-aud">
+          <div class="h"><span class="ic">🌍</span><b>مدقق الإتاحة والترجمة</b></div>
+          <div class="sc">هل عبرت النسخة الإنجليزية مراحلها الثلاث، وهل البناء موحّد بالهوية المؤسسية؟</div>
+          <div class="rd"><i>يقرأ</i> مسار الترجمة الثلاثي · عدّاد بوابة الترجمة · نسبة اكتمال البناء · ازدواجية اللغة في كل مخرج</div>
+          <div class="std"><span>ISO 18587</span><span>ISO/IEC 26514</span></div>
+        </div>
+        <div class="ad-aud chief">
+          <div class="h"><span class="ic">🧾</span><b>رئيس التدقيق</b></div>
+          <div class="sc">لا يدقّق. يجمّع أحكام المدققين الأربعة، ويحسب الملخّص، ويدير متابعة التوصيات.</div>
+          <div class="rd"><i>يُنتج</i> ملخّص الأحكام · حالات عدم المطابقة · التوصيات مرتّبة بالأولوية مع معرّف ثابت لكل توصية · قائمة الضوابط القائمة بلا قياس</div>
+          <div class="std"><span>يوقّع التقرير الشهري</span></div>
+        </div>
+      </div>
+
+      <div class="ad-sect">مقياس الأحكام</div>
+      <div class="ad-verd">
+        <div class="v ok"><b>مطابق</b><span>ضابط قائم وصدر عنه قياس فعلي يثبت عمله.</span></div>
+        <div class="v note"><b>ملاحظة</b><span>الضابط يعمل، لكن القياس يكشف ما يستحق المعالجة أو التوضيح.</span></div>
+        <div class="v bad"><b>عدم مطابقة</b><span>القياس يخالف ما يشترطه المعيار، ويفتح إجراءً تصحيحيًا.</span></div>
+        <div class="v na"><b>غير قابل للقياس</b><span>الضابط قائم فعلاً لكنه لا يُصدر رقمًا يمكن تدقيقه — وهي أسرع فرص التحسين.</span></div>
+      </div>
+
+      <div class="ad-sect">محلل الأداء الشهري — الطبقة الثانية</div>
+      <div class="ad-perf">
+        <div class="pi">يقرأ التقرير أعلاه مع مؤشرات التشغيل، ويكتب تحليلاً شهريًا يذكر لكل بند <b>الإصلاح</b> و<b>الطريقة</b> بخطوات مرقّمة. تصنيف الخطورة لا يتركه للنموذج: مصنّف حتمي يعيد ترتيب كل بند بقواعد مكتوبة، فلا يستطيع النموذج أن ينزل ببند حوكمي إلى درجة أدنى.</div>
+        <div class="tiers">
+          <div class="t1"><b>الدرجة الأولى — تشغيلي</b><span>مهلة · إعادة محاولة · حجم دفعة · توقيت. لا تمسّ محتوى ولا حوكمة.</span></div>
+          <div class="t2"><b>الدرجة الثانية — تعليمات ومحتوى</b><span>تعديل صياغة أو تعليمة وكيل. تُنفَّذ باعتمادك بعد قراءة الطريقة.</span></div>
+          <div class="t3"><b>الدرجة الثالثة — حوكمة</b><span>بوابة أو صلاحية أو معيار أو مصطلح مقفل. قرار بشري صريح حصرًا، ويُوثَّق.</span></div>
+        </div>
+        <div class="pn">لا يُطبَّق أي بند آليًا في أي درجة من الدرجات الثلاث. التقرير يقترح، والتنفيذ قرارك.</div>
+      </div>
+
+      <div class="ad-sect">التقارير</div>
+      <div class="ad-repwrap">
+        <div class="ad-replist" id="adList"><div class="ad-empty">جارٍ التحميل…</div></div>
+        <div class="ad-repbody">
+          <div class="ad-rephead">
+            <b id="adTitle">—</b>
+            <span class="mt" id="adMeta"></span>
+            <a class="ad-dl" id="adDl" href="#" download>تنزيل الملف</a>
+          </div>
+          <pre class="ad-pre" id="adText">—</pre>
+        </div>
+      </div>
+
+      <div class="sb-foot"><span class="dot ok"></span> التقارير تُولَّد آليًا من قياسات المنظومة نفسها<span class="sep"></span>لا يُعتمد منها شيء ولا يُطبَّق إلا بمراجعة بشرية<span class="sep"></span>نسترشد بمنهجيات هذه المعايير ولا ندّعي حيازة شهادة اعتماد رسمية</div>
+    </div>
+  </div>
+
+  <style id="ali-audit">
+  #p-audit .ad-lead{padding:14px 20px 2px;font-size:12.5px;line-height:1.85;color:#C9D4E4}
+  #p-audit .ad-lead b{color:var(--gold-soft)}
+  #p-audit .ad-sect{padding:16px 20px 8px;font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--gold-soft)}
+  #p-audit .ad-sect::after{content:"";display:block;height:1px;background:var(--hair);margin-top:7px}
+
+  #p-audit .ad-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 20px}
+  #p-audit .ad-rule{border:1px solid var(--hair);border-radius:10px;background:rgba(10,31,61,.5);padding:11px 13px}
+  #p-audit .ad-rule b{display:block;font-size:11.5px;color:var(--paper);margin-bottom:4px}
+  #p-audit .ad-rule span{font-size:11px;color:var(--dim);line-height:1.65}
+
+  #p-audit .ad-auds{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;padding:0 20px}
+  #p-audit .ad-aud{border:1px solid var(--hair);border-radius:11px;background:rgba(10,31,61,.6);padding:13px 13px 11px;display:flex;flex-direction:column;gap:8px}
+  #p-audit .ad-aud.chief{border-color:var(--line);background:rgba(199,162,75,.05)}
+  #p-audit .ad-aud .h{display:flex;align-items:center;gap:7px}
+  #p-audit .ad-aud .h .ic{font-size:14px;line-height:1}
+  #p-audit .ad-aud .h b{font-size:12px;color:var(--paper);line-height:1.4}
+  #p-audit .ad-aud .sc{font-size:11px;color:#C2CFE0;line-height:1.7}
+  #p-audit .ad-aud .rd{font-size:10.5px;color:var(--dim);line-height:1.7;border-top:1px dashed var(--hair);padding-top:7px}
+  #p-audit .ad-aud .rd i{display:block;font-style:normal;font-weight:800;color:var(--gold-soft);font-size:9.5px;letter-spacing:.4px;margin-bottom:2px}
+  #p-audit .ad-aud .std{display:flex;flex-wrap:wrap;gap:4px;margin-top:auto;padding-top:4px}
+  #p-audit .ad-aud .std span{font-family:'IBM Plex Mono',monospace;direction:ltr;font-size:9px;color:var(--gold-soft);border:1px solid var(--line);border-radius:5px;padding:2px 6px}
+  #p-audit .ad-aud.chief .std span{font-family:'Tajawal',sans-serif;direction:rtl;font-size:9.5px}
+
+  #p-audit .ad-verd{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 20px}
+  #p-audit .ad-verd .v{border:1px solid var(--hair);border-radius:10px;padding:11px 13px;background:rgba(10,31,61,.5)}
+  #p-audit .ad-verd .v b{display:block;font-size:11.5px;margin-bottom:4px}
+  #p-audit .ad-verd .v span{font-size:10.5px;color:var(--dim);line-height:1.65}
+  #p-audit .ad-verd .v.ok{border-color:rgba(111,207,142,.35)}#p-audit .ad-verd .v.ok b{color:#6FCF8E}
+  #p-audit .ad-verd .v.note{border-color:rgba(229,192,75,.35)}#p-audit .ad-verd .v.note b{color:#E5C04B}
+  #p-audit .ad-verd .v.bad{border-color:rgba(229,72,77,.35)}#p-audit .ad-verd .v.bad b{color:#E5484D}
+  #p-audit .ad-verd .v.na b{color:#8DA2C0}
+
+  #p-audit .ad-perf{padding:0 20px}
+  #p-audit .ad-perf .pi{font-size:12px;color:#C2CFE0;line-height:1.85;margin-bottom:10px}
+  #p-audit .ad-perf .pi b{color:var(--gold-soft)}
+  #p-audit .ad-perf .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  #p-audit .ad-perf .tiers>div{border:1px solid var(--hair);border-radius:10px;padding:11px 13px;background:rgba(10,31,61,.5)}
+  #p-audit .ad-perf .tiers b{display:block;font-size:11.5px;margin-bottom:4px;color:var(--paper)}
+  #p-audit .ad-perf .tiers span{font-size:10.5px;color:var(--dim);line-height:1.65}
+  #p-audit .ad-perf .tiers .t1{border-inline-start:3px solid #6FCF8E}
+  #p-audit .ad-perf .tiers .t2{border-inline-start:3px solid #E5C04B}
+  #p-audit .ad-perf .tiers .t3{border-inline-start:3px solid #E5484D}
+  #p-audit .ad-perf .pn{margin-top:9px;font-size:11px;color:var(--gold-soft);border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:rgba(199,162,75,.05)}
+
+  #p-audit .ad-repwrap{display:grid;grid-template-columns:300px 1fr;gap:12px;padding:0 20px 4px}
+  #p-audit .ad-replist{display:grid;gap:8px;align-content:start}
+  #p-audit .ad-item{font-family:inherit;text-align:start;display:grid;gap:3px;border:1px solid var(--hair);border-radius:10px;background:rgba(10,31,61,.5);padding:11px 13px;cursor:pointer;transition:.2s}
+  #p-audit .ad-item:hover{border-color:rgba(199,162,75,.4);background:rgba(199,162,75,.05)}
+  #p-audit .ad-item.on{border-color:var(--gold);background:rgba(199,162,75,.1)}
+  #p-audit .ad-item .k{font-size:9.5px;color:var(--gold-soft);font-weight:800;letter-spacing:.4px}
+  #p-audit .ad-item .t{font-size:11.5px;color:#D8E0EC;font-weight:700;line-height:1.5}
+  #p-audit .ad-item .m{font-size:10px;color:var(--dim)}
+  #p-audit .ad-empty{border:1px dashed var(--hair);border-radius:10px;padding:16px 13px;font-size:11px;color:var(--dim);text-align:center}
+
+  #p-audit .ad-repbody{border:1px solid var(--hair);border-radius:11px;background:rgba(8,26,51,.55);overflow:hidden;display:flex;flex-direction:column}
+  #p-audit .ad-rephead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 15px;border-bottom:1px solid var(--hair)}
+  #p-audit .ad-rephead b{font-size:12.5px;color:var(--paper)}
+  #p-audit .ad-rephead .mt{font-size:10.5px;color:var(--dim)}
+  #p-audit .ad-dl{margin-inline-start:auto;font-size:10.5px;font-weight:800;color:var(--gold-soft);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:5px 14px;white-space:nowrap}
+  #p-audit .ad-dl:hover{background:rgba(199,162,75,.08)}
+  #p-audit .ad-pre{margin:0;padding:15px 18px;max-height:520px;overflow:auto;font-family:'Tajawal',system-ui,sans-serif;font-size:12px;line-height:1.95;color:#D2DCEA;white-space:pre-wrap;word-break:break-word;unicode-bidi:plaintext;text-align:start}
+  #p-audit .ad-pre::-webkit-scrollbar{width:6px}
+  #p-audit .ad-pre::-webkit-scrollbar-thumb{background:rgba(141,162,192,.25);border-radius:3px}
+
+  @media(max-width:1100px){
+    #p-audit .ad-auds{grid-template-columns:repeat(3,1fr)}
+    #p-audit .ad-verd{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:820px){
+    #p-audit .ad-rules{grid-template-columns:1fr}
+    #p-audit .ad-auds{grid-template-columns:1fr}
+    #p-audit .ad-perf .tiers{grid-template-columns:1fr}
+    #p-audit .ad-repwrap{grid-template-columns:1fr}
+  }
+  </style>
+
+  <script>
+  (function () {
+    var LIVE = "https://alialkaabi.app.n8n.cloud/webhook/audit-reports";
+    var LOADED = false, REPORTS = [], CUR = -1;
+
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+    function src(t) { var e = $("adSrc"); if (e) e.textContent = t; }
+
+    function renderList() {
+      var el = $("adList"); if (!el) return;
+      if (!REPORTS.length) { el.innerHTML = '<div class="ad-empty">لم يصدر تقرير بعد لهذه الدورة.<br>يصدر التقريران آليًا مع الدورة الشهرية.</div>'; return; }
+      el.innerHTML = REPORTS.map(function (r, i) {
+        return '<button type="button" class="ad-item' + (i === CUR ? " on" : "") + '" data-i="' + i + '">' +
+          '<span class="k">' + esc(r.kind || "تقرير") + '</span>' +
+          '<span class="t">' + esc(r.title || "") + '</span>' +
+          '<span class="m mono">' + esc(r.month || "") + '</span></button>';
+      }).join("");
+    }
+
+    function show(i) {
+      var r = REPORTS[i]; if (!r) return;
+      CUR = i; renderList();
+      $("adTitle").textContent = r.title || "—";
+      var n = r.length || String(r.text || "").length;
+      $("adMeta").textContent = "الشهر " + (r.month || "—") + (r.mode ? " · " + r.mode : "") + " · " + n + " حرفًا";
+      $("adText").textContent = r.text || "";
+      var a = $("adDl"), name = r.file || "report.txt";
+      if (r.url) { a.href = r.url; }
+      else { try { a.href = URL.createObjectURL(new Blob([r.text || ""], { type: "text/plain;charset=utf-8" })); } catch (e) { a.removeAttribute("href"); } }
+      a.setAttribute("download", name);
+    }
+
+    function loadSaved() {
+      return fetch("/reports/index.json", { cache: "no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+        var list = (d && d.reports) || [];
+        return Promise.all(list.map(function (x) {
+          return fetch("/reports/" + x.file, { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) {
+            return { kind: x.kind, title: x.title, month: x.month, mode: x.mode, file: x.file, length: t.length, text: t, url: "/reports/" + x.file };
+          });
+        }));
+      });
+    }
+
+    function loadLive() {
+      try {
+        var ctl = new AbortController();
+        var tm = setTimeout(function () { ctl.abort(); }, 6000);
+        return fetch(LIVE, { signal: ctl.signal })
+          .then(function (r) { clearTimeout(tm); return r.json(); })
+          .catch(function () { clearTimeout(tm); return null; });
+      } catch (e) { return Promise.resolve(null); }
+    }
+
+    function init() {
+      if (LOADED) return; LOADED = true;
+      src("جارٍ التحميل…");
+      loadSaved().then(function (list) {
+        REPORTS = list; CUR = 0; renderList(); if (list.length) show(0);
+        src("نسخة محفوظة");
+      }).catch(function () { REPORTS = []; renderList(); src("تعذّر التحميل"); })
+        .then(loadLive)
+        .then(function (d) {
+          if (d && d.ok && d.reports && d.reports.length) {
+            REPORTS = d.reports.slice(); CUR = 0; renderList(); show(0);
+            src("مباشر من المنظومة");
+          }
+        }).catch(function () { });
+    }
+
+    var tabs = $("tabs");
+    if (tabs) tabs.addEventListener("click", function (e) {
+      var b = e.target.closest(".ds-tab"); if (!b) return;
+      if (b.dataset.t === "audit") setTimeout(init, 30);
+    });
+
+    var list = $("adList");
+    if (list) list.addEventListener("click", function (e) {
+      var b = e.target.closest(".ad-item"); if (!b) return;
+      show(parseInt(b.dataset.i, 10));
+    });
+  })();
+  </script>
 
   <div class="pfoot"><span class="dot"></span> فريق العمل: علي سلطان الكعبي · حسن ظافر الأحبابي <span class="sep"></span> لا يصدر أي مخرج دون اعتماد بشري</div>
 </div>

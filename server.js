@@ -62,6 +62,14 @@ app.use("/img", express.static(path.join(__dirname, "img")));
 // وثائق الدليل التشغيلي — تُخدَّم من مجلد docs/ (تعود 404 تلقائياً إن لم يوجد المجلد)
 app.use("/docs", express.static(path.join(__dirname, "docs")));
 
+// تقارير التدقيق والأداء — نسخ محفوظة من آخر تشغيل، يقرأها قسم «المدققين» في لوحة النظام
+app.use("/reports", express.static(path.join(__dirname, "reports"), {
+  setHeaders: (res, fp) => {
+    if (fp.endsWith(".txt")) res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    if (fp.endsWith(".json")) res.setHeader("Content-Type", "application/json; charset=utf-8");
+  }
+}));
+
 app.get("/health", (_req, res) => res.json({ ok: true, topics: Object.keys(CORPUS).length, version: "2.4" }));
 
 app.get("/topic/:code", (req, res) => {
